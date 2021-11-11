@@ -20,3 +20,4 @@ azam
 manza
 dauz
 baam
+salem
