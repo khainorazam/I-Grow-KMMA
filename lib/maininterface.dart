@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_group9/friend.dart';
 import 'package:flutter_group9/group.dart';
 import 'package:flutter_group9/profile.dart';
-import 'package:flutter_group9/timline.dart';
+import 'package:flutter_group9/timeline.dart';
 
 class MainInterface extends StatelessWidget {
   const MainInterface({Key? key}) : super(key: key);

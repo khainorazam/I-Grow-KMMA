@@ -60,7 +60,7 @@ class HomePage extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const LoginPage()));
+                                  builder: (context) => const Login()));
                         },
                         //define shape
                         color: const Color(0xFF8BC34A),

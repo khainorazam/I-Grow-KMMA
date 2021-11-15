@@ -9,7 +9,7 @@ class Friends extends StatelessWidget {
       body: Container(
         color: Colors.lightGreen.shade100,
         child: const Center(
-          child: Text('Timeline'),
+          child: Text('Friends'),
         ),
       ),
     );
