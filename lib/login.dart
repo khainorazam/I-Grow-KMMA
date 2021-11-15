@@ -1,8 +1,32 @@
+import 'dart:convert';
 import "package:flutter/material.dart";
 import 'package:flutter_group9/maininterface.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'network_utils/api.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
+  @override
+  LoginPage createState() => LoginPage();
+}
+
+class LoginPage extends State<Login> {
+  bool _isLoading = false;
+  final _formKey = GlobalKey<FormState>();
+  String? email;
+  String? password;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  _showMsg(msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(msg),
+      action: SnackBarAction(
+        label: 'Close',
+        onPressed: () {
+          // some code to undo change
+        },
+      ),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +81,51 @@ class LoginPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
-                      children: <Widget>[
-                        inputFile(label: "Username"),
-                        inputFile(label: "Password", obscureText: true)
+                      children: [
+                        ListTile(
+                          leading: Icon(
+                            Icons.email,
+                            color: const Color(0xFF8BC34A),
+                          ),
+                          title: TextFormField(
+                            decoration: const InputDecoration(
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                focusedErrorBorder: InputBorder.none),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (emailValue) {
+                              if (emailValue!.isEmpty) {
+                                return 'Please enter your email!';
+                              }
+                              email = emailValue;
+                              return null;
+                            },
+                          ),
+                          tileColor: Colors.white,
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.lock,
+                            color: const Color(0xFF8BC34A),
+                          ),
+                          title: TextFormField(
+                            decoration: const InputDecoration(
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                focusedErrorBorder: InputBorder.none),
+                            obscureText: true,
+                            validator: (pswdValue) {
+                              if (pswdValue!.isEmpty) {
+                                return 'Please enter your password!';
+                              }
+                              password = pswdValue;
+                              return null;
+                            },
+                          ),
+                          tileColor: Colors.white,
+                        ),
                       ],
                     ),
                   ),
@@ -94,33 +160,45 @@ class LoginPage extends StatelessWidget {
           )),
     );
   }
-}
 
-Widget inputFile({label, obscureText = false}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Text(
-        label,
-        style: const TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black87),
-      ),
-      const SizedBox(
-        height: 5,
-      ),
-      TextField(
-        obscureText: obscureText,
-        decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
-            ),
-            border:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey))),
-      ),
-      const SizedBox(
-        height: 10,
-      )
-    ],
-  );
+  String? _myDataState;
+
+  String? user;
+
+  Future<void> _loads() async {
+    FocusScope.of(context).unfocus();
+
+    if (_formKey.currentState!.validate()) {
+      String? _curState = 'Loading';
+
+      setState(() {
+        _myDataState = _curState;
+      });
+
+      _curState = await _login();
+      setState(() {
+        _myDataState = _curState;
+      });
+    }
+  }
+
+  Future _login() async {
+    var data = {'email': email, 'password': password};
+    var res = await Network()
+        .authData(data, '/login')
+        .timeout(const Duration(seconds: 5), onTimeout: () => 'Timeout');
+    // var res = await Network().authData(data, '/login');
+    if (res != 'Timeout') {
+      var body = json.decode(res.body);
+      res = 'Loaded';
+      if (body['success']) {
+        SharedPreferences localStorage = await SharedPreferences.getInstance();
+        localStorage.setString('token', json.encode(body['token']));
+        localStorage.setString('user', json.encode(body['user']));
+        user = jsonDecode(localStorage.getString('user').toString());
+      }
+    }
+    res = 'Loaded';
+    return res;
+  }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_group9/friend.dart';
 import 'package:flutter_group9/group.dart';
 import 'package:flutter_group9/profile.dart';
-import 'package:flutter_group9/timline.dart';
+import 'package:flutter_group9/timeline.dart';
 
 class MainInterface extends StatelessWidget {
   const MainInterface({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class MainInterface extends StatelessWidget {
             width: 250,
           ),
           bottom: const TabBar(
-            labelColor: Colors.white,
+            labelColor: Color(0xFF33691E),
             unselectedLabelColor: Colors.black,
             indicator: BoxDecoration(
                 borderRadius: BorderRadius.only(
