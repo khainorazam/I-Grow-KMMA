@@ -23,7 +23,7 @@ class MainInterface extends StatelessWidget {
             width: 250,
           ),
           bottom: const TabBar(
-            labelColor: Colors.white,
+            labelColor: Color(0xFF33691E),
             unselectedLabelColor: Colors.black,
             indicator: BoxDecoration(
                 borderRadius: BorderRadius.only(

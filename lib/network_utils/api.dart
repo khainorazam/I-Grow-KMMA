@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Network {
-  final _url = 'http://10.0.2.2:8000/api/v1';
+  final _url = 'http://10.0.2.2:8000/api/users_list';
   String? token;
 
   _getToken() async {
