@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_group9/friend.dart';
 import 'package:flutter_group9/group.dart';
 import 'package:flutter_group9/profile.dart';
@@ -27,14 +28,28 @@ class MainInterface extends StatelessWidget {
             unselectedLabelColor: Colors.black,
             indicator: BoxDecoration(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15)),
                 color: Color(0xFFDCEDC8)),
             tabs: [
-              Tab(text: 'Home'),
-              Tab(text: 'Groups'),
-              Tab(text: 'Friends'),
-              Tab(text: 'Profile'),
+              Tab(
+                //text: 'Home',
+                icon: Icon(
+                  Icons.home,
+                ),
+              ),
+              Tab(
+                //text: 'Groups',
+                icon: Icon(Icons.groups),
+              ),
+              Tab(
+                //text: 'Friends',
+                icon: Icon(Icons.group),
+              ),
+              Tab(
+                //text: 'Profile',
+                icon: Icon(Icons.person),
+              ),
             ],
           ),
         ),
