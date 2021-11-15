@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:flutter_group9/maininterface.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,7 +11,13 @@ class LoginPage extends StatelessWidget {
       backgroundColor: Colors.lightGreen.shade100,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: Colors.white,
+        title: Image.asset(
+          'assets/igrowicon.png',
+          fit: BoxFit.contain,
+          height: 70,
+          width: 250,
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -61,7 +68,12 @@ class LoginPage extends StatelessWidget {
                     child: MaterialButton(
                       minWidth: double.infinity,
                       height: 60,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MainInterface()));
+                      },
                       color: const Color(0xFF8BC34A),
                       elevation: 0,
                       shape: RoundedRectangleBorder(

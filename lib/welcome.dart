@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height / 3,
+                    height: MediaQuery.of(context).size.height / 9,
                     decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage("assets/igrowicon.png"))),
