@@ -4,6 +4,7 @@ import 'package:flutter_group9/friend.dart';
 import 'package:flutter_group9/group.dart';
 import 'package:flutter_group9/profile.dart';
 import 'package:flutter_group9/timeline.dart';
+import 'package:flutter_group9/workshop.dart';
 
 class MainInterface extends StatelessWidget {
   const MainInterface({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class MainInterface extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         backgroundColor: Colors.lightGreen.shade100,
         appBar: AppBar(
@@ -34,21 +35,23 @@ class MainInterface extends StatelessWidget {
             tabs: [
               Tab(
                 //text: 'Home',
-                icon: Icon(
-                  Icons.home,
-                ),
+                icon: Icon(Icons.home_rounded),
               ),
               Tab(
                 //text: 'Groups',
-                icon: Icon(Icons.groups),
+                icon: Icon(Icons.groups_rounded),
               ),
               Tab(
                 //text: 'Friends',
-                icon: Icon(Icons.group),
+                icon: Icon(Icons.people_rounded),
               ),
               Tab(
                 //text: 'Profile',
-                icon: Icon(Icons.person),
+                icon: Icon(Icons.build_circle_rounded),
+              ),
+              Tab(
+                //text: 'Profile',
+                icon: Icon(Icons.person_pin),
               ),
             ],
           ),
@@ -58,6 +61,7 @@ class MainInterface extends StatelessWidget {
             Timeline(),
             Groups(),
             Friends(),
+            Workshop(),
             Profile(),
           ],
         ),
