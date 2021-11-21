@@ -2,6 +2,7 @@ import 'dart:convert';
 import "package:flutter/material.dart";
 import 'package:flutter_group9/maininterface.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/scheduler.dart';
 import 'network_utils/api.dart';
 
 class Login extends StatefulWidget {
@@ -11,22 +12,9 @@ class Login extends StatefulWidget {
 }
 
 class LoginPage extends State<Login> {
-  bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   String? email;
   String? password;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  _showMsg(msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg),
-      action: SnackBarAction(
-        label: 'Close',
-        onPressed: () {
-          // some code to undo change
-        },
-      ),
-    ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,29 +118,8 @@ class LoginPage extends State<Login> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: MaterialButton(
-                      minWidth: double.infinity,
-                      height: 60,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MainInterface()));
-                      },
-                      color: const Color(0xFF8BC34A),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          side: const BorderSide(color: Colors.black54),
-                          borderRadius: BorderRadius.circular(50)),
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: Colors.white),
-                      ),
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: loading(),
                   ),
                 ],
               ))
@@ -162,6 +129,48 @@ class LoginPage extends State<Login> {
   }
 
   String? _myDataState;
+
+  Widget loading() {
+    return FutureBuilder(builder: (context, snapshot) {
+      if (_myDataState == 'Loaded') {
+        SchedulerBinding.instance!.addPostFrameCallback((_) {
+          // Navigator.of(context).restorablePushNamed(SAgile.calendarRoute);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const MainInterface()));
+        });
+      }
+      if (_myDataState == 'Timeout') {
+        return Column(
+          children: [
+            MaterialButton(
+              color: Theme.of(context).backgroundColor,
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(8.0),
+              child: const Icon(
+                Icons.refresh,
+              ),
+              onPressed: _loads,
+            ),
+            const Text('Timed out!'),
+          ],
+        );
+      }
+      if (_myDataState == 'Loading') {
+        return CircularProgressIndicator(
+          color: Theme.of(context).backgroundColor,
+        );
+      }
+      return MaterialButton(
+        color: Theme.of(context).backgroundColor,
+        shape: const CircleBorder(),
+        padding: const EdgeInsets.all(8.0),
+        child: const Icon(
+          Icons.login,
+        ),
+        onPressed: _loads,
+      );
+    });
+  }
 
   String? user;
 
@@ -182,23 +191,25 @@ class LoginPage extends State<Login> {
     }
   }
 
+  Future loginAuthData(data) async {
+    var res = await Network().authData(data, '/login');
+    var body = json.decode(res.body);
+    var success;
+    if (body['success']) {
+      print(body['user'].toString());
+      // SharedPreferences localStorage = await SharedPreferences.getInstance();
+      // localStorage.setString('token', json.encode(body['token']));
+      // localStorage.setString('user', json.encode(body['user']));
+      // user = jsonDecode(localStorage.getString('user').toString());
+      success = 'Loaded';
+    }
+    return success;
+  }
+
   Future _login() async {
     var data = {'email': email, 'password': password};
-    var res = await Network()
-        .authData(data, '/login')
-        .timeout(const Duration(seconds: 5), onTimeout: () => 'Timeout');
-    // var res = await Network().authData(data, '/login');
-    if (res != 'Timeout') {
-      var body = json.decode(res.body);
-      res = 'Loaded';
-      if (body['success']) {
-        SharedPreferences localStorage = await SharedPreferences.getInstance();
-        localStorage.setString('token', json.encode(body['token']));
-        localStorage.setString('user', json.encode(body['user']));
-        user = jsonDecode(localStorage.getString('user').toString());
-      }
-    }
-    res = 'Loaded';
-    return res;
+
+    return await loginAuthData(data)
+        .timeout(const Duration(minutes: 1), onTimeout: () => 'Timeout');
   }
 }
