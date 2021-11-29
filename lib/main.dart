@@ -48,7 +48,7 @@ class _CheckAuthState extends State<CheckAuth> {
   Widget build(BuildContext context) {
     Widget child;
     if (isAuth) {
-      child = const MainInterface();
+      child =  MainInterface();
     } else {
       child = const Login();
     }
