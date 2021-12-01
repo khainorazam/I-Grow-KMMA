@@ -5,8 +5,8 @@ import 'package:flutter_group9/mytimeline.dart';
 class Timeline extends StatelessWidget {
   const Timeline({Key? key}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
-    @override
     final List<String> avatarUrl = [
       "https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80",
       "https://images.unsplash.com/photo-1457449940276-e8deed18bfff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
