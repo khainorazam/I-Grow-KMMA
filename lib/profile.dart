@@ -170,7 +170,7 @@ class ProfileState extends State<Profile> {
                         side: const BorderSide(color: Colors.black54),
                         borderRadius: BorderRadius.circular(50)),
                     child: const Text(
-                      "Logout",
+                      "Edit Profile",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
