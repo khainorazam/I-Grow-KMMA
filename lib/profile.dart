@@ -30,7 +30,7 @@ class ProfileState extends State<Profile> {
               width: double.infinity,
               child: const Center(
                 child: Text(
-                  "My Profile",
+                  "Profile",
                   style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
               ),
