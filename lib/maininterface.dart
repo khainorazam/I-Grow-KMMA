@@ -56,7 +56,7 @@ class MainInterface extends StatelessWidget {
               ),
               Tab(
                 //text: 'Profile',
-                icon: Icon(Icons.person_pin),
+                icon: Icon(Icons.account_circle_rounded),
               ),
             ],
           ),

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_group9/group.dart';
 import 'package:flutter_group9/maininterface.dart';
 
-void main(){
+void main() {
   runApp(ViewGroup());
 }
 
-class ViewGroup extends StatefulWidget {  
-  const ViewGroup({Key? key}) : super(key: key);                 //MyApp utk widget
+class ViewGroup extends StatefulWidget {
+  const ViewGroup({Key? key}) : super(key: key); //MyApp utk widget
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -15,32 +15,25 @@ class ViewGroup extends StatefulWidget {
   }
 }
 
-
-
 class ViewGroupState extends State<ViewGroup> {
-  
   var joinStatus = false;
   var buttonText = "Join";
-  
-  void updateStatus(){
 
-    if(joinStatus==false){
-      setState((){
-      joinStatus = true;
+  void updateStatus() {
+    if (joinStatus == false) {
+      setState(() {
+        joinStatus = true;
       });
       buttonText = "Joined";
       print("status : $joinStatus");
-    }
-
-    else if(joinStatus==true){
-      setState((){
-      joinStatus = false;
+    } else if (joinStatus == true) {
+      setState(() {
+        joinStatus = false;
       });
       buttonText = "Join";
       print("status : $joinStatus");
     }
 
-    
     // setState((){
     //   joinStatus = true;
     // });
@@ -58,38 +51,38 @@ class ViewGroupState extends State<ViewGroup> {
             icon: Icon(Icons.arrow_back_rounded),
             onPressed: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MainInterface.select(1),
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MainInterface.select(1),
                   ));
             },
           ),
-  
           title: Text("Group Page"),
         ),
         body: Container(
-         color: Colors.lightGreen[100],
-         child: Center(
-           child: SizedBox(
-             width: 100.0,
-             child: ElevatedButton(
-               onPressed: updateStatus,
-               child: Text(buttonText, style: TextStyle(color: Colors.white70),),
-               style: ButtonStyle(
-                 backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade500),
-                 overlayColor: MaterialStateProperty.all<Color>(Colors.green.shade700),
-                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                 borderRadius: BorderRadius.circular(18.0),
-                            ))
-               ),
-               
-             ),
-           ),
-         )
-       ),
-
-
-        ),
+            color: Colors.lightGreen[100],
+            child: Center(
+              child: SizedBox(
+                width: 100.0,
+                child: ElevatedButton(
+                  onPressed: updateStatus,
+                  child: Text(
+                    buttonText,
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.grey.shade500),
+                      overlayColor: MaterialStateProperty.all<Color>(
+                          Colors.green.shade700),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ))),
+                ),
+              ),
+            )),
+      ),
     );
   }
 }
