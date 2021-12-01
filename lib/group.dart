@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/viewgroup.dart';
-import 'package:flutter_group9/widget/custom_page_route.dart';
 
 class Groups extends StatelessWidget {
   const Groups({Key? key}) : super(key: key);
@@ -56,9 +55,8 @@ class Groups extends StatelessWidget {
                         onPressed: (){
                            Navigator.push(
                              context,
-                             CustomPageRoute(
-                               child: const ViewGroup(),
-                               direction: AxisDirection.left,
+                             MaterialPageRoute(
+                               builder: (context) => const ViewGroup()
                                )
                               );
                         },
