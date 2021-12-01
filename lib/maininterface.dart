@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_group9/editprof.dart';
 import 'package:flutter_group9/friend.dart';
 import 'package:flutter_group9/group.dart';
 import 'package:flutter_group9/profile.dart';
 import 'package:flutter_group9/timeline.dart';
 import 'package:flutter_group9/workshop.dart';
+import 'package:flutter_group9/editprof.dart';
 
 class MainInterface extends StatelessWidget {
   MainInterface({Key? key}) : super(key: key);
@@ -54,7 +56,7 @@ class MainInterface extends StatelessWidget {
               ),
               Tab(
                 //text: 'Profile',
-                icon: Icon(Icons.person_pin),
+                icon: Icon(Icons.account_circle_rounded),
               ),
             ],
           ),
@@ -65,7 +67,7 @@ class MainInterface extends StatelessWidget {
             Groups(),
             Friends(),
             Workshop(),
-            Profile(),
+            EditProfile(),
           ],
         ),
       ),
