@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/login.dart';
+import 'package:flutter_group9/editprof.dart';
 import 'maininterface.dart';
 
 class Profile extends StatefulWidget {
@@ -12,10 +13,10 @@ class Profile extends StatefulWidget {
 }
 
 class ProfileState extends State<Profile> {
-  final _formKey = GlobalKey<FormState>();
-  String? name;
-  String? email;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  // final _formKey = GlobalKey<FormState>();
+  // String? name;
+  // String? email;
+  // final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +40,21 @@ class ProfileState extends State<Profile> {
           Expanded(
             flex: 3,
             child: Padding(
+              //padding: (EdgeInsets.only(top: 50, left: 35, right: 35))
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: SingleChildScrollView(
                 child: Column(
                   children: const [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(100, 0, 50, 100),
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.account_circle,
+                          size: 150,
+                          color: Color.fromARGB(169, 169, 169, 169),
+                        ),
+                      ),
+                    ),
                     ListTile(
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.black12)),
@@ -162,7 +174,7 @@ class ProfileState extends State<Profile> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Login()));
+                              builder: (context) => EditProfile()));
                     },
                     color: const Color(0xFF8BC34A),
                     elevation: 0,
@@ -170,7 +182,7 @@ class ProfileState extends State<Profile> {
                         side: const BorderSide(color: Colors.black54),
                         borderRadius: BorderRadius.circular(50)),
                     child: const Text(
-                      "Logout",
+                      "Edit Profile",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
