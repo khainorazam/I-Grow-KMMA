@@ -7,11 +7,14 @@ import 'package:flutter_group9/timeline.dart';
 import 'package:flutter_group9/workshop.dart';
 
 class MainInterface extends StatelessWidget {
-  const MainInterface({Key? key}) : super(key: key);
+  MainInterface({Key? key}) : super(key: key);
+  int selectedPage = 0;
+  MainInterface.select(this.selectedPage);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: selectedPage,
       length: 5,
       child: Scaffold(
         backgroundColor: Colors.lightGreen.shade100,
@@ -51,7 +54,7 @@ class MainInterface extends StatelessWidget {
               ),
               Tab(
                 //text: 'Profile',
-                icon: Icon(Icons.person_pin),
+                icon: Icon(Icons.account_circle_rounded),
               ),
             ],
           ),

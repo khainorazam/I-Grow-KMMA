@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/login.dart';
-
 import 'maininterface.dart';
 
 class Profile extends StatefulWidget {
@@ -31,7 +30,7 @@ class ProfileState extends State<Profile> {
               width: double.infinity,
               child: const Center(
                 child: Text(
-                  "My Profile",
+                  "Profile",
                   style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
               ),
