@@ -37,25 +37,20 @@ class ViewGroupState extends State<ViewGroup> {
       _isPostDisabled = true;
     }
   }
+
   //update like status
-  void updateLikeStatus(){
-
-    if(_likeStatus==false){
-
+  void updateLikeStatus() {
+    if (_likeStatus == false) {
       setState(() {
-        _likeStatus=true;
+        _likeStatus = true;
       });
-      
-    }
-    else if(_likeStatus==true){
-      
+    } else if (_likeStatus == true) {
       setState(() {
-        _likeStatus=false;      
+        _likeStatus = false;
       });
-      
-
     }
   }
+
   //update join button color
   void updateColor() {
     if (_currentColorIndex == 0) {
@@ -180,10 +175,9 @@ class ViewGroupState extends State<ViewGroup> {
                           SizedBox(
                             height: 22,
                           ),
-                                                                                  //Gambar bawang  
-                          
-                          
-                          PhysicalModel(                                       
+                          //Gambar bawang
+
+                          PhysicalModel(
                             color: Colors.black,
                             shadowColor: Colors.green,
                             elevation: 10,
@@ -210,10 +204,11 @@ class ViewGroupState extends State<ViewGroup> {
                             ),
                           ),
 
-                          SizedBox(height: 22,),
+                          SizedBox(
+                            height: 22,
+                          ),
 
-                          
-                                                                                              //start of group title
+                          //start of group title
                           Column(
                             children: [
                               Stack(
@@ -361,7 +356,7 @@ class ViewGroupState extends State<ViewGroup> {
                             ],
                           ),
 
-                                                                                           //start of post
+                          //start of post
                           Column(
                             children: [
                               PhysicalModel(
@@ -432,34 +427,49 @@ class ViewGroupState extends State<ViewGroup> {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                                                   
-                                      Container(                                        //like comment share
+                                      Container(
+                                        //like comment share
 
                                         width: double.infinity,
                                         height: 40,
-                                        decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey.shade500,), bottom: BorderSide(color: Colors.grey.shade500,))),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                top: BorderSide(
+                                                  color: Colors.grey.shade500,
+                                                ),
+                                                bottom: BorderSide(
+                                                  color: Colors.grey.shade500,
+                                                ))),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: <Widget>[
-                                                                          
-                                          Row(
-                                            children: [
-                                              IconButton(
+                                            Row(
+                                              children: [
+                                                IconButton(
                                                   iconSize: 20,
                                                   onPressed: updateLikeStatus,
                                                   icon: Icon(
                                                     Icons.thumb_up_outlined,
-                                                    color: _likeStatus? Colors.green[700]:Colors.grey[500],
+                                                    color: _likeStatus
+                                                        ? Colors.green[700]
+                                                        : Colors.grey[500],
                                                   ),
                                                   tooltip: "Like this post",
                                                 ),
-                                              Text("Like",style: TextStyle(fontSize: 14,color: _likeStatus? Colors.green[700] : Colors.grey[500]),)
-                                            ],
-                                          ),
-
-                                          Row(
-                                            children: [
-                                              IconButton(
+                                                Text(
+                                                  "Like",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: _likeStatus
+                                                          ? Colors.green[700]
+                                                          : Colors.grey[500]),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                IconButton(
                                                   iconSize: 20,
                                                   onPressed: () {},
                                                   icon: Icon(
@@ -468,13 +478,17 @@ class ViewGroupState extends State<ViewGroup> {
                                                   ),
                                                   tooltip: "Comment this post",
                                                 ),
-                                              Text("Comment",style: TextStyle(fontSize: 14,color: Colors.grey[500]),)
-                                            ],
-                                          ),
-
-                                          Row(
-                                            children: [
-                                              IconButton(
+                                                Text(
+                                                  "Comment",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey[500]),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                IconButton(
                                                   iconSize: 20,
                                                   onPressed: () {},
                                                   icon: Icon(
@@ -483,15 +497,16 @@ class ViewGroupState extends State<ViewGroup> {
                                                   ),
                                                   tooltip: "Share this post",
                                                 ),
-                                              Text("Share",style: TextStyle(fontSize: 14,color: Colors.grey[500]),)
-                                            ],
-                                          ),
-                                          
-
-
-                                        ],),
-
-
+                                                Text(
+                                                  "Share",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey[500]),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),
@@ -503,7 +518,8 @@ class ViewGroupState extends State<ViewGroup> {
                             ],
                           ),
 
-                           Column(                                          //second post
+                          Column(
+                            //second post
                             children: [
                               PhysicalModel(
                                 color: Colors.transparent,
@@ -573,34 +589,49 @@ class ViewGroupState extends State<ViewGroup> {
                                       SizedBox(
                                         height: 10,
                                       ),
-                                                                   
-                                      Container(                                        //like comment share
+                                      Container(
+                                        //like comment share
 
                                         width: double.infinity,
                                         height: 40,
-                                        decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.grey.shade500,), bottom: BorderSide(color: Colors.grey.shade500,))),
+                                        decoration: BoxDecoration(
+                                            border: Border(
+                                                top: BorderSide(
+                                                  color: Colors.grey.shade500,
+                                                ),
+                                                bottom: BorderSide(
+                                                  color: Colors.grey.shade500,
+                                                ))),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: <Widget>[
-                                                                          
-                                          Row(
-                                            children: [
-                                              IconButton(
+                                            Row(
+                                              children: [
+                                                IconButton(
                                                   iconSize: 20,
                                                   onPressed: updateLikeStatus,
                                                   icon: Icon(
                                                     Icons.thumb_up_outlined,
-                                                    color: _likeStatus? Colors.green[700]:Colors.grey[500],
+                                                    color: _likeStatus
+                                                        ? Colors.green[700]
+                                                        : Colors.grey[500],
                                                   ),
                                                   tooltip: "Like this post",
                                                 ),
-                                              Text("Like",style: TextStyle(fontSize: 14,color: _likeStatus? Colors.green[700] : Colors.grey[500]),)
-                                            ],
-                                          ),
-
-                                          Row(
-                                            children: [
-                                              IconButton(
+                                                Text(
+                                                  "Like",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: _likeStatus
+                                                          ? Colors.green[700]
+                                                          : Colors.grey[500]),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                IconButton(
                                                   iconSize: 20,
                                                   onPressed: () {},
                                                   icon: Icon(
@@ -609,13 +640,17 @@ class ViewGroupState extends State<ViewGroup> {
                                                   ),
                                                   tooltip: "Comment this post",
                                                 ),
-                                              Text("Comment",style: TextStyle(fontSize: 14,color: Colors.grey[500]),)
-                                            ],
-                                          ),
-
-                                          Row(
-                                            children: [
-                                              IconButton(
+                                                Text(
+                                                  "Comment",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey[500]),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                IconButton(
                                                   iconSize: 20,
                                                   onPressed: () {},
                                                   icon: Icon(
@@ -624,15 +659,16 @@ class ViewGroupState extends State<ViewGroup> {
                                                   ),
                                                   tooltip: "Share this post",
                                                 ),
-                                              Text("Share",style: TextStyle(fontSize: 14,color: Colors.grey[500]),)
-                                            ],
-                                          ),
-                                          
-
-
-                                        ],),
-
-
+                                                Text(
+                                                  "Share",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.grey[500]),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),
@@ -643,8 +679,6 @@ class ViewGroupState extends State<ViewGroup> {
                               ),
                             ],
                           ),
-
-                          
                         ],
                       ),
                     ),
