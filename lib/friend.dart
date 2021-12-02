@@ -50,12 +50,7 @@ class Friends extends StatelessWidget {
                           child: SizedBox(
                             height: 60.0,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Login()));
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
@@ -97,7 +92,23 @@ class Friends extends StatelessWidget {
                                           Align(
                                             alignment: Alignment.centerRight,
                                             child: Row(
-                                              children: [],
+                                              children: [
+                                                IconButton(
+                                                    iconSize: 35.0,
+                                                    onPressed: () {},
+                                                    icon: Icon(
+                                                      Icons
+                                                          .check_circle_outline,
+                                                      color: Colors.green[600],
+                                                    )),
+                                                IconButton(
+                                                    iconSize: 35.0,
+                                                    onPressed: () {},
+                                                    icon: Icon(
+                                                      Icons.cancel_outlined,
+                                                      color: Colors.red[600],
+                                                    )),
+                                              ],
                                             ),
                                           ),
                                         ],
@@ -131,12 +142,7 @@ class Friends extends StatelessWidget {
                           child: SizedBox(
                             height: 60.0,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Login()));
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
@@ -204,12 +210,7 @@ class Friends extends StatelessWidget {
                           child: SizedBox(
                             height: 60.0,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Login()));
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
@@ -277,12 +278,7 @@ class Friends extends StatelessWidget {
                           child: SizedBox(
                             height: 60.0,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Login()));
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
@@ -350,12 +346,7 @@ class Friends extends StatelessWidget {
                           child: SizedBox(
                             height: 60.0,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const Login()));
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
