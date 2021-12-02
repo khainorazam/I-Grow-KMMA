@@ -53,26 +53,26 @@ class HomePage extends StatelessWidget {
                   ),
                   Column(
                     children: <Widget>[
-                      MaterialButton(
-                        minWidth: double.infinity,
-                        height: 60,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.lightGreen,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 50, vertical: 20),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50))),
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Login()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
                         },
-                        //define shape
-                        color: const Color(0xFF8BC34A),
-                        shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Colors.black54),
-                            borderRadius: BorderRadius.circular(50)),
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: Colors.white),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 70),
+                          child: Text(
+                            "Continue",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                color: Colors.white),
+                          ),
                         ),
                       ),
                     ],
