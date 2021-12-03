@@ -52,7 +52,7 @@ class _LoginState extends State<Login> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.lightGreen.shade100,
         appBar: AppBar(
-          elevation: 0,
+          elevation: 5,
           backgroundColor: Colors.white,
           title: Image.asset(
             'assets/igrowicon.png',
@@ -109,6 +109,9 @@ class _LoginState extends State<Login> {
                               ),
                               title: TextFormField(
                                 decoration: const InputDecoration(
+                                    hintText: "Enter Your Email",
+                                    hintStyle: TextStyle(
+                                        fontSize: 15.0, color: Colors.black12),
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
@@ -136,6 +139,9 @@ class _LoginState extends State<Login> {
                               ),
                               title: TextFormField(
                                 decoration: const InputDecoration(
+                                    hintText: "Enter Your Password",
+                                    hintStyle: TextStyle(
+                                        fontSize: 15.0, color: Colors.black12),
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
@@ -168,6 +174,7 @@ class _LoginState extends State<Login> {
                                       Expanded(
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
+                                              elevation: 10,
                                               primary: Colors.lightGreen,
                                               padding:
                                                   const EdgeInsets.symmetric(
@@ -261,38 +268,12 @@ class FireAuth {
       );
       user = userCredential.user;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided.');
-      }
+      Fluttertoast.showToast(
+        msg: "Wrong Email and Password",
+        toastLength: Toast.LENGTH_LONG,
+      );
     }
 
     return user;
   }
-}
-
-Future<User?> signInUsingEmailPassword({
-  required String email,
-  required String password,
-  required BuildContext context,
-}) async {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? user;
-
-  try {
-    UserCredential userCredential = await auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    user = userCredential.user;
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'user-not-found') {
-      print('No user found for that email.');
-    } else if (e.code == 'wrong-password') {
-      print('Wrong password provided.');
-    }
-  }
-
-  return user;
 }

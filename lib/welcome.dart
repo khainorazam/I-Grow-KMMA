@@ -55,6 +55,7 @@ class HomePage extends StatelessWidget {
                     children: <Widget>[
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                            elevation: 10,
                             primary: Colors.lightGreen,
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 50, vertical: 20),
