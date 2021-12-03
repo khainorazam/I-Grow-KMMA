@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/login.dart';
+import 'package:flutter_group9/mytimeline.dart';
 import 'package:flutter_group9/searchfriends.dart';
 
 class Friends extends StatelessWidget {
@@ -210,7 +211,13 @@ class Friends extends StatelessWidget {
                           child: SizedBox(
                             height: 60.0,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MyTimeline()));
+                              },
                               style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
