@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/creategrouppost.dart';
 import 'package:flutter_group9/group.dart';
 import 'package:flutter_group9/maininterface.dart';
+import 'package:flutter_group9/viewGroupMember.dart';
 import 'package:flutter_group9/widget/custom_page_route.dart';
 
-void main() {
-  runApp(ViewGroup());
-}
+// void main() {
+//   runApp(ViewGroup());
+// }
 
 class ViewGroup extends StatefulWidget {
   const ViewGroup({Key? key}) : super(key: key);
@@ -143,7 +145,29 @@ class ViewGroupState extends State<ViewGroup> {
 
   @override
   Widget build(BuildContext context) {
+    
+    // final List<String> memberPic = [
+    //   "assets/Daus.jpg",
+    //   "assets/Guy1.jfif"
+    // ];
+    // final List<String> memberName = [
+    //   "Firdaus Hishamudin",
+    //   "Haikal Iman"
+    // ];
+    // final List<String> memberPostTime = [
+    //   "1h",
+    //   "6h"
+    // ];
+    // final List<String> memberPostContentText = [
+    //   "Mari menanam bawang!",
+    //   "Tips menyimpan bawang dengan betul"
+    // ];
+    // final List<String> memberPostContentPic = [
+    //   "assets/BawangPost1.jpg",
+    //   "assets/SimpanBawangPost2.jfif"
+    // ];
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.green[700],
@@ -151,11 +175,7 @@ class ViewGroupState extends State<ViewGroup> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MainInterface.select(1),
-                    ));
+                Navigator.pop(context);
               },
             ),
             title: const Text(
@@ -215,7 +235,7 @@ class ViewGroupState extends State<ViewGroup> {
                                 alignment: AlignmentDirectional.topCenter,
                                 children: <Widget>[
                                   PhysicalModel(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     shadowColor: Colors.green,
                                     elevation: 20,
                                     borderRadius: BorderRadius.circular(10.0),
@@ -313,7 +333,16 @@ class ViewGroupState extends State<ViewGroup> {
                                               SizedBox(
                                                 width: 150,
                                                 child: ElevatedButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                     Navigator.push(
+                                                       context,
+                                                     CustomPageRoute(
+                                                        child:  ViewGroupMember(),
+                                                        direction: AxisDirection.left)
+                                                        );
+
+
+                                                  },
                                                   child: Text(
                                                     "Show Members",
                                                     style: TextStyle(
@@ -687,7 +716,14 @@ class ViewGroupState extends State<ViewGroup> {
               )),
           floatingActionButton: FloatingActionButton(
             onPressed:
-                _isPostDisabled ? null : () => print("Go to create post page"),
+                _isPostDisabled ? null : (){
+                   Navigator.push(
+                      context,
+                      CustomPageRoute(
+                        child:  CreateGroupPost(),
+                        direction: AxisDirection.up)
+                  );
+                },
             child: Icon(
               Icons.add_outlined,
               color: _isPostDisabled ? Colors.transparent : Colors.white70,
