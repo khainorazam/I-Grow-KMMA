@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/newpost.dart';
 import 'package:flutter_group9/mytimeline.dart';
+import 'package:flutter_group9/test.dart';
+import 'package:flutter_group9/test2.dart';
+import 'package:flutter_group9/test3.dart';
 
 import 'widget/custom_post.dart';
 
@@ -140,6 +143,10 @@ class Timeline extends StatelessWidget {
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => NewPost()));
+          // context,
+          // MaterialPageRoute(builder: (context) => AddSharing()));
+          //context,MaterialPageRoute(builder: (context) => GetUserName()));
+          //context,MaterialPageRoute(builder: (context) => CameraWidget()));
         },
         child: const Icon(Icons.add),
         backgroundColor: Colors.green[700],
