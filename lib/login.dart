@@ -1,237 +1,279 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_group9/maininterface.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/scheduler.dart';
 import 'network_utils/api.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
   @override
-  LoginPage createState() => LoginPage();
+  _LoginState createState() => _LoginState();
 }
 
-class LoginPage extends State<Login> {
+class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-  String? email;
-  String? password;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+
+  final _focusEmail = FocusNode();
+  final _focusPassword = FocusNode();
+
+  bool _isProcessing = false;
+
+  Future<FirebaseApp> _initializeFirebase() async {
+    FirebaseApp firebaseApp = await Firebase.initializeApp();
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => MainInterface(
+            user: user,
+          ),
+        ),
+      );
+    }
+
+    return firebaseApp;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.lightGreen.shade100,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: Image.asset(
-          'assets/igrowicon.png',
-          fit: BoxFit.contain,
-          height: 70,
-          width: 250,
+    return GestureDetector(
+      onTap: () {
+        _focusEmail.unfocus();
+        _focusPassword.unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.lightGreen.shade100,
+        appBar: AppBar(
+          elevation: 5,
+          backgroundColor: Colors.white,
+          title: Image.asset(
+            'assets/igrowicon.png',
+            fit: BoxFit.contain,
+            height: 70,
+            width: 250,
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+            iconSize: 20,
+            color: Colors.black,
+          ),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios),
-          iconSize: 20,
-          color: Colors.black,
-        ),
-      ),
-      body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Column(
-                    children: const <Widget>[
-                      Text(
-                        "Login",
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Login to your account",
-                        style:
-                            TextStyle(fontSize: 15, color: Colors.lightGreen),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: Icon(
-                            Icons.email,
-                            color: const Color(0xFF8BC34A),
-                          ),
-                          title: TextFormField(
-                            decoration: const InputDecoration(
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                focusedErrorBorder: InputBorder.none),
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (emailValue) {
-                              if (emailValue!.isEmpty) {
-                                return 'Please enter your email!';
-                              }
-                              email = emailValue;
-                              return null;
-                            },
-                          ),
-                          tileColor: Colors.white,
+        body: FutureBuilder(
+          future: _initializeFirebase(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: const <Widget>[
+                        Text(
+                          "Login",
+                          style: TextStyle(
+                              fontSize: 60, fontWeight: FontWeight.bold),
                         ),
-                        ListTile(
-                          leading: Icon(
-                            Icons.lock,
-                            color: const Color(0xFF8BC34A),
-                          ),
-                          title: TextFormField(
-                            decoration: const InputDecoration(
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                focusedErrorBorder: InputBorder.none),
-                            obscureText: true,
-                            validator: (pswdValue) {
-                              if (pswdValue!.isEmpty) {
-                                return 'Please enter your password!';
-                              }
-                              password = pswdValue;
-                              return null;
-                            },
-                          ),
-                          tileColor: Colors.white,
+                        SizedBox(
+                          height: 20,
                         ),
+                        Text(
+                          "Login to your account",
+                          style:
+                              TextStyle(fontSize: 15, color: Colors.lightGreen),
+                        )
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: MaterialButton(
-                      minWidth: double.infinity,
-                      height: 60,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>  MainInterface()));
-                      },
-                      color: const Color(0xFF8BC34A),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          side: const BorderSide(color: Colors.black54),
-                          borderRadius: BorderRadius.circular(50)),
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: Colors.white),
+                    SizedBox(height: 20.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            ListTile(
+                              leading: Icon(
+                                Icons.email,
+                                color: const Color(0xFF8BC34A),
+                              ),
+                              title: TextFormField(
+                                decoration: const InputDecoration(
+                                    hintText: "Enter Your Email",
+                                    hintStyle: TextStyle(
+                                        fontSize: 15.0, color: Colors.black12),
+                                    focusedBorder: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                    focusedErrorBorder: InputBorder.none),
+                                keyboardType: TextInputType.emailAddress,
+                                controller: _emailTextController,
+                                focusNode: _focusEmail,
+                                validator: (emailValue) {
+                                  if (emailValue == null) {
+                                    return null;
+                                  }
+                                  if (emailValue.isEmpty) {
+                                    return 'Email can\'t be empty';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              tileColor: Colors.white,
+                            ),
+                            SizedBox(height: 8.0),
+                            ListTile(
+                              leading: Icon(
+                                Icons.lock,
+                                color: const Color(0xFF8BC34A),
+                              ),
+                              title: TextFormField(
+                                decoration: const InputDecoration(
+                                    hintText: "Enter Your Password",
+                                    hintStyle: TextStyle(
+                                        fontSize: 15.0, color: Colors.black12),
+                                    focusedBorder: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                    focusedErrorBorder: InputBorder.none),
+                                keyboardType: TextInputType.emailAddress,
+                                controller: _passwordTextController,
+                                focusNode: _focusPassword,
+                                obscureText: true,
+                                validator: (emailValue) {
+                                  if (emailValue == null) {
+                                    return null;
+                                  }
+                                  if (emailValue.isEmpty) {
+                                    return 'Password can\'t be empty';
+                                  } else if (emailValue.length < 6) {
+                                    return 'Enter a password with length at least 6';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              tileColor: Colors.white,
+                            ),
+                            SizedBox(height: 24.0),
+                            _isProcessing
+                                ? CircularProgressIndicator()
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              elevation: 10,
+                                              primary: Colors.lightGreen,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 50,
+                                                      vertical: 20),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50))),
+                                          onPressed: () async {
+                                            _focusEmail.unfocus();
+                                            _focusPassword.unfocus();
+
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              setState(() {
+                                                _isProcessing = true;
+                                              });
+
+                                              User? user = await FireAuth
+                                                  .signInUsingEmailPassword(
+                                                email:
+                                                    _emailTextController.text,
+                                                password:
+                                                    _passwordTextController
+                                                        .text,
+                                              );
+
+                                              setState(() {
+                                                _isProcessing = false;
+                                              });
+
+                                              if (user != null) {
+                                                Navigator.of(context)
+                                                    .pushReplacement(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        MainInterface(
+                                                            user: user),
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          },
+                                          child: const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 40),
+                                            child: Text(
+                                              "Login",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ))
-            ],
-          )),
+                    )
+                  ],
+                ),
+              );
+            }
+
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
+      ),
     );
   }
+}
 
-  String? _myDataState;
+class FireAuth {
+  static Future<User?> signInUsingEmailPassword({
+    required String email,
+    required String password,
+  }) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
 
-  Widget loading() {
-    return FutureBuilder(builder: (context, snapshot) {
-      if (_myDataState == 'Loaded') {
-        SchedulerBinding.instance!.addPostFrameCallback((_) {
-          // Navigator.of(context).restorablePushNamed(SAgile.calendarRoute);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) =>  MainInterface()));
-        });
-      }
-      if (_myDataState == 'Timeout') {
-        return Column(
-          children: [
-            MaterialButton(
-              color: Theme.of(context).backgroundColor,
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(8.0),
-              child: const Icon(
-                Icons.refresh,
-              ),
-              onPressed: _loads,
-            ),
-            const Text('Timed out!'),
-          ],
-        );
-      }
-      if (_myDataState == 'Loading') {
-        return CircularProgressIndicator(
-          color: Theme.of(context).backgroundColor,
-        );
-      }
-      return MaterialButton(
-        color: Theme.of(context).backgroundColor,
-        shape: const CircleBorder(),
-        padding: const EdgeInsets.all(8.0),
-        child: const Icon(
-          Icons.login,
-        ),
-        onPressed: _loads,
+    try {
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-    });
-  }
-
-  String? user;
-
-  Future<void> _loads() async {
-    FocusScope.of(context).unfocus();
-
-    if (_formKey.currentState!.validate()) {
-      String? _curState = 'Loading';
-
-      setState(() {
-        _myDataState = _curState;
-      });
-
-      _curState = await _login();
-      setState(() {
-        _myDataState = _curState;
-      });
+      user = userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      Fluttertoast.showToast(
+        msg: "Wrong Email and Password",
+        toastLength: Toast.LENGTH_LONG,
+      );
     }
-  }
 
-  Future loginAuthData(data) async {
-    var res = await Network().authData(data, '/login');
-    var body = json.decode(res.body);
-    var success;
-    if (body['success']) {
-      print(body['user'].toString());
-      // SharedPreferences localStorage = await SharedPreferences.getInstance();
-      // localStorage.setString('token', json.encode(body['token']));
-      // localStorage.setString('user', json.encode(body['user']));
-      // user = jsonDecode(localStorage.getString('user').toString());
-      success = 'Loaded';
-    }
-    return success;
-  }
-
-  Future _login() async {
-    var data = {'email': email, 'password': password};
-
-    return await loginAuthData(data)
-        .timeout(const Duration(minutes: 1), onTimeout: () => 'Timeout');
+    return user;
   }
 }

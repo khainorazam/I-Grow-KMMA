@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/newpost.dart';
 import 'package:flutter_group9/mytimeline.dart';
+import 'package:flutter_group9/test.dart';
+import 'package:flutter_group9/test2.dart';
+import 'package:flutter_group9/test3.dart';
+
+import 'widget/custom_post.dart';
 
 class Timeline extends StatelessWidget {
   const Timeline({Key? key}) : super(key: key);
@@ -20,7 +25,7 @@ class Timeline extends StatelessWidget {
       "Username",
     ];
     final List<String> time = [
-      "JustNow",
+      "Just Now",
       "6min",
       "19h",
       "Yesterday",
@@ -32,7 +37,7 @@ class Timeline extends StatelessWidget {
       "Hehe!!!",
     ];
     final List<String> storyUrl = [
-      "https://images.unsplash.com/photo-1600055882386-5d18b02a0d51?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=621&q=80",
+      "",
       "https://images.unsplash.com/photo-1600174297956-c6d4d9998f14?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80",
       "https://images.unsplash.com/photo-1600008646149-eb8835bd979d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=666&q=80",
       "https://images.unsplash.com/photo-1502920313556-c0bbbcd00403?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80",
@@ -51,19 +56,22 @@ class Timeline extends StatelessWidget {
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Color(0xFFC5E1A5),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 8.0, vertical: 10.0),
                   child: Column(
-                    children: [
+                    children: <Widget>[
                       Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 25.0,
-                            backgroundImage: NetworkImage(avatarUrl[0]),
+                        children: <Widget>[
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: CircleAvatar(
+                              radius: 25.0,
+                              backgroundImage: NetworkImage(avatarUrl[0]),
+                            ),
                           ),
                           SizedBox(
                             width: 10.0,
@@ -135,6 +143,10 @@ class Timeline extends StatelessWidget {
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => NewPost()));
+          // context,
+          // MaterialPageRoute(builder: (context) => AddSharing()));
+          //context,MaterialPageRoute(builder: (context) => GetUserName()));
+          //context,MaterialPageRoute(builder: (context) => CameraWidget()));
         },
         child: const Icon(Icons.add),
         backgroundColor: Colors.green[700],
@@ -168,88 +180,4 @@ Widget actionButton(
       ),
     );
   });
-}
-
-Widget feedBox(String avatarUrl, String userName, String date,
-    String contentText, String contentImg) {
-  return Container(
-    margin: EdgeInsets.only(bottom: 20.0),
-    width: double.infinity,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12.0),
-      color: Color(0xFFC5E1A5),
-    ),
-    child: Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(avatarUrl),
-                radius: 25.0,
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userName,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(
-                      date,
-                      style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          if (contentText != "")
-            Text(
-              contentText,
-              style: TextStyle(color: Colors.black, fontSize: 16.0),
-            ),
-          SizedBox(
-            height: 10.0,
-          ),
-          if (contentImg != "") Image.network(contentImg),
-          SizedBox(
-            height: 10.0,
-          ),
-          Divider(
-            thickness: 1.5,
-            color: Color(0xFF505050),
-          ),
-          Row(
-            children: [
-              actionButton(Icons.thumb_up, "Like", Color(0xFF505050), ""),
-              actionButton(Icons.thumb_down, "Dislike", Color(0xFF505050), ""),
-            ],
-          )
-        ],
-      ),
-    ),
-  );
 }

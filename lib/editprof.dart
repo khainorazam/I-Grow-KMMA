@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/data/setting.dart';
 import 'package:flutter_group9/login.dart';
@@ -22,6 +23,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  bool _isSigningOut = false;
   bool showPassword = false;
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -52,9 +54,21 @@ class _EditProfileState extends State<EditProfile> {
                 Padding(
                   padding: const EdgeInsets.only(left: 310),
                   child: MaterialButton(
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Login()));
+                    onPressed: () async {
+                      setState(() {
+                        _isSigningOut = true;
+                      });
+                      await FirebaseAuth.instance.signOut();
+                      setState(() {
+                        _isSigningOut = false;
+                      });
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => Login(),
+                        ),
+                      );
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) => Login()));
                     },
                     child: Icon(Icons.logout_outlined,
                         size: 35, color: Colors.black87),
@@ -167,38 +181,35 @@ class _EditProfileState extends State<EditProfile> {
       );
   Widget buildTextField(
       String labelText, String placeholder, bool isPasswordTextField) {
-    return Expanded(
-      // padding: const EdgeInsets.only(bottom: 35.0),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 18.0),
-        //padding: const EdgeInsets.only(bottom: 35.0),
-        child: SingleChildScrollView(
-          child: TextField(
-            obscureText: isPasswordTextField ? showPassword : false,
-            decoration: InputDecoration(
-                suffixIcon: isPasswordTextField
-                    ? IconButton(
-                        onPressed: () {
-                          setState(() {
-                            showPassword = !showPassword;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.remove_red_eye,
-                          color: Colors.grey,
-                        ),
-                      )
-                    : null,
-                contentPadding: EdgeInsets.only(bottom: 3),
-                labelText: labelText,
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                hintText: placeholder,
-                hintStyle: TextStyle(
-                  fontSize: 16,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.black,
-                )),
-          ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18.0),
+      //padding: const EdgeInsets.only(bottom: 35.0),
+      child: SingleChildScrollView(
+        child: TextField(
+          obscureText: isPasswordTextField ? showPassword : false,
+          decoration: InputDecoration(
+              suffixIcon: isPasswordTextField
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.grey,
+                      ),
+                    )
+                  : null,
+              contentPadding: EdgeInsets.only(bottom: 3),
+              labelText: labelText,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+              hintText: placeholder,
+              hintStyle: TextStyle(
+                fontSize: 16,
+                fontStyle: FontStyle.italic,
+                color: Colors.black,
+              )),
         ),
       ),
     );

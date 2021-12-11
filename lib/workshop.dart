@@ -25,225 +25,230 @@ class Workshop extends StatelessWidget {
             ),
           ),
           Container(
+
               color: Colors.white,
+              height: 350,
+              width: 400,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: const [
-                      DataColumn(
-                        label: Text(
-                          'Programme Name',
+                // child: SingleChildScrollView(
+                //scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  columnSpacing: 10,
+                  dataRowHeight: 100,
+                  columns: const [
+                    DataColumn(
+                      label: Text(
+                        'Programe',
+                        style: TextStyle(
+                            fontSize: 12, fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Description',
+                        style: TextStyle(
+                            fontSize: 12, fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Date',
+                        style: TextStyle(
+                            fontSize: 12, fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Session',
+                        style: TextStyle(
+                            fontSize: 12, fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(''),
+                    ),
+                  ],
+                  rows: [
+                    DataRow(
+                      cells: <DataCell>[
+                        const DataCell(Text(
+                          'Pucuk Ubi',
                           style: TextStyle(
-                              fontSize: 15, fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Description',
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          'pucuk abi',
                           style: TextStyle(
-                              fontSize: 15, fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Date',
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          'March 19,2021',
                           style: TextStyle(
-                              fontSize: 15, fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Session',
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          '8.00am-12.00pm',
                           style: TextStyle(
-                              fontSize: 15, fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(''),
-                      ),
-                    ],
-                    rows: [
-                      DataRow(
-                        cells: <DataCell>[
-                          const DataCell(Text(
-                            'Pucuk Ubi',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            'pucuk abi',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            'March 19,2021',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            '8.00am-12.00pm',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          DataCell(
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        fullscreenDialog: true,
-                                        builder: (_) => BookingForm(
-                                              programmeName: 'Pucuk Ubi',
-                                              date: 'March 19,2021',
-                                            )));
-                              },
-                              color: Colors.lightGreen.shade100,
-                              child: const Text(
-                                'Book',
-                                style: TextStyle(
-                                    fontSize: 15, fontStyle: FontStyle.italic),
-                              ),
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        DataCell(
+                          MaterialButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      fullscreenDialog: true,
+                                      builder: (_) => BookingForm(
+                                        programmeName: 'Pucuk Ubi',
+                                        date: 'March 19,2021',
+                                      )));
+                            },
+                            color: Colors.lightGreen.shade100,
+                            child: const Text(
+                              'Book',
+                              style: TextStyle(
+                                  fontSize: 10, fontStyle: FontStyle.italic),
                             ),
                           ),
-                        ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          const DataCell(Text(
-                            'Carrot',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            'Carrot',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            'May 18,2021',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            '8.00am-12.00pm',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          DataCell(
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        fullscreenDialog: true,
-                                        builder: (_) => BookingForm(
-                                              programmeName: 'Carrot',
-                                              date: 'May 18,2021',
-                                            )));
-                              },
-                              color: Colors.lightGreen.shade100,
-                              child: const Text(
-                                'Book',
-                                style: TextStyle(
-                                    fontSize: 15, fontStyle: FontStyle.italic),
-                              ),
+                        ),
+                      ],
+                    ),
+                    DataRow(
+                      cells: <DataCell>[
+                        const DataCell(Text(
+                          'Carrot',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          'Carrot',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          'May 18,2021',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          '8.00am-12.00pm',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        DataCell(
+                          MaterialButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      fullscreenDialog: true,
+                                      builder: (_) => BookingForm(
+                                        programmeName: 'Carrot',
+                                        date: 'May 18,2021',
+                                      )));
+                            },
+                            color: Colors.lightGreen.shade100,
+                            child: const Text(
+                              'Book',
+                              style: TextStyle(
+                                  fontSize: 10, fontStyle: FontStyle.italic),
                             ),
                           ),
-                        ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          const DataCell(Text(
-                            'Cili Padi',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            'Penanaman cili padi ini memerlukan ilmu yang tepat',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            'May 1,2021',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            '8.00am-12.00pm',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          DataCell(
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        fullscreenDialog: true,
-                                        builder: (_) => BookingForm(
-                                              programmeName: 'Cili Padi',
-                                              date: 'May 1,2021',
-                                            )));
-                              },
-                              color: Colors.lightGreen.shade100,
-                              child: const Text(
-                                'Book',
-                                style: TextStyle(
-                                    fontSize: 15, fontStyle: FontStyle.italic),
-                              ),
+                        ),
+                      ],
+                    ),
+                    DataRow(
+                      cells: <DataCell>[
+                        const DataCell(Text(
+                          'Cili Padi',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          'Penanaman cili padi ini memerlukan ilmu yang tepat',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          'May 1,2021',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          '8.00am-12.00pm',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        DataCell(
+                          MaterialButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      fullscreenDialog: true,
+                                      builder: (_) => BookingForm(
+                                        programmeName: 'Cili Padi',
+                                        date: 'May 1,2021',
+                                      )));
+                            },
+                            color: Colors.lightGreen.shade100,
+                            child: const Text(
+                              'Book',
+                              style: TextStyle(
+                                  fontSize: 10, fontStyle: FontStyle.italic),
                             ),
                           ),
-                        ],
-                      ),
-                      DataRow(
-                        cells: <DataCell>[
-                          const DataCell(Text(
-                            'Kubis bunga',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            'Kubis bunga',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            'June 30,2021',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          const DataCell(Text(
-                            '8.00am-12.00pm',
-                            style: TextStyle(
-                                fontSize: 15, fontStyle: FontStyle.italic),
-                          )),
-                          DataCell(
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        fullscreenDialog: true,
-                                        builder: (_) => BookingForm(
-                                              programmeName: 'Kubis bunga',
-                                              date: 'June 30,2021',
-                                            )));
-                              },
-                              color: Colors.lightGreen.shade100,
-                              child: const Text(
-                                'Book',
-                                style: TextStyle(
-                                    fontSize: 15, fontStyle: FontStyle.italic),
-                              ),
+                        ),
+                      ],
+                    ),
+                    DataRow(
+                      cells: <DataCell>[
+                        const DataCell(Text(
+                          'Kubis bunga',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          'Kubis bunga',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          'June 30,2021',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        const DataCell(Text(
+                          '8.00am-12.00pm',
+                          style: TextStyle(
+                              fontSize: 10, fontStyle: FontStyle.italic),
+                        )),
+                        DataCell(
+                          MaterialButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      fullscreenDialog: true,
+                                      builder: (_) => BookingForm(
+                                        programmeName: 'Kubis bunga',
+                                        date: 'June 30,2021',
+                                      )));
+                            },
+                            color: Colors.lightGreen.shade100,
+                            child: const Text(
+                              'Book',
+                              style: TextStyle(
+                                  fontSize: 10, fontStyle: FontStyle.italic),
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
+                //  ),
               )),
         ],
       ),
@@ -359,7 +364,7 @@ class _BookingFormState extends State<BookingForm> {
               },
               items: duration
                   .map((duration) => DropdownMenuItem(
-                      value: duration, child: Text("$duration")))
+                  value: duration, child: Text("$duration")))
                   .toList(),
             ),
             const SizedBox(height: 25),

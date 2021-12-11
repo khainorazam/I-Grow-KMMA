@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_group9/editprof.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_group9/workshop.dart';
 import 'package:flutter_group9/editprof.dart';
 
 class MainInterface extends StatelessWidget {
-  MainInterface({Key? key}) : super(key: key);
+  MainInterface({Key? key, required User user}) : super(key: key);
   int selectedPage = 0;
   MainInterface.select(this.selectedPage);
 
