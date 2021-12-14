@@ -76,10 +76,11 @@ class _LoginState extends State<Login> {
               return Padding(
                 padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Column(
                       children: const <Widget>[
+                        SizedBox(height: 70,),
                         Text(
                           "Login",
                           style: TextStyle(
@@ -95,7 +96,8 @@ class _LoginState extends State<Login> {
                         )
                       ],
                     ),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 70.0),
+
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Form(
@@ -109,9 +111,9 @@ class _LoginState extends State<Login> {
                               ),
                               title: TextFormField(
                                 decoration: const InputDecoration(
-                                    hintText: "Enter Your Email",
+                                    hintText: "Email",
                                     hintStyle: TextStyle(
-                                        fontSize: 15.0, color: Colors.black12),
+                                        fontSize: 15.0, color: Colors.lightGreen),
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
@@ -139,9 +141,9 @@ class _LoginState extends State<Login> {
                               ),
                               title: TextFormField(
                                 decoration: const InputDecoration(
-                                    hintText: "Enter Your Password",
+                                    hintText: "Password",
                                     hintStyle: TextStyle(
-                                        fontSize: 15.0, color: Colors.black12),
+                                        fontSize: 15.0, color: Colors.lightGreen),
                                     focusedBorder: InputBorder.none,
                                     enabledBorder: InputBorder.none,
                                     errorBorder: InputBorder.none,
@@ -164,13 +166,14 @@ class _LoginState extends State<Login> {
                               ),
                               tileColor: Colors.white,
                             ),
-                            SizedBox(height: 24.0),
+                            SizedBox(height: 50.0),
                             _isProcessing
                                 ? CircularProgressIndicator()
                                 : Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
+                                      
                                       Expanded(
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
