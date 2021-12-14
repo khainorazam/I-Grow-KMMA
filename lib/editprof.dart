@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_group9/data/setting.dart';
+import 'package:flutter_group9/setting.dart';
 import 'package:flutter_group9/login.dart';
 import 'package:flutter_group9/timeline.dart';
 
@@ -27,21 +27,41 @@ class EditProfile extends StatefulWidget {
   _EditProfileState createState() => _EditProfileState();
 }
 
-String userID = "";
-String name = "";
-String email = "";
-String location = "";
-String about = "";
-String status = "";
+// final FirebaseAuth auth = FirebaseAuth.instance;
+
+// void inputData() {
+//   final User? user = auth.currentUser;
+//   final uid = user!.uid;
+//   // here you write the codes to input the data into firestore
+// }
+
+// String userID = "";
+// String name = "";
+// String email = "";
+// String location = "";
+// String about = "";
+// String status = "";
 
 CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 class _EditProfileState extends State<EditProfile> {
+  String userID = "";
+  String name = "";
+  String email = "";
+  String location = "";
+  String about = "";
+  String status = "";
   bool _isSigningOut = false;
   bool showPassword = false;
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference sharing =
+        FirebaseFirestore.instance.collection('users');
+    //to get current user ID
+    getCurrentUser();
+    userID = documentId!;
+
     var firebaseUser = FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance
         .collection("users")
@@ -56,6 +76,29 @@ class _EditProfileState extends State<EditProfile> {
     });
 
     return Scaffold(
+      // appBar: AppBar(
+      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //   elevation: 1,
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.arrow_back,
+      //       color: Colors.green,
+      //     ),
+      //     onPressed: () {},
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(
+      //         Icons.settings,
+      //         color: Colors.green,
+      //       ),
+      //       onPressed: () {
+      //         Navigator.of(context).push(MaterialPageRoute(
+      //             builder: (BuildContext context) => SettingsPage()));
+      //       },
+      //     ),
+      //   ],
+      // ),
       backgroundColor: Colors.lightGreen.shade100,
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
@@ -64,28 +107,41 @@ class _EditProfileState extends State<EditProfile> {
             FocusScope.of(context).unfocus();
           },
           child: ListView(
-            children: [
+            children: <Widget>[
+              //   Padding(
+              //     padding: const EdgeInsets.only(left: 310),
+              //     child: MaterialButton(
+              //       onPressed: () async {
+              //         setState(() {
+              //           _isSigningOut = true;
+              //         });
+              //         await FirebaseAuth.instance.signOut();
+              //         setState(() {
+              //           _isSigningOut = false;
+              //         });
+              //         Navigator.of(context).pushReplacement(
+              //           MaterialPageRoute(
+              //             builder: (context) => Login(),
+              //           ),
+              //         );
+              //         // Navigator.push(context,
+              //         //     MaterialPageRoute(builder: (context) => Login()));
+              //       },
+              //       child: Icon(Icons.logout_outlined,
+              //           size: 35, color: Colors.black87),
+              //     ),
+              //   ),
               Padding(
                 padding: const EdgeInsets.only(left: 310),
                 child: MaterialButton(
-                  onPressed: () async {
-                    setState(() {
-                      _isSigningOut = true;
-                    });
-                    await FirebaseAuth.instance.signOut();
-                    setState(() {
-                      _isSigningOut = false;
-                    });
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => Login(),
-                      ),
-                    );
-                    // Navigator.push(context,
-                    //     MaterialPageRoute(builder: (context) => Login()));
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => SettingsPage()));
                   },
-                  child: Icon(Icons.logout_outlined,
-                      size: 35, color: Colors.black87),
+                  child: Icon(
+                    Icons.settings,
+                    color: Colors.green,
+                  ),
                 ),
               ),
               Text(
@@ -129,14 +185,17 @@ class _EditProfileState extends State<EditProfile> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              width: 4,
+                              width: 1.5,
                               color: Theme.of(context).scaffoldBackgroundColor,
                             ),
                             color: Colors.green,
                           ),
-                          child: Icon(
-                            Icons.edit,
+                          child: IconButton(
+                            icon: const Icon(Icons.edit),
                             color: Colors.white,
+                            onPressed: () {},
+                            //size: 10,
+                            //align:
                           ),
                         )),
                   ],
@@ -184,6 +243,11 @@ class _EditProfileState extends State<EditProfile> {
                           .update({"about": "okay"}).then((_) {
                         print("success!");
                       });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MainInterface.select(4),
+                          ));
                     },
                     color: Colors.green,
                     padding: EdgeInsets.symmetric(horizontal: 50),
@@ -205,6 +269,7 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
     );
+    userID = "Null";
   }
 
   Widget buildTextField(

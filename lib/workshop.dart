@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_group9/setting.dart';
+import 'package:flutter_group9/login.dart';
 
 List duration = ['1 H', '2 H', '3 H', ' 4 H'];
 // ignore: prefer_typing_uninitialized_variables
@@ -25,7 +31,6 @@ class Workshop extends StatelessWidget {
             ),
           ),
           Container(
-
               color: Colors.white,
               height: 350,
               width: 400,
@@ -100,9 +105,9 @@ class Workshop extends StatelessWidget {
                                   MaterialPageRoute(
                                       fullscreenDialog: true,
                                       builder: (_) => BookingForm(
-                                        programmeName: 'Pucuk Ubi',
-                                        date: 'March 19,2021',
-                                      )));
+                                            programmeName: 'Pucuk Ubi',
+                                            date: 'March 19,2021',
+                                          )));
                             },
                             color: Colors.lightGreen.shade100,
                             child: const Text(
@@ -144,9 +149,9 @@ class Workshop extends StatelessWidget {
                                   MaterialPageRoute(
                                       fullscreenDialog: true,
                                       builder: (_) => BookingForm(
-                                        programmeName: 'Carrot',
-                                        date: 'May 18,2021',
-                                      )));
+                                            programmeName: 'Carrot',
+                                            date: 'May 18,2021',
+                                          )));
                             },
                             color: Colors.lightGreen.shade100,
                             child: const Text(
@@ -188,9 +193,9 @@ class Workshop extends StatelessWidget {
                                   MaterialPageRoute(
                                       fullscreenDialog: true,
                                       builder: (_) => BookingForm(
-                                        programmeName: 'Cili Padi',
-                                        date: 'May 1,2021',
-                                      )));
+                                            programmeName: 'Cili Padi',
+                                            date: 'May 1,2021',
+                                          )));
                             },
                             color: Colors.lightGreen.shade100,
                             child: const Text(
@@ -232,9 +237,9 @@ class Workshop extends StatelessWidget {
                                   MaterialPageRoute(
                                       fullscreenDialog: true,
                                       builder: (_) => BookingForm(
-                                        programmeName: 'Kubis bunga',
-                                        date: 'June 30,2021',
-                                      )));
+                                            programmeName: 'Kubis bunga',
+                                            date: 'June 30,2021',
+                                          )));
                             },
                             color: Colors.lightGreen.shade100,
                             child: const Text(
@@ -273,6 +278,7 @@ class BookingForm extends StatefulWidget {
 }
 
 class _BookingFormState extends State<BookingForm> {
+  bool _isSigningOut = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -364,7 +370,7 @@ class _BookingFormState extends State<BookingForm> {
               },
               items: duration
                   .map((duration) => DropdownMenuItem(
-                  value: duration, child: Text("$duration")))
+                      value: duration, child: Text("$duration")))
                   .toList(),
             ),
             const SizedBox(height: 25),
