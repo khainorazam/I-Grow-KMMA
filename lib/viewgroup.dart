@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/creategrouppost.dart';
-import 'package:flutter_group9/group.dart';
-import 'package:flutter_group9/maininterface.dart';
 import 'package:flutter_group9/viewGroupMember.dart';
 import 'package:flutter_group9/widget/custom_page_route.dart';
+
+import 'aboutgroup.dart';
 
 // void main() {
 //   runApp(ViewGroup());
@@ -180,7 +180,7 @@ class ViewGroupState extends State<ViewGroup> {
             ),
             title: const Text(
               "Group Page",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              // style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           body: Container(
@@ -224,40 +224,26 @@ class ViewGroupState extends State<ViewGroup> {
                             ),
                           ),
 
-                          SizedBox(
+                          const SizedBox(
                             height: 22,
                           ),
 
                           //start of group title
                           Column(
                             children: [
-                              Stack(
-                                alignment: AlignmentDirectional.topCenter,
-                                children: <Widget>[
-                                  PhysicalModel(
-                                    color: Colors.white,
-                                    shadowColor: Colors.green,
-                                    elevation: 20,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Container(
-                                      width: 360,
-                                      height: 145,
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF0E3311)
-                                            .withOpacity(0.5),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
+                              Padding(
+                                padding: const EdgeInsets.only(right:18.0,left:18.0),
+                                child: Material(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  elevation:20,
+                                  shadowColor:Colors.green,
+                                  child: Container(
                                     width: MediaQuery.of(context).size.width,
-                                    margin: const EdgeInsets.only(
-                                        left: 24.0, right: 24.0),
                                     padding: const EdgeInsets.all(12.0),
                                     decoration: BoxDecoration(
                                       color: Colors.grey[200],
                                       borderRadius: BorderRadius.circular(10.0),
+                                      // border: Border.all(color: Colors.black)
                                       //  boxShadow: const [BoxShadow(
                                       //    blurRadius: 10,
                                       //    color: Colors.grey,
@@ -270,14 +256,26 @@ class ViewGroupState extends State<ViewGroup> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            const Text(
+                                             Text(
                                               "Group Bawang",
                                               style: TextStyle(
                                                   fontSize: 25,
+                                                  color: Colors.grey[800],
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+
+                                                Navigator.push(
+                                                  context,
+                                                  CustomPageRoute(
+                                                    child:  AboutGroup(),
+                                                    direction: AxisDirection.left)
+                                                    
+                                                    );
+
+
+                                              },
                                               icon: Icon(
                                                 Icons.info_outline_rounded,
                                                 color: Colors.green[700],
@@ -340,8 +338,8 @@ class ViewGroupState extends State<ViewGroup> {
                                                         child:  ViewGroupMember(),
                                                         direction: AxisDirection.left)
                                                         );
-
-
+                                
+                                
                                                   },
                                                   child: Text(
                                                     "Show Members",
@@ -377,7 +375,7 @@ class ViewGroupState extends State<ViewGroup> {
                                       ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                               SizedBox(
                                 height: 20,

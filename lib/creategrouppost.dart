@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
-
 class CreateGroupPost extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -31,7 +29,7 @@ class CreateGroupPostState extends State<CreateGroupPost>{
           onPressed: (){Navigator.pop(context);}, 
           icon: Icon(Icons.clear), 
           color: Colors.green.shade700, 
-          tooltip: "Post", ),
+          tooltip: "Cancel", ),
         actions: <Widget>[
           // IconButton(onPressed: (){}, icon: Icon(Icons.post_add_outlined), color: Colors.green.shade700, tooltip: "Post", )
           OutlinedButton(

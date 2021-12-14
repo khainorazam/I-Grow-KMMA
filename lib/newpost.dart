@@ -70,7 +70,7 @@ class NewPostState extends State<NewPost> {
             'time': now
           })
           .then((value) => print("Sharing Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+          .catchError((error) => print("Failed to add sharing: $error"));
     }
 
     void _openCamImage(BuildContext context) async {
