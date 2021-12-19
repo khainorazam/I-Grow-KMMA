@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_group9/setting.dart';
-import 'package:flutter_group9/login.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_group9/myworkshop.dart';
+import 'package:intl/intl.dart';
 
 List duration = ['1 H', '2 H', '3 H', ' 4 H'];
 // ignore: prefer_typing_uninitialized_variables
 var dropDownValue;
+FirebaseAuth user = FirebaseAuth.instance;
 
 class Workshop extends StatelessWidget {
   const Workshop({Key? key}) : super(key: key);
@@ -17,246 +17,196 @@ class Workshop extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.lightGreen.shade100,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            color: Colors.lightGreen.shade100,
-            width: double.infinity,
-            child: const Center(
-              child: Text(
-                "Workshop",
-                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('workshop')
+              .doc('AsBVN2Eu9SgaFK68CyR1')
+              .snapshots(),
+          builder: (context, dynamic snapshot) {
+            if (snapshot.hasError) {
+              return const Text('Something went wrong');
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text("Loading");
+            }
+            Map data = snapshot.data.data();
+
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    color: Colors.lightGreen.shade100,
+                    width: double.infinity,
+                    child: const Center(
+                      child: Text(
+                        "Workshop",
+                        style: TextStyle(
+                            fontSize: 35, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.lightGreen.shade100,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const MyWorkShop()));
+                          },
+                          icon: const Icon(
+                            Icons.schedule_outlined,
+                            color: Colors.black,
+                          ),
+                          label: const Text(
+                            'My Workshop',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 10,
+                                fontStyle: FontStyle.italic),
+                          )),
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    // height: 350,
+                    // width: 400,
+                    //  child: SingleChildScrollView(
+                    // scrollDirection: Axis.vertical,
+                    // child: SingleChildScrollView(
+                    //scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columnSpacing: 10,
+                      dataRowHeight: 100,
+                      columns: const [
+                        DataColumn(
+                          label: Text(
+                            'Programe',
+                            style: TextStyle(
+                                fontSize: 12, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Description',
+                            style: TextStyle(
+                                fontSize: 12, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Date',
+                            style: TextStyle(
+                                fontSize: 12, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Session',
+                            style: TextStyle(
+                                fontSize: 12, fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(''),
+                        ),
+                      ],
+                      rows: [
+                        for (int i = 0; i < data['workshop'].length; i++)
+                          DataRow(cells: [
+                            DataCell(Text(
+                              data['workshop'][i]['programe'],
+                              style: const TextStyle(
+                                  fontSize: 10, fontStyle: FontStyle.italic),
+                            )),
+                            DataCell(Text(
+                              data['workshop'][i]['description'],
+                              style: const TextStyle(
+                                  fontSize: 10, fontStyle: FontStyle.italic),
+                            )),
+                            DataCell(Text(
+                              DateFormat.yMMMd()
+                                  .format(data['workshop'][i]['date'].toDate())
+                                  .toString(),
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            )),
+                            DataCell(Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  DateFormat.jm()
+                                      .format(data['workshop'][i]['sessionFrom']
+                                      .toDate())
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontSize: 10,
+                                      fontStyle: FontStyle.italic),
+                                ),
+                                const Text(
+                                  'to',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontStyle: FontStyle.italic),
+                                ),
+                                Text(
+                                  DateFormat.jm()
+                                      .format(data['workshop'][i]['sessionTo']
+                                      .toDate())
+                                      .toString(),
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ],
+                            )),
+                            DataCell(
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          fullscreenDialog: true,
+                                          builder: (_) => BookingForm(
+                                            programmeName: data['workshop']
+                                            [i]['programe'],
+                                            date: DateFormat.yMMMd()
+                                                .format(data['workshop'][i]
+                                            ['date']
+                                                .toDate())
+                                                .toString(),
+                                            index: data['workshop'][i],
+                                          )));
+                                },
+                                color: Colors.lightGreen.shade100,
+                                child: const Text(
+                                  'Book',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                          ])
+                      ],
+                    ),
+                    //  ),
+                    //),
+                  ),
+                ],
               ),
-            ),
-          ),
-          Container(
-              color: Colors.white,
-              height: 350,
-              width: 400,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                // child: SingleChildScrollView(
-                //scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columnSpacing: 10,
-                  dataRowHeight: 100,
-                  columns: const [
-                    DataColumn(
-                      label: Text(
-                        'Programe',
-                        style: TextStyle(
-                            fontSize: 12, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Description',
-                        style: TextStyle(
-                            fontSize: 12, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Date',
-                        style: TextStyle(
-                            fontSize: 12, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Session',
-                        style: TextStyle(
-                            fontSize: 12, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(''),
-                    ),
-                  ],
-                  rows: [
-                    DataRow(
-                      cells: <DataCell>[
-                        const DataCell(Text(
-                          'Pucuk Ubi',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          'pucuk abi',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          'March 19,2021',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          '8.00am-12.00pm',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        DataCell(
-                          MaterialButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      fullscreenDialog: true,
-                                      builder: (_) => BookingForm(
-                                            programmeName: 'Pucuk Ubi',
-                                            date: 'March 19,2021',
-                                          )));
-                            },
-                            color: Colors.lightGreen.shade100,
-                            child: const Text(
-                              'Book',
-                              style: TextStyle(
-                                  fontSize: 10, fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    DataRow(
-                      cells: <DataCell>[
-                        const DataCell(Text(
-                          'Carrot',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          'Carrot',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          'May 18,2021',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          '8.00am-12.00pm',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        DataCell(
-                          MaterialButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      fullscreenDialog: true,
-                                      builder: (_) => BookingForm(
-                                            programmeName: 'Carrot',
-                                            date: 'May 18,2021',
-                                          )));
-                            },
-                            color: Colors.lightGreen.shade100,
-                            child: const Text(
-                              'Book',
-                              style: TextStyle(
-                                  fontSize: 10, fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    DataRow(
-                      cells: <DataCell>[
-                        const DataCell(Text(
-                          'Cili Padi',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          'Penanaman cili padi ini memerlukan ilmu yang tepat',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          'May 1,2021',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          '8.00am-12.00pm',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        DataCell(
-                          MaterialButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      fullscreenDialog: true,
-                                      builder: (_) => BookingForm(
-                                            programmeName: 'Cili Padi',
-                                            date: 'May 1,2021',
-                                          )));
-                            },
-                            color: Colors.lightGreen.shade100,
-                            child: const Text(
-                              'Book',
-                              style: TextStyle(
-                                  fontSize: 10, fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    DataRow(
-                      cells: <DataCell>[
-                        const DataCell(Text(
-                          'Kubis bunga',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          'Kubis bunga',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          'June 30,2021',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        const DataCell(Text(
-                          '8.00am-12.00pm',
-                          style: TextStyle(
-                              fontSize: 10, fontStyle: FontStyle.italic),
-                        )),
-                        DataCell(
-                          MaterialButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      fullscreenDialog: true,
-                                      builder: (_) => BookingForm(
-                                            programmeName: 'Kubis bunga',
-                                            date: 'June 30,2021',
-                                          )));
-                            },
-                            color: Colors.lightGreen.shade100,
-                            child: const Text(
-                              'Book',
-                              style: TextStyle(
-                                  fontSize: 10, fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                //  ),
-              )),
-        ],
-      ),
+            );
+          }),
     );
   }
 }
@@ -266,11 +216,13 @@ class BookingForm extends StatefulWidget {
   dynamic programmeName;
   dynamic date;
   dynamic duration;
+  dynamic index;
   BookingForm({
     Key? key,
     this.programmeName,
     this.date,
     this.duration,
+    this.index,
   }) : super(key: key);
 
   @override
@@ -278,7 +230,6 @@ class BookingForm extends StatefulWidget {
 }
 
 class _BookingFormState extends State<BookingForm> {
-  bool _isSigningOut = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -370,7 +321,7 @@ class _BookingFormState extends State<BookingForm> {
               },
               items: duration
                   .map((duration) => DropdownMenuItem(
-                      value: duration, child: Text("$duration")))
+                  value: duration, child: Text("$duration")))
                   .toList(),
             ),
             const SizedBox(height: 25),
@@ -383,8 +334,31 @@ class _BookingFormState extends State<BookingForm> {
                   child: MaterialButton(
                     minWidth: double.infinity,
                     height: 60,
-                    onPressed: () {
-                      Navigator.pop(context);
+                    onPressed: () async {
+                      // Navigator.pop(context);
+                      Map workshopData = {
+                        'programe': widget.programmeName,
+                        'date': widget.date,
+                        'duration': dropDownValue ?? '1 H',
+                        'userName': user.currentUser!.email,
+                      };
+                      await FirebaseFirestore.instance
+                          .collection('workshop')
+                          .doc('AsBVN2Eu9SgaFK68CyR1')
+                          .update({
+                        'workshop': FieldValue.arrayRemove([widget.index]),
+                      });
+
+                      await FirebaseFirestore.instance
+                          .collection('myWorkshop')
+                          .doc(user.currentUser!.uid)
+                          .set({
+                        'myWorkshop': FieldValue.arrayUnion([workshopData])
+                      }, SetOptions(merge: true));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const MyWorkShop()));
                     },
                     color: const Color(0xFF8BC34A),
                     elevation: 0,
@@ -398,6 +372,7 @@ class _BookingFormState extends State<BookingForm> {
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
                           color: Colors.white),
+
                     ),
                   ),
                 ),
