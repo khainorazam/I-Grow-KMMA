@@ -18,6 +18,134 @@ class Friends extends StatefulWidget {
 CollectionReference friends = FirebaseFirestore.instance.collection('friends');
 
 class FriendsState extends State<Friends> {
+  List<Color> _colors = <Color>[
+    Colors.red.shade600,
+    Colors.green.shade600,
+  ];
+  //variable declaration
+  var _currentColorIndex = 0;
+  var _currentOverlayIndex = 1;
+  var friendStatus = true;
+  var _buttonText = "Remove Friend";
+
+  //update join button color
+  void updateColor() {
+    if (_currentColorIndex == 0) {
+      _currentColorIndex = 1;
+      _currentOverlayIndex = 0;
+    } else if (_currentColorIndex == 1) {
+      _currentColorIndex = 0;
+      _currentOverlayIndex = 1;
+    }
+  }
+
+  void deleteFriendReq() {
+    _showDeleteFriendReqDialog();
+  }
+
+  Future<void> _showDeleteFriendReqDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Friend Request'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Text('Would you like to delete this friend request?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // updateStatus();
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //Confirm Remove Dialog
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Friend Removal'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Text('Would you like to remove this friend?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                updateStatus();
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void removeFriend() {
+    if (friendStatus == false) {
+      updateStatus();
+    } else if (friendStatus == true) {
+      _showMyDialog();
+    }
+  }
+
+  //update join status
+  void updateStatus() {
+    if (friendStatus == true) {
+      setState(() {
+        friendStatus = false;
+        updateColor();
+        // updateMembersNum(_joinStatus);
+        // updateIsPostDisabled(_joinStatus);
+        // hasBeenPressed = true;
+      });
+      _buttonText = "Add Friend";
+      print("status : $friendStatus");
+    } else if (friendStatus == false) {
+      // _showMyDialog();
+      setState(() {
+        friendStatus = true;
+        updateColor();
+        // updateMembersNum(_joinStatus);
+        // updateIsPostDisabled(_joinStatus);
+        // hasBeenPressed = false;
+      });
+      _buttonText = "Remove Friend";
+      print("status : friendStatus");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,7 +249,8 @@ class FriendsState extends State<Friends> {
                                                       )),
                                                   IconButton(
                                                       iconSize: 35.0,
-                                                      onPressed: () {},
+                                                      onPressed:
+                                                          deleteFriendReq,
                                                       icon: Icon(
                                                         Icons.cancel_outlined,
                                                         color: Colors.red[600],
@@ -209,12 +338,17 @@ class FriendsState extends State<Friends> {
                                               child: ElevatedButton(
                                                 style: ButtonStyle(
                                                   backgroundColor:
-                                                      MaterialStateProperty.all<
-                                                          Color>(Colors.red),
+                                                      MaterialStateProperty
+                                                          .all<Color>(_colors[
+                                                              _currentColorIndex]),
+                                                  overlayColor:
+                                                      MaterialStateProperty
+                                                          .all<Color>(_colors[
+                                                              _currentOverlayIndex]),
                                                 ),
-                                                onPressed: () {},
-                                                child: const Text(
-                                                  'Remove Friend',
+                                                onPressed: removeFriend,
+                                                child: Text(
+                                                  _buttonText,
                                                 ),
                                               ),
                                             ),
@@ -464,8 +598,10 @@ class FriendsState extends State<Friends> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SearchFriends()));
+          showSearch(
+            context: context,
+            delegate: SearchFriends(),
+          );
         },
         child: const Icon(Icons.search),
         backgroundColor: Colors.green[700],
