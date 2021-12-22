@@ -28,6 +28,7 @@ class ViewGroupState extends State<ViewGroup> {
   var _membersCount = 1;
   var _currentColorIndex = 0;
   var _currentOverlayIndex = 1;
+
   var _joinStatus = false;
   var _buttonText = "Join";
   var _isPostDisabled = true;
@@ -145,7 +146,6 @@ class ViewGroupState extends State<ViewGroup> {
 
   @override
   Widget build(BuildContext context) {
-    
     // final List<String> memberPic = [
     //   "assets/Daus.jpg",
     //   "assets/Guy1.jfif"
@@ -232,11 +232,12 @@ class ViewGroupState extends State<ViewGroup> {
                           Column(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(right:18.0,left:18.0),
+                                padding: const EdgeInsets.only(
+                                    right: 18.0, left: 18.0),
                                 child: Material(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  elevation:20,
-                                  shadowColor:Colors.green,
+                                  elevation: 20,
+                                  shadowColor: Colors.green,
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,
                                     padding: const EdgeInsets.all(12.0),
@@ -256,7 +257,7 @@ class ViewGroupState extends State<ViewGroup> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                             Text(
+                                            Text(
                                               "Group Bawang",
                                               style: TextStyle(
                                                   fontSize: 25,
@@ -265,16 +266,12 @@ class ViewGroupState extends State<ViewGroup> {
                                             ),
                                             IconButton(
                                               onPressed: () {
-
                                                 Navigator.push(
-                                                  context,
-                                                  CustomPageRoute(
-                                                    child:  AboutGroup(),
-                                                    direction: AxisDirection.left)
-                                                    
-                                                    );
-
-
+                                                    context,
+                                                    CustomPageRoute(
+                                                        child: AboutGroup(),
+                                                        direction: AxisDirection
+                                                            .left));
                                               },
                                               icon: Icon(
                                                 Icons.info_outline_rounded,
@@ -332,14 +329,14 @@ class ViewGroupState extends State<ViewGroup> {
                                                 width: 150,
                                                 child: ElevatedButton(
                                                   onPressed: () {
-                                                     Navigator.push(
-                                                       context,
-                                                     CustomPageRoute(
-                                                        child:  ViewGroupMember(),
-                                                        direction: AxisDirection.left)
-                                                        );
-                                
-                                
+                                                    Navigator.push(
+                                                        context,
+                                                        CustomPageRoute(
+                                                            child:
+                                                                ViewGroupMember(),
+                                                            direction:
+                                                                AxisDirection
+                                                                    .left));
                                                   },
                                                   child: Text(
                                                     "Show Members",
@@ -713,15 +710,15 @@ class ViewGroupState extends State<ViewGroup> {
                 ],
               )),
           floatingActionButton: FloatingActionButton(
-            onPressed:
-                _isPostDisabled ? null : (){
-                   Navigator.push(
-                      context,
-                      CustomPageRoute(
-                        child:  CreateGroupPost(),
-                        direction: AxisDirection.up)
-                  );
-                },
+            onPressed: _isPostDisabled
+                ? null
+                : () {
+                    Navigator.push(
+                        context,
+                        CustomPageRoute(
+                            child: CreateGroupPost(),
+                            direction: AxisDirection.up));
+                  },
             child: Icon(
               Icons.add_outlined,
               color: _isPostDisabled ? Colors.transparent : Colors.white70,

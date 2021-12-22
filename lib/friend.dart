@@ -4,7 +4,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/login.dart';
 import 'package:flutter_group9/mytimeline.dart';
+import 'package:flutter_group9/profile.dart';
 import 'package:flutter_group9/searchfriends.dart';
+import 'package:flutter_group9/widget/custom_page_route.dart';
 
 class Friends extends StatefulWidget {
   const Friends({Key? key}) : super(key: key);
@@ -142,7 +144,7 @@ class FriendsState extends State<Friends> {
         // hasBeenPressed = false;
       });
       _buttonText = "Remove Friend";
-      print("status : friendStatus");
+      print("status : $friendStatus");
     }
   }
 
@@ -195,7 +197,13 @@ class FriendsState extends State<Friends> {
                             child: SizedBox(
                               height: 60.0,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      CustomPageRoute(
+                                          child: const Profile(),
+                                          direction: AxisDirection.left));
+                                },
                                 style: ButtonStyle(
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
