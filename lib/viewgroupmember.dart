@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/viewgroup.dart';
+import 'package:flutter_group9/widget/custom_title.dart';
 
 class ViewGroupMember extends StatelessWidget{
 
@@ -46,35 +47,37 @@ class ViewGroupMember extends StatelessWidget{
 
                 children: <Widget>[
 
-                  Padding(
-                      padding: const EdgeInsets.only(left:18, top:20),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Stack(
-                          children: <Widget>[
-                            // Stroked text as border.
-                            Text(
-                              'Our Big Family !',
-                              style: TextStyle(
-                                fontSize: 40,
-                                foreground: Paint()
-                                  ..style = PaintingStyle.stroke
-                                  ..strokeWidth = 6
-                                  ..color = Colors.green[700]!,
-                              ),
-                            ),
-                            // Solid text as fill.
-                            Text(
-                              'Our Big Family !',
-                              style: TextStyle(
-                                fontSize: 40,
-                                color: Colors.lightGreen[100],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  CustomTitle("Our Big Family !"),
+
+                  // Padding(
+                  //     padding: const EdgeInsets.only(left:18, top:20),
+                  //     child: Align(
+                  //       alignment: Alignment.topLeft,
+                  //       child: Stack(
+                  //         children: <Widget>[
+                  //           // Stroked text as border.
+                  //           Text(
+                  //             'Our Big Family !',
+                  //             style: TextStyle(
+                  //               fontSize: 40,
+                  //               foreground: Paint()
+                  //                 ..style = PaintingStyle.stroke
+                  //                 ..strokeWidth = 6
+                  //                 ..color = Colors.green[700]!,
+                  //             ),
+                  //           ),
+                  //           // Solid text as fill.
+                  //           Text(
+                  //             'Our Big Family !',
+                  //             style: TextStyle(
+                  //               fontSize: 40,
+                  //               color: Colors.lightGreen[100],
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
                   SizedBox(height: 22,),
 
                 //list name start here

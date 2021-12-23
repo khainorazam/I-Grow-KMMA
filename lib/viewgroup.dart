@@ -257,8 +257,8 @@ class ViewGroupState extends State<ViewGroup> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                              "Group Bawang",
+                                             Text(
+                                              "Group Bawang Sentul",
                                               style: TextStyle(
                                                   fontSize: 25,
                                                   color: Colors.grey[800],

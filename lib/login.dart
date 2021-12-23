@@ -75,173 +75,175 @@ class _LoginState extends State<Login> {
             if (snapshot.connectionState == ConnectionState.done) {
               return Padding(
                 padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      children: const <Widget>[
-                        SizedBox(height: 70,),
-                        Text(
-                          "Login",
-                          style: TextStyle(
-                              fontSize: 60, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Login to your account",
-                          style:
-                              TextStyle(fontSize: 15, color: Colors.lightGreen),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 70.0),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: <Widget>[
-                            ListTile(
-                              leading: Icon(
-                                Icons.email,
-                                color: const Color(0xFF8BC34A),
-                              ),
-                              title: TextFormField(
-                                decoration: const InputDecoration(
-                                    hintText: "Email",
-                                    hintStyle: TextStyle(
-                                        fontSize: 15.0, color: Colors.lightGreen),
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none),
-                                keyboardType: TextInputType.emailAddress,
-                                controller: _emailTextController,
-                                focusNode: _focusEmail,
-                                validator: (emailValue) {
-                                  if (emailValue == null) {
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: const <Widget>[
+                          SizedBox(height: 70,),
+                          Text(
+                            "Login",
+                            style: TextStyle(
+                                fontSize: 60, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "Login to your account",
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.lightGreen),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 70.0),
+                
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                leading: Icon(
+                                  Icons.email,
+                                  color: const Color(0xFF8BC34A),
+                                ),
+                                title: TextFormField(
+                                  decoration: const InputDecoration(
+                                      hintText: "Email",
+                                      hintStyle: TextStyle(
+                                          fontSize: 15.0, color: Colors.lightGreen),
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      focusedErrorBorder: InputBorder.none),
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: _emailTextController,
+                                  focusNode: _focusEmail,
+                                  validator: (emailValue) {
+                                    if (emailValue == null) {
+                                      return null;
+                                    }
+                                    if (emailValue.isEmpty) {
+                                      return 'Email can\'t be empty';
+                                    }
                                     return null;
-                                  }
-                                  if (emailValue.isEmpty) {
-                                    return 'Email can\'t be empty';
-                                  }
-                                  return null;
-                                },
+                                  },
+                                ),
+                                tileColor: Colors.white,
                               ),
-                              tileColor: Colors.white,
-                            ),
-                            SizedBox(height: 8.0),
-                            ListTile(
-                              leading: Icon(
-                                Icons.lock,
-                                color: const Color(0xFF8BC34A),
-                              ),
-                              title: TextFormField(
-                                decoration: const InputDecoration(
-                                    hintText: "Password",
-                                    hintStyle: TextStyle(
-                                        fontSize: 15.0, color: Colors.lightGreen),
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    focusedErrorBorder: InputBorder.none),
-                                keyboardType: TextInputType.emailAddress,
-                                controller: _passwordTextController,
-                                focusNode: _focusPassword,
-                                obscureText: true,
-                                validator: (emailValue) {
-                                  if (emailValue == null) {
+                              SizedBox(height: 8.0),
+                              ListTile(
+                                leading: Icon(
+                                  Icons.lock,
+                                  color: const Color(0xFF8BC34A),
+                                ),
+                                title: TextFormField(
+                                  decoration: const InputDecoration(
+                                      hintText: "Password",
+                                      hintStyle: TextStyle(
+                                          fontSize: 15.0, color: Colors.lightGreen),
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      focusedErrorBorder: InputBorder.none),
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: _passwordTextController,
+                                  focusNode: _focusPassword,
+                                  obscureText: true,
+                                  validator: (emailValue) {
+                                    if (emailValue == null) {
+                                      return null;
+                                    }
+                                    if (emailValue.isEmpty) {
+                                      return 'Password can\'t be empty';
+                                    } else if (emailValue.length < 6) {
+                                      return 'Enter a password with length at least 6';
+                                    }
                                     return null;
-                                  }
-                                  if (emailValue.isEmpty) {
-                                    return 'Password can\'t be empty';
-                                  } else if (emailValue.length < 6) {
-                                    return 'Enter a password with length at least 6';
-                                  }
-                                  return null;
-                                },
+                                  },
+                                ),
+                                tileColor: Colors.white,
                               ),
-                              tileColor: Colors.white,
-                            ),
-                            SizedBox(height: 50.0),
-                            _isProcessing
-                                ? CircularProgressIndicator()
-                                : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              elevation: 10,
-                                              primary: Colors.lightGreen,
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 50,
-                                                      vertical: 20),
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50))),
-                                          onPressed: () async {
-                                            _focusEmail.unfocus();
-                                            _focusPassword.unfocus();
-
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              setState(() {
-                                                _isProcessing = true;
-                                              });
-
-                                              User? user = await FireAuth
-                                                  .signInUsingEmailPassword(
-                                                email:
-                                                    _emailTextController.text,
-                                                password:
-                                                    _passwordTextController
-                                                        .text,
-                                              );
-
-                                              setState(() {
-                                                _isProcessing = false;
-                                              });
-
-                                              if (user != null) {
-                                                Navigator.of(context)
-                                                    .pushReplacement(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MainInterface(
-                                                            user: user),
-                                                  ),
+                              SizedBox(height: 50.0),
+                              _isProcessing
+                                  ? CircularProgressIndicator()
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                elevation: 10,
+                                                primary: Colors.lightGreen,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 50,
+                                                        vertical: 20),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50))),
+                                            onPressed: () async {
+                                              _focusEmail.unfocus();
+                                              _focusPassword.unfocus();
+                
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                setState(() {
+                                                  _isProcessing = true;
+                                                });
+                
+                                                User? user = await FireAuth
+                                                    .signInUsingEmailPassword(
+                                                  email:
+                                                      _emailTextController.text,
+                                                  password:
+                                                      _passwordTextController
+                                                          .text,
                                                 );
+                
+                                                setState(() {
+                                                  _isProcessing = false;
+                                                });
+                
+                                                if (user != null) {
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MainInterface(
+                                                              user: user),
+                                                    ),
+                                                  );
+                                                }
                                               }
-                                            }
-                                          },
-                                          child: const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 40),
-                                            child: Text(
-                                              "Login",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18,
-                                                  color: Colors.white),
+                                            },
+                                            child: const Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 40),
+                                              child: Text(
+                                                "Login",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 18,
+                                                    color: Colors.white),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  )
-                          ],
+                                      ],
+                                    )
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               );
             }
