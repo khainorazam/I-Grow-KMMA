@@ -9,8 +9,11 @@ class ChatBubble extends StatefulWidget {
 }
 
 class _ChatBubbleState extends State<ChatBubble> {
-  final Stream<QuerySnapshot> _usersStream =
-      FirebaseFirestore.instance.collection('messages').snapshots();
+  //final DateTime _now = DateTime.now();
+  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
+      .collection('messages')
+      //.orderBy('time') // tak jadi taktau la kenapa geram
+      .snapshots();
 
   bool isFromMe = true;
 
@@ -19,15 +22,16 @@ class _ChatBubbleState extends State<ChatBubble> {
 
   @override
   Widget build(BuildContext context) {
+    //DateTime _now = DateTime.now();
     return StreamBuilder<QuerySnapshot>(
       stream: _usersStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return const Text('Something went wrong');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
+          return const Text("Loading");
         }
 
         return Flexible(
@@ -39,6 +43,7 @@ class _ChatBubbleState extends State<ChatBubble> {
               data = document.data() as Map<String, dynamic>;
               String email = data?['sender'];
               String message = data?['text'];
+              //= DateTime now = data?['time'];
               isFromMe = loggedInEmail == email;
               return Column(
                 crossAxisAlignment: isFromMe
