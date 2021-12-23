@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/chats/chatbox.dart';
 import 'package:flutter_group9/newpost.dart';
 import 'package:flutter_group9/mytimeline.dart';
 import 'package:flutter_group9/test.dart';
 import 'package:flutter_group9/test2.dart';
 import 'package:flutter_group9/test3.dart';
 
+import 'maininterface.dart';
 import 'widget/custom_post.dart';
 
 class Timeline extends StatelessWidget {
@@ -102,11 +104,31 @@ class Timeline extends StatelessWidget {
                         thickness: 1.5,
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          actionButton(Icons.assignment_ind_rounded,
-                              "MyTimeline", Color(0xFFF23E5C), "MyTimeline"),
-                          actionButton(Icons.mail_outline_rounded, "Messages",
-                              Color(0xFF2962FF), "")
+                          RaisedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          MainInterface.select(0)));
+                            },
+                            icon: const Icon(Icons.assignment_ind_rounded),
+                            label: const Text("My Timeline"),
+                            color: Color(0xFFF23E5C),
+                          ),
+                          RaisedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChatScreen()));
+                            },
+                            icon: const Icon(Icons.mail_outline_rounded),
+                            label: const Text("Messages"),
+                            color: Colors.blue[300],
+                          ), //
                         ],
                       )
                     ],
