@@ -106,29 +106,10 @@ class Timeline extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          RaisedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          MainInterface.select(0)));
-                            },
-                            icon: const Icon(Icons.assignment_ind_rounded),
-                            label: const Text("My Timeline"),
-                            color: Color(0xFFF23E5C),
-                          ),
-                          RaisedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ChatScreen()));
-                            },
-                            icon: const Icon(Icons.mail_outline_rounded),
-                            label: const Text("Messages"),
-                            color: Colors.blue[300],
-                          ), //
+                          actionButton(Icons.assignment_ind_rounded,
+                              "MyTimeline", Color(0xFFF23E5C), "MyTimeline"),
+                          actionButton(Icons.mail_outline_rounded, "Messages",
+                              Color(0xFF2962FF), "Messages"),
                         ],
                       )
                     ],
@@ -165,10 +146,6 @@ class Timeline extends StatelessWidget {
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => NewPost()));
-          // context,
-          // MaterialPageRoute(builder: (context) => AddSharing()));
-          //context,MaterialPageRoute(builder: (context) => GetUserName()));
-          //context,MaterialPageRoute(builder: (context) => CameraWidget()));
         },
         child: const Icon(Icons.add),
         backgroundColor: Colors.green[700],
@@ -187,7 +164,11 @@ Widget actionButton(
           if (nextPage == "MyTimeline") {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => MyTimeline()));
-          } else {}
+          }
+          if (nextPage == "Messages") {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => ChatScreen()));
+          }
         },
         icon: Icon(
           icon,
