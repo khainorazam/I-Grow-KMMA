@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  material_design_icons_flutter: 5.0.6595
   shared_preferences: ^2.0.8
   http: ^0.13.4
   

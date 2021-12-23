@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/widget/custom_title.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class AboutGroup extends StatefulWidget {
   @override
@@ -36,36 +38,38 @@ class AboutGroupState extends State<AboutGroup> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
+
+                    CustomTitle("About Us !"),
                     // Text("About Group",style: TextStyle(color: Colors.green[700], fontSize: 24, fontWeight: FontWeight.bold, fontFamily:,)
-                    Padding(
-                      padding: const EdgeInsets.only(left:18, top:20),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Stack(
-                          children: <Widget>[
-                            // Stroked text as border.
-                            Text(
-                              'About Us !',
-                              style: TextStyle(
-                                fontSize: 40,
-                                foreground: Paint()
-                                  ..style = PaintingStyle.stroke
-                                  ..strokeWidth = 6
-                                  ..color = Colors.green[700]!,
-                              ),
-                            ),
-                            // Solid text as fill.
-                            Text(
-                              'About Us !',
-                              style: TextStyle(
-                                fontSize: 40,
-                                color: Colors.lightGreen[100],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left:18, top:20),
+                    //   child: Align(
+                    //     alignment: Alignment.topLeft,
+                    //     child: Stack(
+                    //       children: <Widget>[
+                    //         // Stroked text as border.
+                    //         Text(
+                    //           'About Us !',
+                    //           style: TextStyle(
+                    //             fontSize: 40,
+                    //             foreground: Paint()
+                    //               ..style = PaintingStyle.stroke
+                    //               ..strokeWidth = 6
+                    //               ..color = Colors.green[700]!,
+                    //           ),
+                    //         ),
+                    //         // Solid text as fill.
+                    //         Text(
+                    //           'About Us !',
+                    //           style: TextStyle(
+                    //             fontSize: 40,
+                    //             color: Colors.lightGreen[100],
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
 
                     SizedBox(height: 22,),
 
@@ -121,16 +125,51 @@ class AboutGroupState extends State<AboutGroup> {
                             children: <Widget>[
 
                            
-                            Text("Location",style: TextStyle(color: Colors.grey[800],fontSize: 22,fontWeight: FontWeight.bold,)),
+                            Text("Related Tags",style: TextStyle(color: Colors.grey[800],fontSize: 22,fontWeight: FontWeight.bold,)),
                             SizedBox(height: 8,),
                             SizedBox(width: double.infinity, height: 3, child: Container(color: Colors.lightGreen,),),
+                            SizedBox(height: 18,),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                IconButton(onPressed: (){}, icon: Icon(Icons.pin_drop), color: Colors.red,),
-                                Text(location,style: TextStyle(color: Colors.grey[700]),),
-                              ],
+                    children: <Widget>[
+                      Container(
+                        width: 90,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50), 
+                            color: Colors.purple[700],
                             ),
+                          padding: EdgeInsets.all(8),
+                          child: Center(child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(MdiIcons.tag,color:Colors.white,size:20),
+                              SizedBox(width: 5,),
+                              Text('Onion',style:TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                            ],
+                          ))
+                        ),
+                      ),
+                      SizedBox(width:5),
+                      Container(
+                        
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50), 
+                            color: Colors.orange[700],
+                            ),
+                          padding: EdgeInsets.all(8),
+                          child: Center(child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(MdiIcons.tag,color:Colors.white,size:20),
+                              SizedBox(width: 5,),
+                              Text('Kuala Lumpur',style:TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                            ],
+                          ))
+                        ),
+                      ),
+                    ],
+                  ),
 
                           ],)
 
