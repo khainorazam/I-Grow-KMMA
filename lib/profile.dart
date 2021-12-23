@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/chats/chat_message_bubble.dart';
+import 'package:flutter_group9/chats/chatbox.dart';
 import 'package:flutter_group9/creategrouppost.dart';
 import 'package:flutter_group9/viewprofilefriend.dart';
 import 'package:flutter_group9/widget/custom_page_route.dart';
@@ -689,8 +691,7 @@ class ProfileState extends State<Profile> {
                     Navigator.push(
                         context,
                         CustomPageRoute(
-                            child: CreateGroupPost(),
-                            direction: AxisDirection.up));
+                            child: ChatScreen(), direction: AxisDirection.up));
                   },
             child: Icon(
               Icons.message,
