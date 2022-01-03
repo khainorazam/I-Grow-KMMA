@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/groupsuggestion.dart';
 import 'package:flutter_group9/viewgroup.dart';
 import 'package:flutter_group9/widget/custom_page_route.dart';
 import 'package:flutter_group9/widget/searchservice.dart';
@@ -12,7 +14,9 @@ class Groups extends StatefulWidget {
   }
 }
 
+
 class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
+  
   //Start of expanded FAB 
   bool isOpened = false;
   late AnimationController _animationController;
@@ -31,7 +35,7 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
           });
     _animationIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-    _buttonColor = ColorTween(begin: Colors.green[700], end: Colors.red).animate(
+    _buttonColor = ColorTween(begin: Colors.green[700], end: Colors.red[700]).animate(
         CurvedAnimation(
             parent: _animationController,
             curve: Interval(0.00, 1.00, curve: Curves.linear)));
@@ -49,14 +53,19 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
   }
   
   //Widgets
-  Widget buttonAdd(){
+  Widget buttonExplore(){
     return Container(
       child: FloatingActionButton(
         heroTag: "btn1",
-        backgroundColor: Colors.green[700],
-        onPressed: (){print("button add clicked");},
-        tooltip: "Add new group",
-        child: Icon(Icons.add),
+        backgroundColor: Colors.yellow[700],
+        onPressed: (){ Navigator.push(
+                    context,
+                    CustomPageRoute(
+                        child:  GroupSuggestion(),
+                        direction: AxisDirection.left));
+                        },
+        tooltip: "View group suggestion",
+        child: Icon(Icons.explore),
       )
     );
   }
@@ -65,7 +74,7 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
     return Container(
       child: FloatingActionButton(
         heroTag: "btn2",
-        backgroundColor: Colors.green[700],
+        backgroundColor: Colors.yellow[700],
         onPressed: (){showSearch(context: context, delegate: CustomSearchDelegate(),);},
         tooltip: "Search groups",
         child: Icon(Icons.search_outlined),
@@ -96,27 +105,41 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    // List<String> groupName = [];
+    // FirebaseFirestore.instance
+    // .collection('groups')
+    // .get()
+    // .then((QuerySnapshot querySnapshot) {
+      
+    //     querySnapshot.docs.forEach((doc) {
+    //         print(doc['groupName']);
+    //         groupName.add(doc['groupName']);
+    //         print(groupName[groupName.length-1]);
+    //         print(groupName.length);      
+    //     });
+    // });
     //array start here
     final List<String> groupPic = [
-      "assets/onion.jpg",
-      "assets/carrot.jpg",
       "assets/cabbage.jpg",
+      "assets/carrot.jpg",
+      "assets/onion.jpg",
       "assets/chili.jpg",
       "assets/spinach.jpg",
       "assets/mushroom.jfif",
       "assets/pumpkin.jfif",
       "assets/brinjal.png",
     ];
-    final List<String> groupName = [
-      "Group Bawang",
-      "Group Lobak Merah",
-      "Group Kobis",
-      "Group Cili",
-      "Group Bayam",
-      "Group Cendawan",
-      "Group Labu",
-      "Group Terung",
-    ];
+    // final List<String> groupName = [
+    //   "Group Bawang",
+    //   "Group Lobak Merah",
+    //   "Group Kobis",
+    //   "Group Cili",
+    //   "Group Bayam",
+    //   "Group Cendawan",
+    //   "Group Labu",
+    //   "Group Terung",
+    // ];
+    // List<String> groupName = [];
     final List<String> groupNoti = [
       "1 New Post",
       "2 New Post",
@@ -127,6 +150,8 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
       "5 New Post",
       "6 New Post",
     ];
+
+    
 
     return Scaffold(
       body: Container(
@@ -140,7 +165,7 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
                   Container(
                     margin: const EdgeInsets.all(45),
                     child: const Text(
-                      "Groups",
+                      "My Groups",
                       style: TextStyle(
                         color: Colors.black87,
                         fontSize: 35,
@@ -154,21 +179,50 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
-                  children: <Widget>[
-                    ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: groupName.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          child: GroupBox(
-                              '${groupPic[index]}',
-                              '${groupName[index]}',
-                              '${groupNoti[index]}',
-                              context),
-                        );
-                      },
-                    ),
+                  children: [
+
+                    FutureBuilder(future: listBoxVariable, builder: (BuildContext context, AsyncSnapshot<List>snapshot){
+
+                     
+                     if (snapshot.connectionState==ConnectionState.done){
+                     
+                     return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        child: GroupBox(
+                            '${groupPic[index]}',
+                            '${snapshot.data![index]}',
+                            '${groupNoti[index]}',
+                            context),
+                      );
+                    },
+                    );
+                     }
+
+                     return Text("Loading");
+                     
+
+
+
+                    }),
+                    
+                    // ListView.builder(
+                    //   physics: NeverScrollableScrollPhysics(),
+                    //   shrinkWrap: true,
+                    //   itemCount: groupName.length,
+                    //   itemBuilder: (BuildContext context, int index) {
+                    //     return Container(
+                    //       child: GroupBox(
+                    //           '${groupPic[index]}',
+                    //           '${groupName[index]}',
+                    //           '${groupNoti[index]}',
+                    //           context),
+                    //     );
+                    //   },
+                    // ),
                     //group 1
                     // GroupBox("assets/onion.jpg", "Group Bawang", "1 New Post"),
                   ],
@@ -184,7 +238,7 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
           Transform(
             transform: Matrix4.translationValues(
                 0.0, _translateButton.value * 2.0, 0.0),
-            child: buttonAdd(),
+            child: buttonExplore(),
           ),
            Transform(
             transform: Matrix4.translationValues(
@@ -214,6 +268,27 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
     );
   }
 }
+
+Future<List> listBoxFunction (){
+
+  List<String> groupName = [];
+    FirebaseFirestore.instance
+    .collection('groups')
+    .get()
+    .then((QuerySnapshot querySnapshot) {
+      
+        querySnapshot.docs.forEach((doc) {
+            print(doc['groupName']);
+            groupName.add(doc['groupName']);
+        });
+    });
+
+    return Future.value(groupName);
+
+
+}
+
+Future<List> listBoxVariable = listBoxFunction();
 
 Widget GroupBox(
     String groupPic, String groupName, String groupNoti, BuildContext context) {
