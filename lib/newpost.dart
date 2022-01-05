@@ -46,9 +46,7 @@ class NewPostState extends State<NewPost> {
     //store data to db
     Future<void> addSharing() async {
       try {
-        if (imageFile == null) {
-          Text("Please pick an image");
-        } else {
+        if (imageFile != null) {
           setState(() {
             _isLoading = true;
           });
@@ -165,6 +163,7 @@ class NewPostState extends State<NewPost> {
                 onPressed: () {
                   if (myController.text.isNotEmpty || image) {
                     addSharing();
+                    _remove(context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(

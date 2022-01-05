@@ -186,7 +186,8 @@ Widget PostFeed() {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    AvatarandUsername(dpUrl, username, data!['time']),
+                    AvatarandUsername(
+                        dpUrl, username, data!['time'], document.id, context),
                     SizedBox(
                       height: 10,
                     ),
@@ -222,7 +223,8 @@ Widget PostFeed() {
       });
 }
 
-Widget AvatarandUsername(String avatarUrl, String userName, Timestamp date) {
+Widget AvatarandUsername(String avatarUrl, String userName, Timestamp date,
+    String ID, BuildContext context) {
   DateTime d = date.toDate();
 
   return Row(
@@ -244,10 +246,106 @@ Widget AvatarandUsername(String avatarUrl, String userName, Timestamp date) {
             style: TextStyle(color: Colors.grey[600]),
           )
         ],
+      ),
+      SizedBox(width: 100),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.black,
+            ),
+            color: Colors.purple.shade600,
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                        title: Text(
+                          "Choose option",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        content: SingleChildScrollView(
+                          child: ListBody(
+                            children: [
+                              Divider(
+                                height: 1,
+                                color: Colors.blue,
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  Navigator.of(ctx).pop();
+                                  deletePost(ID, context);
+                                },
+                                title: Text("Delete Post"),
+                              ),
+                              Divider(
+                                height: 1,
+                                color: Colors.blue,
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                                title: Text("Edit Post"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ));
+            },
+          ),
+        ],
       )
     ],
   );
 }
+
+Future<void> deletePost(String ID, BuildContext context) async {
+  CollectionReference sharing =
+      FirebaseFirestore.instance.collection('sharing');
+  showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+            title: Text(
+              "Confirm Delete",
+              style: TextStyle(color: Colors.red),
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: [
+                  Divider(
+                    height: 1,
+                    color: Colors.red,
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.of(ctx).pop();
+                      sharing
+                          .doc(ID)
+                          .delete()
+                          .then((value) => print("User Deleted"))
+                          .catchError((error) =>
+                              print("Failed to delete user: $error"));
+                    },
+                    title: Text(
+                      "Yes",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.red,
+                  ),
+                ],
+              ),
+            ),
+          ));
+}
+
+// Widget editPost(String ID, BuildContext context) {
+//   return Scaffold();
+// }
 
 Widget LikeandDislike() {
   return Container(
@@ -381,144 +479,144 @@ void getCurrentUser() async {
 // Future<List> listNumVar = listNum();
 
 // FutureBuilder(
-                              //     future: listNumVar,
-                              //     builder: (BuildContext context,
-                              //         AsyncSnapshot<List> snapshot) {
-                              //       if (snapshot.connectionState ==
-                              //           ConnectionState.done) {
-                              //         return ListView.builder(
-                              //           physics: NeverScrollableScrollPhysics(),
-                              //           shrinkWrap: true,
-                              //           itemCount: snapshot.data!.length,
-                              //           itemBuilder:
-                              //               (BuildContext context, int index) {
-                              //             return Column(
-                              //               children: [
-                              //                 PhysicalModel(
-                              //                   color: Colors.transparent,
-                              //                   shadowColor: Colors.green,
-                              //                   elevation: 20,
-                              //                   child: Container(
-                              //                     margin: EdgeInsets.only(
-                              //                         bottom: 20.0),
-                              //                     width: 360,
-                              //                     padding: const EdgeInsets.all(
-                              //                         12.0),
-                              //                     decoration: BoxDecoration(
-                              //                       color: Colors.grey[200],
-                              //                       borderRadius:
-                              //                           BorderRadius.circular(
-                              //                               10.0),
-                              //                     ),
-                              //                     child: Column(
-                              //                       mainAxisAlignment:
-                              //                           MainAxisAlignment.start,
-                              //                       crossAxisAlignment:
-                              //                           CrossAxisAlignment
-                              //                               .start,
-                              //                       children: <Widget>[
-                              //                         FutureBuilder(
-                              //                             future: listTimeVar,
-                              //                             builder: (BuildContext
-                              //                                     context,
-                              //                                 AsyncSnapshot<
-                              //                                         List>
-                              //                                     snapshot) {
-                              //                               if (snapshot
-                              //                                       .connectionState ==
-                              //                                   ConnectionState
-                              //                                       .done) {
-                              //                                 return AvatarandUsername(
-                              //                                     dpUrl,
-                              //                                     username,
-                              //                                     snapshot
-                              //                                         .data![
-                              //                                             index]
-                              //                                         .toString());
-                              //                               }
+//     future: listNumVar,
+//     builder: (BuildContext context,
+//         AsyncSnapshot<List> snapshot) {
+//       if (snapshot.connectionState ==
+//           ConnectionState.done) {
+//         return ListView.builder(
+//           physics: NeverScrollableScrollPhysics(),
+//           shrinkWrap: true,
+//           itemCount: snapshot.data!.length,
+//           itemBuilder:
+//               (BuildContext context, int index) {
+//             return Column(
+//               children: [
+//                 PhysicalModel(
+//                   color: Colors.transparent,
+//                   shadowColor: Colors.green,
+//                   elevation: 20,
+//                   child: Container(
+//                     margin: EdgeInsets.only(
+//                         bottom: 20.0),
+//                     width: 360,
+//                     padding: const EdgeInsets.all(
+//                         12.0),
+//                     decoration: BoxDecoration(
+//                       color: Colors.grey[200],
+//                       borderRadius:
+//                           BorderRadius.circular(
+//                               10.0),
+//                     ),
+//                     child: Column(
+//                       mainAxisAlignment:
+//                           MainAxisAlignment.start,
+//                       crossAxisAlignment:
+//                           CrossAxisAlignment
+//                               .start,
+//                       children: <Widget>[
+//                         FutureBuilder(
+//                             future: listTimeVar,
+//                             builder: (BuildContext
+//                                     context,
+//                                 AsyncSnapshot<
+//                                         List>
+//                                     snapshot) {
+//                               if (snapshot
+//                                       .connectionState ==
+//                                   ConnectionState
+//                                       .done) {
+//                                 return AvatarandUsername(
+//                                     dpUrl,
+//                                     username,
+//                                     snapshot
+//                                         .data![
+//                                             index]
+//                                         .toString());
+//                               }
 
-                              //                               return Text(
-                              //                                   "Loading");
-                              //                             }),
-                              //                         SizedBox(
-                              //                           height: 10,
-                              //                         ),
-                              //                         FutureBuilder(
-                              //                             future:
-                              //                                 listCaptionVar,
-                              //                             builder: (BuildContext
-                              //                                     context,
-                              //                                 AsyncSnapshot<
-                              //                                         List>
-                              //                                     snapshot) {
-                              //                               if (snapshot
-                              //                                       .connectionState ==
-                              //                                   ConnectionState
-                              //                                       .done) {
-                              //                                 return Container(
-                              //                                     child: Text(
-                              //                                   snapshot.data![
-                              //                                       index],
-                              //                                   style:
-                              //                                       TextStyle(
-                              //                                     fontSize: 16,
-                              //                                   ),
-                              //                                 ));
-                              //                               }
+//                               return Text(
+//                                   "Loading");
+//                             }),
+//                         SizedBox(
+//                           height: 10,
+//                         ),
+//                         FutureBuilder(
+//                             future:
+//                                 listCaptionVar,
+//                             builder: (BuildContext
+//                                     context,
+//                                 AsyncSnapshot<
+//                                         List>
+//                                     snapshot) {
+//                               if (snapshot
+//                                       .connectionState ==
+//                                   ConnectionState
+//                                       .done) {
+//                                 return Container(
+//                                     child: Text(
+//                                   snapshot.data![
+//                                       index],
+//                                   style:
+//                                       TextStyle(
+//                                     fontSize: 16,
+//                                   ),
+//                                 ));
+//                               }
 
-                              //                               return Text(
-                              //                                   "Loading");
-                              //                             }),
-                              //                         SizedBox(
-                              //                           height: 10,
-                              //                         ),
-                              //                         FutureBuilder(
-                              //                             future: listImageVar,
-                              //                             builder: (BuildContext
-                              //                                     context,
-                              //                                 AsyncSnapshot<
-                              //                                         List>
-                              //                                     snapshot) {
-                              //                               if (snapshot
-                              //                                       .connectionState ==
-                              //                                   ConnectionState
-                              //                                       .done) {
-                              //                                 if (snapshot.data![
-                              //                                         index] !=
-                              //                                     "") {
-                              //                                   return SizedBox(
-                              //                                     width: double
-                              //                                         .infinity,
-                              //                                     height: 200,
-                              //                                     child:
-                              //                                         FittedBox(
-                              //                                       fit: BoxFit
-                              //                                           .fill,
-                              //                                       child: Image.network(
-                              //                                           snapshot
-                              //                                               .data![index]),
-                              //                                     ),
-                              //                                   );
-                              //                                 } else {
-                              //                                   return SizedBox();
-                              //                                 }
-                              //                               }
+//                               return Text(
+//                                   "Loading");
+//                             }),
+//                         SizedBox(
+//                           height: 10,
+//                         ),
+//                         FutureBuilder(
+//                             future: listImageVar,
+//                             builder: (BuildContext
+//                                     context,
+//                                 AsyncSnapshot<
+//                                         List>
+//                                     snapshot) {
+//                               if (snapshot
+//                                       .connectionState ==
+//                                   ConnectionState
+//                                       .done) {
+//                                 if (snapshot.data![
+//                                         index] !=
+//                                     "") {
+//                                   return SizedBox(
+//                                     width: double
+//                                         .infinity,
+//                                     height: 200,
+//                                     child:
+//                                         FittedBox(
+//                                       fit: BoxFit
+//                                           .fill,
+//                                       child: Image.network(
+//                                           snapshot
+//                                               .data![index]),
+//                                     ),
+//                                   );
+//                                 } else {
+//                                   return SizedBox();
+//                                 }
+//                               }
 
-                              //                               return Text(
-                              //                                   "Loading");
-                              //                             }),
-                              //                         SizedBox(
-                              //                           height: 10,
-                              //                         ),
-                              //                         LikeandDislike()
-                              //                       ],
-                              //                     ),
-                              //                   ),
-                              //                 ),
-                              //               ],
-                              //             );
-                              //           },
-                              //         );
-                              //       }
-                              //       return Text("Loading");
-                              //     }),
+//                               return Text(
+//                                   "Loading");
+//                             }),
+//                         SizedBox(
+//                           height: 10,
+//                         ),
+//                         LikeandDislike()
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             );
+//           },
+//         );
+//       }
+//       return Text("Loading");
+//     }),
