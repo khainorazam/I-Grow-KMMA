@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/editpost.dart';
 import 'package:flutter_group9/maininterface.dart';
 
 CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -286,6 +287,14 @@ Widget AvatarandUsername(String avatarUrl, String userName, Timestamp date,
                               ListTile(
                                 onTap: () {
                                   Navigator.of(ctx).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => EditPost(
+                                        docID: ID,
+                                      ),
+                                    ),
+                                  );
                                 },
                                 title: Text("Edit Post"),
                               ),
