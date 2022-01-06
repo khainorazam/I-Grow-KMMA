@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_group9/chat/chats.dart';
-import 'package:flutter_group9/chat/chat_detail.dart';
-import 'package:flutter_group9/chat/people.dart';
+import 'package:flutter_group9/chats/chatbox.dart';
+import 'package:flutter_group9/messages/chat_screen.dart';
 import 'package:flutter_group9/newpost.dart';
 import 'package:flutter_group9/mytimeline.dart';
 import 'package:flutter_group9/test.dart';
 import 'package:flutter_group9/test2.dart';
 import 'package:flutter_group9/test3.dart';
 
+import 'chat/chatlist.dart';
 import 'maininterface.dart';
 import 'widget/custom_post.dart';
 
@@ -165,11 +165,11 @@ Widget actionButton(
         onPressed: () {
           if (nextPage == "MyTimeline") {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MyTimeline()));
+                context, MaterialPageRoute(builder: (context) => ChatScreen()));
           }
           if (nextPage == "Messages") {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Chats()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ChatsScreen()));
           }
         },
         icon: Icon(
