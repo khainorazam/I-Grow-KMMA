@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_group9/chats/chatbox.dart';
+import 'package:flutter_group9/chat/chats.dart';
+import 'package:flutter_group9/chat/chat_detail.dart';
+import 'package:flutter_group9/chat/people.dart';
 import 'package:flutter_group9/newpost.dart';
 import 'package:flutter_group9/mytimeline.dart';
 import 'package:flutter_group9/test.dart';
@@ -167,7 +169,7 @@ Widget actionButton(
           }
           if (nextPage == "Messages") {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => ChatScreen()));
+                context, MaterialPageRoute(builder: (context) => Chats()));
           }
         },
         icon: Icon(
