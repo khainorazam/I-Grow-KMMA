@@ -43,6 +43,7 @@ class EditProfile extends StatefulWidget {
 // String status = "";
 
 CollectionReference users = FirebaseFirestore.instance.collection('users');
+String? documentId;
 
 class _EditProfileState extends State<EditProfile> {
   String userID = "";
@@ -307,4 +308,10 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
+}
+
+void getCurrentUser() async {
+  final User? user = FirebaseAuth.instance.currentUser;
+  final uid = user!.uid;
+  documentId = uid;
 }
