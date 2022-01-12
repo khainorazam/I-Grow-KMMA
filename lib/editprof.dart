@@ -54,13 +54,13 @@ class _EditProfileState extends State<EditProfile> {
   String status = "";
   bool _isSigningOut = false;
   bool showPassword = false;
+  String? documentId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
   Widget build(BuildContext context) {
     CollectionReference sharing =
         FirebaseFirestore.instance.collection('users');
     //to get current user ID
-    getCurrentUser();
     userID = documentId!;
 
     var firebaseUser = FirebaseAuth.instance.currentUser;
@@ -308,10 +308,4 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
-}
-
-void getCurrentUser() async {
-  final User? user = FirebaseAuth.instance.currentUser;
-  final uid = user!.uid;
-  documentId = uid;
 }
