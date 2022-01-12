@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/groupsuggestion.dart';
 import 'package:flutter_group9/viewgroup.dart';
 import 'package:flutter_group9/widget/custom_page_route.dart';
 import 'package:flutter_group9/widget/searchservice.dart';
+
+CollectionReference users = FirebaseFirestore.instance.collection('users');
+String? documentId;
+Map<String, dynamic>? data;
 
 class Groups extends StatefulWidget {
   const Groups({Key? key}) : super(key: key);
@@ -14,10 +19,8 @@ class Groups extends StatefulWidget {
   }
 }
 
-
 class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
-  
-  //Start of expanded FAB 
+  //Start of expanded FAB
   bool isOpened = false;
   late AnimationController _animationController;
   late Animation<Color?> _buttonColor;
@@ -35,67 +38,72 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
           });
     _animationIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-    _buttonColor = ColorTween(begin: Colors.green[700], end: Colors.red[700]).animate(
-        CurvedAnimation(
+    _buttonColor = ColorTween(begin: Colors.green[700], end: Colors.red[700])
+        .animate(CurvedAnimation(
             parent: _animationController,
             curve: Interval(0.00, 1.00, curve: Curves.linear)));
     _translateButton = Tween<double>(begin: _fabHeight, end: -14.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Interval(0.0,0.75, curve: _curve))
-    );
+        CurvedAnimation(
+            parent: _animationController,
+            curve: Interval(0.0, 0.75, curve: _curve)));
     super.initState();
   }
-  
+
   @override
   void dispose() {
-
     _animationController.dispose();
     super.dispose();
   }
-  
+
   //Widgets
-  Widget buttonExplore(){
+  Widget buttonExplore() {
     return Container(
-      child: FloatingActionButton(
-        heroTag: "btn1",
-        backgroundColor: Colors.yellow[700],
-        onPressed: (){ Navigator.push(
-                    context,
-                    CustomPageRoute(
-                        child:  GroupSuggestion(),
-                        direction: AxisDirection.left));
-                        },
-        tooltip: "View group suggestion",
-        child: Icon(Icons.explore),
-      )
-    );
+        child: FloatingActionButton(
+      heroTag: "btn1",
+      backgroundColor: Colors.yellow[700],
+      onPressed: () {
+        Navigator.push(
+            context,
+            CustomPageRoute(
+                child: GroupSuggestion(), direction: AxisDirection.left));
+      },
+      tooltip: "View group suggestion",
+      child: Icon(Icons.explore),
+    ));
   }
 
-  Widget buttonSearch(){
+  Widget buttonSearch() {
     return Container(
-      child: FloatingActionButton(
-        heroTag: "btn2",
-        backgroundColor: Colors.yellow[700],
-        onPressed: (){showSearch(context: context, delegate: CustomSearchDelegate(),);},
-        tooltip: "Search groups",
-        child: Icon(Icons.search_outlined),
-      )
-    );
+        child: FloatingActionButton(
+      heroTag: "btn2",
+      backgroundColor: Colors.yellow[700],
+      onPressed: () {
+        showSearch(
+          context: context,
+          delegate: CustomSearchDelegate(),
+        );
+      },
+      tooltip: "Search groups",
+      child: Icon(Icons.search_outlined),
+    ));
   }
-  
-  Widget buttonToggle(){
+
+  Widget buttonToggle() {
     return Container(
-      child: FloatingActionButton(
-        heroTag: "btn3",
-        backgroundColor: _buttonColor.value,
-        onPressed: animate,
-        tooltip: "Toggle",
-        child: AnimatedIcon(icon: AnimatedIcons.menu_close,progress: _animationIcon,),
-      )
-    );
+        child: FloatingActionButton(
+      heroTag: "btn3",
+      backgroundColor: _buttonColor.value,
+      onPressed: animate,
+      tooltip: "Toggle",
+      child: AnimatedIcon(
+        icon: AnimatedIcons.menu_close,
+        progress: _animationIcon,
+      ),
+    ));
   }
-  
-  animate(){
-    if(!isOpened)
+
+  animate() {
+    if (!isOpened)
       _animationController.forward();
     else
       _animationController.reverse();
@@ -105,54 +113,7 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // List<String> groupName = [];
-    // FirebaseFirestore.instance
-    // .collection('groups')
-    // .get()
-    // .then((QuerySnapshot querySnapshot) {
-      
-    //     querySnapshot.docs.forEach((doc) {
-    //         print(doc['groupName']);
-    //         groupName.add(doc['groupName']);
-    //         print(groupName[groupName.length-1]);
-    //         print(groupName.length);      
-    //     });
-    // });
-    //array start here
-    final List<String> groupPic = [
-      "assets/cabbage.jpg",
-      "assets/carrot.jpg",
-      "assets/onion.jpg",
-      "assets/chili.jpg",
-      "assets/spinach.jpg",
-      "assets/mushroom.jfif",
-      "assets/pumpkin.jfif",
-      "assets/brinjal.png",
-    ];
-    // final List<String> groupName = [
-    //   "Group Bawang",
-    //   "Group Lobak Merah",
-    //   "Group Kobis",
-    //   "Group Cili",
-    //   "Group Bayam",
-    //   "Group Cendawan",
-    //   "Group Labu",
-    //   "Group Terung",
-    // ];
-    // List<String> groupName = [];
-    final List<String> groupNoti = [
-      "1 New Post",
-      "2 New Post",
-      "4 New Post",
-      "No New Post",
-      "3 New Post",
-      "3 New Post",
-      "5 New Post",
-      "6 New Post",
-    ];
-
-    
-
+    getCurrentUser();
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(color: Colors.lightGreen[100]),
@@ -180,51 +141,7 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-
-                    FutureBuilder(future: listBoxVariable, builder: (BuildContext context, AsyncSnapshot<List>snapshot){
-
-                     
-                     if (snapshot.connectionState==ConnectionState.done){
-                     
-                     return ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        child: GroupBox(
-                            '${groupPic[index]}',
-                            '${snapshot.data![index]}',
-                            '${groupNoti[index]}',
-                            context),
-                      );
-                    },
-                    );
-                     }
-
-                     return Text("Loading");
-                     
-
-
-
-                    }),
-                    
-                    // ListView.builder(
-                    //   physics: NeverScrollableScrollPhysics(),
-                    //   shrinkWrap: true,
-                    //   itemCount: groupName.length,
-                    //   itemBuilder: (BuildContext context, int index) {
-                    //     return Container(
-                    //       child: GroupBox(
-                    //           '${groupPic[index]}',
-                    //           '${groupName[index]}',
-                    //           '${groupNoti[index]}',
-                    //           context),
-                    //     );
-                    //   },
-                    // ),
-                    //group 1
-                    // GroupBox("assets/onion.jpg", "Group Bawang", "1 New Post"),
+                    BoxTemplate(),
                   ],
                 ),
               ),
@@ -240,121 +157,162 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
                 0.0, _translateButton.value * 2.0, 0.0),
             child: buttonExplore(),
           ),
-           Transform(
-            transform: Matrix4.translationValues(
-                0.0, _translateButton.value, 0.0),
+          Transform(
+            transform:
+                Matrix4.translationValues(0.0, _translateButton.value, 0.0),
             child: buttonSearch(),
           ),
           buttonToggle()
-           
         ],
       ),
-
-      // FloatingActionButton(
-      //   onPressed: () {
-      //     // Navigator.push(
-      //     //   context,
-      //     //   CustomPageRoute(
-      //     //     child: SearchGroup(),
-      //     //     direction: AxisDirection.up,
-      //     //   ),
-      //     // );
-      //     showSearch(context: context, delegate: CustomSearchDelegate(),);
-      //   },
-      //   child: const Icon(Icons.explore),
-      //   backgroundColor: Colors.green[700],
-      //   tooltip: "Explore Other Groups",
-      // ),
     );
   }
 }
 
-Future<List> listBoxFunction (){
+//snapshot method
+// retrieve group name
+// Future<List> listName() async {
+//   List<String> groupName = [];
+//   await FirebaseFirestore.instance
+//       .collection('groups')
+//       .get()
+//       .then((QuerySnapshot querySnapshot) {
+//     querySnapshot.docs.forEach((doc) {
+//       print(doc['groupName']);
+//       groupName.add(doc['groupName']);
+//     });
+//   });
 
-  List<String> groupName = [];
-    FirebaseFirestore.instance
-    .collection('groups')
-    .get()
-    .then((QuerySnapshot querySnapshot) {
-      
-        querySnapshot.docs.forEach((doc) {
-            print(doc['groupName']);
-            groupName.add(doc['groupName']);
-        });
-    });
+//   return Future.value(groupName);
+// }
 
-    return Future.value(groupName);
+// Future<List> listNameVar = listName();
 
+// //retrieve group pic
+// Future<List> listImg() async {
+//   List<String> groupImg = [];
+//   await FirebaseFirestore.instance
+//       .collection('groups')
+//       .get()
+//       .then((QuerySnapshot querySnapshot) {
+//     querySnapshot.docs.forEach((doc) {
+//       print("dontol");
+//       groupImg.add(doc['dpUrl']);
+//     });
+//   });
 
-}
+//   return Future.value(groupImg);
+// }
 
-Future<List> listBoxVariable = listBoxFunction();
+// Future<List> listImgVar = listImg();
 
-Widget GroupBox(
-    String groupPic, String groupName, String groupNoti, BuildContext context) {
-  return Container(
-    margin: const EdgeInsets.all(8.0),
-    child: Column(
-      children: <Widget>[
-        SizedBox(
-          height: 60.0,
-          child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    CustomPageRoute(
-                        child: const ViewGroup(),
-                        direction: AxisDirection.left));
-              },
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.grey.shade500),
-                  overlayColor:
-                      MaterialStateProperty.all<Color>(Colors.green.shade700),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ))),
-              child: Row(
+// //retrieve group noti
+// Future<List> listNoti() async {
+//   List<String> groupNoti = [];
+//   await FirebaseFirestore.instance
+//       .collection('groups')
+//       .get()
+//       .then((QuerySnapshot querySnapshot) {
+//     querySnapshot.docs.forEach((doc) {
+//       groupNoti.add(doc['notiCount'].toString());
+//     });
+//   });
+
+//   return Future.value(groupNoti);
+// }
+
+// Future<List> listNotiVar = listNoti();
+
+Widget BoxTemplate() {
+  return StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('groups').where('userId', isEqualTo: documentId).snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+
+        return ListView(
+          physics: NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          children: snapshot.data!.docs.map((DocumentSnapshot document) {
+            data = document.data() as Map<String, dynamic>;
+
+            return Container(
+              margin: const EdgeInsets.all(8.0),
+              child: Column(
                 children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(groupPic),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              child: Text(
-                                groupName,
-                                style: const TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold),
+                  SizedBox(
+                    height: 60.0,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              CustomPageRoute(
+                                  child: const ViewGroup(),
+                                  direction: AxisDirection.left));
+                        },
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.grey.shade500),
+                            overlayColor: MaterialStateProperty.all<Color>(
+                                Colors.green.shade700),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ))),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              child: CircleAvatar(
+                                backgroundImage: NetworkImage(data!['dpUrl']),
                               ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                                child: Text(
-                              groupNoti,
-                            )),
-                          ),
-                        ],
-                      ),
-                    ),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Container(
+                                        child: Text(
+                                          data!['groupName'],
+                                          style: const TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Container(
+                                          child: Text(
+                                        '${data!['notiCount'].toString()} new notifications',
+                                      )),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
                   ),
+                  SizedBox(height: 8),
                 ],
-              )),
-        ),
-        SizedBox(height: 8),
-      ],
-    ),
-  );
+              ),
+            );
+          }).toList(),
+        );
+      });
+}
+void getCurrentUser() async {
+  final User? user = FirebaseAuth.instance.currentUser;
+  final uid = user!.uid;
+  documentId = uid;
 }
