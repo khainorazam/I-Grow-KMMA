@@ -12,7 +12,7 @@ class _ChatBubbleState extends State<ChatBubble> {
   //final DateTime _now = DateTime.now();
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
       .collection('messages')
-      //.orderBy('time') // tak jadi taktau la kenapa geram
+      .orderBy('time') // tak jadi taktau la kenapa geram
       .snapshots();
 
   bool isFromMe = true;
@@ -38,7 +38,7 @@ class _ChatBubbleState extends State<ChatBubble> {
           child: ListView(
             padding: EdgeInsets.all(10.0),
             scrollDirection: Axis.vertical,
-            shrinkWrap: true,
+            //shrinkWrap: true,
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               data = document.data() as Map<String, dynamic>;
               String email = data?['sender'];

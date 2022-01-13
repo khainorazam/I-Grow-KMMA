@@ -17,17 +17,25 @@ class _ChatScreenState extends State<ChatScreen> {
   var _controller = TextEditingController();
 
   String message = "";
-  DateTime now = DateTime.now();
+  var now = DateTime.now();
 
   Future<void> addMessage() {
     return messages
         .add({
           'sender': FirebaseAuth.instance.currentUser?.email,
           'text': message,
-          'time': now
+          'time': FieldValue.serverTimestamp(),
         })
         .then((value) => print("Message Added"))
         .catchError((error) => print("Failed to add user: $error"));
+  }
+
+  Future<void> clearMessage() async {
+    var collection = FirebaseFirestore.instance.collection('messages');
+    var snapshots = await collection.get();
+    for (var doc in snapshots.docs) {
+      await doc.reference.delete();
+    }
   }
 
   @override
@@ -37,9 +45,9 @@ class _ChatScreenState extends State<ChatScreen> {
         leading: null,
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.delete),
               onPressed: () {
-                FirebaseAuth.instance.signOut();
+                clearMessage();
               }),
         ],
         title: Text('⚡️Chat'),
