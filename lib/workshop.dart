@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 
 FirebaseAuth user = FirebaseAuth.instance;
 String? userName;
+Map? myWorkShop;
+
 getUserName() async {
   final data = await FirebaseFirestore.instance
       .collection('users')
@@ -18,19 +20,30 @@ getUserName() async {
   userName = data.data()!['username'];
 }
 
-class Workshop extends StatelessWidget {
+getMyWorShop() async {
+  final worshopData = await FirebaseFirestore.instance
+      .collection('myWorkshop')
+      .doc(user.currentUser!.uid)
+      .get();
+  myWorkShop = worshopData.data();
+}
+
+class Workshop extends StatefulWidget {
   const Workshop({Key? key}) : super(key: key);
 
   @override
+  State<Workshop> createState() => _WorkshopState();
+}
+
+class _WorkshopState extends State<Workshop> {
+  @override
   Widget build(BuildContext context) {
     getUserName();
+    getMyWorShop();
     return Scaffold(
       backgroundColor: Colors.lightGreen.shade100,
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('workshop')
-              .doc('AsBVN2Eu9SgaFK68CyR1')
-              .snapshots(),
+          stream: FirebaseFirestore.instance.collection('workshop').snapshots(),
           builder: (context, dynamic snapshot) {
             if (snapshot.hasError) {
               return const Text('Something went wrong');
@@ -39,8 +52,7 @@ class Workshop extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Text("Loading");
             }
-            Map data = snapshot.data.data();
-
+            List data = snapshot.data.docs.toList();
             return SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -60,27 +72,13 @@ class Workshop extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Align(
                       alignment: Alignment.topRight,
-                      child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.lightGreen.shade100,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const MyWorkShop()));
-                          },
-                          icon: const Icon(
-                            Icons.schedule_outlined,
-                            color: Colors.black,
-                          ),
-                          label: const Text(
-                            'My Workshop',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 10,
-                                fontStyle: FontStyle.italic),
-                          )),
+                      child: IconButton(
+                        onPressed: () {
+                          showSearch(
+                              context: context, delegate: SearchProgramme());
+                        },
+                        icon: const Icon(Icons.search),
+                      ),
                     ),
                   ),
                   Container(
@@ -91,146 +89,160 @@ class Workshop extends StatelessWidget {
                     // scrollDirection: Axis.vertical,
                     // child: SingleChildScrollView(
                     //scrollDirection: Axis.horizontal,
-                    child: data['workshop'].isEmpty
+                    child: data.isEmpty
                         ? const Text('')
                         : DataTable(
-                            columnSpacing: 10,
-                            dataRowHeight: 100,
-                            columns: const [
-                              DataColumn(
-                                label: Text(
-                                  'Programe',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontStyle: FontStyle.italic),
-                                ),
+                      columnSpacing: 10,
+                      dataRowHeight: 100,
+                      columns: const [
+                        DataColumn(
+                          label: Text(
+                            'Programe',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Description',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Date',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Session',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(''),
+                        ),
+                      ],
+                      rows: [
+                        for (int i = 0; i < data.length; i++)
+                          DataRow(cells: [
+                            DataCell(Text(
+                              data[i]['programe'],
+                              style: const TextStyle(
+                                  fontSize: 10,
+                                  fontStyle: FontStyle.italic),
+                            )),
+                            DataCell(Text(
+                              data[i]['description'],
+                              style: const TextStyle(
+                                  fontSize: 10,
+                                  fontStyle: FontStyle.italic),
+                            )),
+                            DataCell(Text(
+                              DateFormat.yMMMd()
+                                  .format(data[i]['date'].toDate())
+                                  .toString(),
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontStyle: FontStyle.italic,
                               ),
-                              DataColumn(
-                                label: Text(
-                                  'Description',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Date',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  'Session',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              DataColumn(
-                                label: Text(''),
-                              ),
-                            ],
-                            rows: [
-                              for (int i = 0; i < data['workshop'].length; i++)
-                                DataRow(cells: [
-                                  DataCell(Text(
-                                    data['workshop'][i]['programe'],
+                            )),
+                            DataCell(
+                              Column(
+                                mainAxisAlignment:
+                                MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    DateFormat.jm()
+                                        .format(data[i]['sessionFrom']
+                                        .toDate())
+                                        .toString(),
                                     style: const TextStyle(
                                         fontSize: 10,
                                         fontStyle: FontStyle.italic),
-                                  )),
-                                  DataCell(Text(
-                                    data['workshop'][i]['description'],
-                                    style: const TextStyle(
+                                  ),
+                                  const Text(
+                                    'to',
+                                    style: TextStyle(
                                         fontSize: 10,
                                         fontStyle: FontStyle.italic),
-                                  )),
-                                  DataCell(Text(
-                                    DateFormat.yMMMd()
-                                        .format(data['workshop'][i]['date']
-                                            .toDate())
+                                  ),
+                                  Text(
+                                    DateFormat.jm()
+                                        .format(
+                                        data[i]['sessionTo'].toDate())
                                         .toString(),
                                     style: const TextStyle(
                                       fontSize: 10,
                                       fontStyle: FontStyle.italic,
                                     ),
-                                  )),
-                                  DataCell(
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          DateFormat.jm()
-                                              .format(data['workshop'][i]
-                                                      ['sessionFrom']
-                                                  .toDate())
-                                              .toString(),
-                                          style: const TextStyle(
-                                              fontSize: 10,
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                        const Text(
-                                          'to',
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                        Text(
-                                          DateFormat.jm()
-                                              .format(data['workshop'][i]
-                                                      ['sessionTo']
-                                                  .toDate())
-                                              .toString(),
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            fontStyle: FontStyle.italic,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            DataCell(
+                              MaterialButton(
+                                onPressed: () {
+                                  setState(() {});
+                                  myWorkShop!['myWorkshop'].any(
+                                          (element) =>
+                                      element['programe'] ==
+                                          data[i]['programe']) ==
+                                      true
+                                      ? showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: const Text(
+                                            'You are aleardy Book this Programme'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(
+                                                    context),
+                                            child: const Text('Ok'),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  DataCell(
-                                    MaterialButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                fullscreenDialog: true,
-                                                builder: (_) => BookingForm(
-                                                      programmeName:
-                                                          data['workshop'][i]
-                                                              ['programe'],
-                                                      date: data['workshop'][i]
-                                                          ['date'],
-                                                      description:
-                                                          data['workshop'][i]
-                                                              ['description'],
-                                                      index: data['workshop']
-                                                          [i],
-                                                      sessionFrom:
-                                                          data['workshop'][i]
-                                                              ['sessionFrom'],
-                                                      sessiontTo:
-                                                          data['workshop'][i]
-                                                              ['sessionTo'],
-                                                    )));
-                                      },
-                                      color: Colors.lightGreen.shade100,
-                                      child: const Text(
-                                        'Book',
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                  ),
-                                ])
-                            ],
-                          ),
+                                        ],
+                                      );
+                                    },
+                                  )
+                                      : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          fullscreenDialog: true,
+                                          builder: (_) => BookingForm(
+                                            programmeName: data[i]
+                                            ['programe'],
+                                            date: data[i]['date'],
+                                            description: data[i]
+                                            ['description'],
+                                            index: data[i],
+                                            sessionFrom: data[i]
+                                            ['sessionFrom'],
+                                            sessiontTo: data[i]
+                                            ['sessionTo'],
+                                          )));
+                                },
+                                color: Colors.lightGreen.shade100,
+                                child: const Text(
+                                  'Book',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                          ])
+                      ],
+                    ),
                     //  ),
                     //),
                   ),
@@ -238,8 +250,49 @@ class Workshop extends StatelessWidget {
               ),
             );
           }),
+      floatingActionButton: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          primary: Colors.lightGreen.shade100,
+        ),
+        onPressed: () {
+          setState(() {});
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => const MyWorkShop()));
+        },
+        icon: const Icon(
+          Icons.schedule_outlined,
+          color: Colors.black,
+        ),
+        label: const Text(
+          'My Workshop',
+          style: TextStyle(
+              color: Colors.black, fontSize: 10, fontStyle: FontStyle.italic),
+        ),
+      ),
     );
   }
+}
+
+class SearchProgramme extends SearchDelegate {
+  @override
+  List<Widget>? buildActions(BuildContext context) => [
+    IconButton(onPressed: () {
+      query='';
+    }, icon: const Icon(Icons.clear)),
+  ];
+
+  @override
+  Widget? buildLeading(BuildContext context) => IconButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      icon: const Icon(Icons.arrow_back));
+
+  @override
+  Widget buildResults(BuildContext context) => Container();
+
+  @override
+  Widget buildSuggestions(BuildContext context) => Container();
 }
 
 // ignore: must_be_immutable
@@ -320,7 +373,7 @@ class _BookingFormState extends State<BookingForm> {
             const SizedBox(height: 15),
             TextFormField(
               initialValue:
-                  DateFormat.yMMMd().format(widget.date.toDate()).toString(),
+              DateFormat.yMMMd().format(widget.date.toDate()).toString(),
               enabled: false,
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
@@ -336,7 +389,7 @@ class _BookingFormState extends State<BookingForm> {
             const SizedBox(height: 15),
             TextFormField(
               initialValue:
-                  '${DateFormat.jm().format(widget.sessiontTo.toDate()).toString()} to ${DateFormat.jm().format(widget.sessionFrom.toDate()).toString()}',
+              '${DateFormat.jm().format(widget.sessiontTo.toDate()).toString()} to ${DateFormat.jm().format(widget.sessionFrom.toDate()).toString()}',
               enabled: false,
               decoration: const InputDecoration(
                 border: UnderlineInputBorder(),
@@ -363,12 +416,6 @@ class _BookingFormState extends State<BookingForm> {
                         'sessionFrom': widget.sessionFrom,
                         'userName': user.currentUser!.email,
                       };
-                      await FirebaseFirestore.instance
-                          .collection('workshop')
-                          .doc('AsBVN2Eu9SgaFK68CyR1')
-                          .update({
-                        'workshop': FieldValue.arrayRemove([widget.index]),
-                      });
 
                       await FirebaseFirestore.instance
                           .collection('myWorkshop')
