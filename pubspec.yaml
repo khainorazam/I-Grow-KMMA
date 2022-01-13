@@ -63,6 +63,9 @@ dependencies:
   cupertino_list_tile: ^0.2.0
   settings_ui: ^1.0.0
   google_fonts: ^2.2.0
+  firebase_messaging: ^11.2.5
+  animated_theme_switcher: ^2.0.6
+  string_validator: ^0.3.0
   
 
 dev_dependencies:

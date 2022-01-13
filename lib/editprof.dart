@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/profile/page/edit_email.dart';
+import 'package:flutter_group9/profile/page/edit_name.dart';
+import 'package:flutter_group9/profile/page/edit_phone.dart';
 import 'package:flutter_group9/setting.dart';
 import 'package:flutter_group9/login.dart';
 import 'package:flutter_group9/timeline.dart';
@@ -12,7 +17,7 @@ import 'newpost.dart';
 class SettingsUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Setting UI",
       home: EditProfile(),
@@ -27,21 +32,6 @@ class EditProfile extends StatefulWidget {
   _EditProfileState createState() => _EditProfileState();
 }
 
-// final FirebaseAuth auth = FirebaseAuth.instance;
-
-// void inputData() {
-//   final User? user = auth.currentUser;
-//   final uid = user!.uid;
-//   // here you write the codes to input the data into firestore
-// }
-
-// String userID = "";
-// String name = "";
-// String email = "";
-// String location = "";
-// String about = "";
-// String status = "";
-
 CollectionReference users = FirebaseFirestore.instance.collection('users');
 String? documentId;
 
@@ -49,6 +39,7 @@ class _EditProfileState extends State<EditProfile> {
   String userID = "";
   String name = "";
   String email = "";
+  String phone = "";
   String location = "";
   String about = "";
   String status = "";
@@ -57,8 +48,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference sharing =
-        FirebaseFirestore.instance.collection('users');
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
     //to get current user ID
     getCurrentUser();
     userID = documentId!;
@@ -72,34 +62,12 @@ class _EditProfileState extends State<EditProfile> {
       email = value.data()!["email"];
       name = value.data()!["username"];
       location = value.data()!["location"];
+      phone = value.data()!["phone"];
       status = value.data()!["status"];
       about = value.data()!["about"];
     });
 
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      //   elevation: 1,
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.arrow_back,
-      //       color: Colors.green,
-      //     ),
-      //     onPressed: () {},
-      //   ),
-      //   actions: [
-      //     IconButton(
-      //       icon: Icon(
-      //         Icons.settings,
-      //         color: Colors.green,
-      //       ),
-      //       onPressed: () {
-      //         Navigator.of(context).push(MaterialPageRoute(
-      //             builder: (BuildContext context) => SettingsPage()));
-      //       },
-      //     ),
-      //   ],
-      // ),
       backgroundColor: Colors.lightGreen.shade100,
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
@@ -205,11 +173,10 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 height: 35,
               ),
-              buildTextField("Full Name", name, false),
-              buildTextField("E-mail", email, false),
-              buildTextField("Status", status, false),
-              buildTextField("Location", location, false),
-              buildTextField("About", about, false),
+              buildUserInfoDisplay(name, 'Name', EditNameFormPage()),
+              buildUserInfoDisplay(email, 'Email', EditEmailFormPage()),
+              buildUserInfoDisplay(phone, 'Phone', EditPhoneFormPage()),
+
               SizedBox(
                 height: 10,
               ),
@@ -273,40 +240,59 @@ class _EditProfileState extends State<EditProfile> {
     userID = "Null";
   }
 
-  Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
+  Widget buildUserInfoDisplay(String getValue, String title, Widget editPage) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 18.0),
-      //padding: const EdgeInsets.only(bottom: 35.0),
-      child: SingleChildScrollView(
-        child: TextField(
-          obscureText: isPasswordTextField ? showPassword : false,
-          decoration: InputDecoration(
-              // suffixIcon: isPasswordTextField
-              //     ? IconButton(
-              //         onPressed: () {
-              //           setState(() {
-              //             showPassword = !showPassword;
-              //           });
-              //         },
-              //         icon: Icon(
-              //           Icons.remove_red_eye,
-              //           color: Colors.grey,
-              //         ),
-              //       )
-              // : null,
-              contentPadding: EdgeInsets.only(bottom: 3),
-              labelText: labelText,
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              hintText: placeholder,
-              hintStyle: TextStyle(
-                fontSize: 16,
-                fontStyle: FontStyle.italic,
-                color: Colors.black,
-              )),
-        ),
-      ),
-    );
+        padding: EdgeInsets.only(bottom: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(
+              height: 1,
+            ),
+            Container(
+                width: 350,
+                height: 40,
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                  color: Colors.grey,
+                  width: 1,
+                ))),
+                child: Row(children: [
+                  Expanded(
+                      child: TextButton(
+                          onPressed: () {
+                            navigateSecondPage(editPage);
+                          },
+                          child: Text(
+                            getValue,
+                            style: TextStyle(fontSize: 16, height: 1.4),
+                          ))),
+                  Icon(
+                    Icons.keyboard_arrow_right,
+                    color: Colors.grey,
+                    size: 40.0,
+                  )
+                ]))
+          ],
+        ));
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
+  }
+
+  void navigateSecondPage(Widget editForm) {
+    Route route = MaterialPageRoute(builder: (context) => editForm);
+    Navigator.push(context, route).then(onGoBack);
   }
 }
 
