@@ -17,12 +17,14 @@ class _ChatScreenState extends State<ChatScreen> {
   var _controller = TextEditingController();
 
   String message = "";
+  DateTime now = DateTime.now();
 
   Future<void> addMessage() {
     return messages
         .add({
           'sender': FirebaseAuth.instance.currentUser?.email,
-          'text': message
+          'text': message,
+          'time': now
         })
         .then((value) => print("Message Added"))
         .catchError((error) => print("Failed to add user: $error"));

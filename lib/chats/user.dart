@@ -1,10 +1,5 @@
-import 'package:flutter_group9/data/utils.dart';
-import 'package:meta/meta.dart';
-
-import '../utils.dart';
-
 class UserField {
-  static final String lastMessageTime = 'lastMessageTime';
+  static const String lastMessageTime = 'lastMessageTime';
 }
 
 class User {

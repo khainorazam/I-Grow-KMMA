@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/chats/chatbox.dart';
+import 'package:flutter_group9/messages/chat_screen.dart';
 import 'package:flutter_group9/newpost.dart';
 import 'package:flutter_group9/mytimeline.dart';
 import 'package:flutter_group9/test.dart';
@@ -163,11 +164,11 @@ Widget actionButton(
         onPressed: () {
           if (nextPage == "MyTimeline") {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MyTimeline()));
+                context, MaterialPageRoute(builder: (context) => ChatScreen()));
           }
           if (nextPage == "Messages") {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => ChatScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ChatsScreen()));
           }
         },
         icon: Icon(
