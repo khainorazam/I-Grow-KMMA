@@ -1,58 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_group9/profile/widget/appbar_widget.dart';
-import 'package:string_validator/string_validator.dart';
 import 'package:flutter_group9/profile/user/user_data.dart';
-import 'package:flutter_group9/profile/page/profile_page.dart';
 
 import '../../maininterface.dart';
-//import 'package:flutter_user_profile/widgets/appbar_widget.dart';
+import 'package:flutter_group9/profile/widget/appbar_widget.dart';
 
-// This class handles the Page to edit the Phone Section of the User Profile.
-class EditPhoneFormPage extends StatefulWidget {
-  const EditPhoneFormPage({Key? key}) : super(key: key);
+// This class handles the Page to edit the About Me Section of the User Profile.
+class EditLocationFormPage extends StatefulWidget {
   @override
-  EditPhoneFormPageState createState() {
-    return EditPhoneFormPageState();
-  }
+  _EditLocationFormPageState createState() => _EditLocationFormPageState();
 }
 
 String? documentId;
 
-class EditPhoneFormPageState extends State<EditPhoneFormPage> {
-  String userID = "";
-  String _phone = "";
-
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+class _EditLocationFormPageState extends State<EditLocationFormPage> {
   final _formKey = GlobalKey<FormState>();
-  final phoneController = TextEditingController();
-  //var user = UserData.myUser;
+  final locationController = TextEditingController();
+
+  String userID = "";
+  String _location = "";
 
   @override
   void dispose() {
-    phoneController.dispose();
+    locationController.dispose();
     super.dispose();
   }
 
-  void updateUserValue(String phone) {
-    String formattedPhoneNumber = "(" +
-        phone.substring(0, 3) +
-        ") " +
-        phone.substring(3, 6) +
-        "-" +
-        phone.substring(6, phone.length);
-    _phone = formattedPhoneNumber;
+  void updateUserValue(String location) {
+    _location = location;
   }
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference sharing =
-        FirebaseFirestore.instance.collection('users');
-    final _formKey = GlobalKey<FormState>();
-    final phoneController = TextEditingController();
-    //var user = UserData.myUser;
-
     getCurrentUser();
     userID = documentId!;
 
@@ -62,7 +42,7 @@ class EditPhoneFormPageState extends State<EditPhoneFormPage> {
         .doc(userID)
         .get()
         .then((value) {
-      _phone = value.data()!["phone"];
+      _location = value.data()!["location"];
     });
     return Scaffold(
         appBar: buildAppBar(context),
@@ -73,54 +53,56 @@ class EditPhoneFormPageState extends State<EditPhoneFormPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                    width: 320,
+                    width: 350,
                     child: const Text(
-                      "What's Your Phone Number?",
+                      "Where do you live?",
                       style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     )),
                 Padding(
-                    padding: EdgeInsets.only(top: 40),
+                    padding: EdgeInsets.all(20),
                     child: SizedBox(
                         height: 100,
-                        width: 320,
+                        width: 350,
                         child: TextFormField(
                           // Handles Form Validation
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your phone number';
-                            } else if (isAlpha(value)) {
-                              return 'Only Numbers Please';
-                            } else if (value.length < 10) {
-                              return 'Please enter a VALID phone number';
+                            if (value == null ||
+                                value.isEmpty ||
+                                value.length > 200) {
+                              return 'Please describe yourself but keep it under 200 characters.';
                             }
                             return null;
                           },
-                          controller: phoneController,
+                          controller: locationController,
+                          textAlignVertical: TextAlignVertical.top,
                           decoration: const InputDecoration(
-                            labelText: 'Your Phone Number',
-                          ),
+                              alignLabelWithHint: true,
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(10, 15, 10, 50),
+                              hintMaxLines: 3,
+                              hintText: 'Please state your new location.'),
                         ))),
                 Padding(
-                    padding: EdgeInsets.only(top: 150),
+                    padding: EdgeInsets.only(top: 50),
                     child: Align(
                         alignment: Alignment.bottomCenter,
                         child: SizedBox(
-                          width: 320,
+                          width: 350,
                           height: 50,
                           child: ElevatedButton(
                             onPressed: () {
                               // Validate returns true if the form is valid, or false otherwise.
-                              if (_formKey.currentState!.validate() &&
-                                  isNumeric(phoneController.text)) {
-                                updateUserValue(phoneController.text);
+                              if (_formKey.currentState!.validate()) {
+                                updateUserValue(locationController.text);
+                                //Navigator.pop(context);
                                 var firebaseUser =
                                     FirebaseAuth.instance.currentUser;
                                 FirebaseFirestore.instance
                                     .collection("users")
                                     .doc(userID)
-                                    .update({'phone': '`' + _phone})
-                                    .then((_) => print(_phone))
+                                    .update({'location': _location})
+                                    .then((_) => print(_location))
                                     .catchError(
                                         (error) => print('Failed: $error'));
                                 Navigator.push(
@@ -133,7 +115,9 @@ class EditPhoneFormPageState extends State<EditPhoneFormPage> {
                             },
                             child: const Text(
                               'Update',
-                              style: TextStyle(fontSize: 15),
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
                             ),
                           ),
                         )))
