@@ -5,9 +5,10 @@ class SearchFriends extends SearchDelegate {
     "Ahmad Mujahid",
     "Ali Baba",
     "firdaus",
+    "Ibrahim Musa",
+    "Idham Anur",
     "Khainor Azam",
     "Muhammad Firdaus",
-    "Mohd Idham bin Anur",
     "Nor Ain Salleh",
     "Yasmeen Abu Bakar",
   ];
