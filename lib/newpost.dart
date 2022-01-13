@@ -34,13 +34,13 @@ class NewPostState extends State<NewPost> {
   final myController = TextEditingController();
   late VideoPlayerController _videoPlayerController;
   late VideoPlayerController _cameraVideoPlayerController;
+  String? documentId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
   Widget build(BuildContext context) {
     CollectionReference sharing =
         FirebaseFirestore.instance.collection('sharing');
     //to get current user ID
-    getCurrentUser();
     userID = documentId!;
 
     //store data to db
@@ -124,6 +124,7 @@ class NewPostState extends State<NewPost> {
       setState(() {
         imageFile = null;
         image = false;
+        imageUrl = "";
       });
     }
 
@@ -429,10 +430,4 @@ class NewPostState extends State<NewPost> {
               )),
         ));
   }
-}
-
-void getCurrentUser() async {
-  final User? user = FirebaseAuth.instance.currentUser;
-  final uid = user!.uid;
-  documentId = uid;
 }

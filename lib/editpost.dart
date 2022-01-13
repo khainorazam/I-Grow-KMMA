@@ -44,7 +44,6 @@ class _EditPostState extends State<EditPost> {
         Text("Error");
         print('error occured ${error}');
       }
-      print(docID);
       return sharing
           .doc(docID)
           .update(
@@ -107,6 +106,7 @@ class _EditPostState extends State<EditPost> {
       setState(() {
         imageFile = null;
         image = false;
+        imageUrl = "";
       });
     }
 
