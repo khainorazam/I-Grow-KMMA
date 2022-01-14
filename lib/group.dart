@@ -6,7 +6,7 @@ import 'package:flutter_group9/viewgroup.dart';
 import 'package:flutter_group9/widget/custom_page_route.dart';
 import 'package:flutter_group9/widget/searchservice.dart';
 
-CollectionReference users = FirebaseFirestore.instance.collection('users');
+// CollectionReference users = FirebaseFirestore.instance.collection('users');
 String? documentId;
 Map<String, dynamic>? data;
 
