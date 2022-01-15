@@ -158,6 +158,17 @@ class FriendsState extends State<Friends> {
       "assets/brinjal.png",
     ];
 
+    String? user = FirebaseAuth.instance.currentUser?.uid;
+
+    final Stream<QuerySnapshot> friend = FirebaseFirestore.instance
+        .collection('users')
+        .where('userid', isEqualTo: user)
+        // .orderBy('id')
+        .snapshots();
+
+    final Stream<QuerySnapshot> alluser =
+        FirebaseFirestore.instance.collection('users').snapshots();
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(color: Colors.lightGreen.shade100),
@@ -196,94 +207,65 @@ class FriendsState extends State<Friends> {
                             ),
                           ),
                         ),
-                        PhysicalModel(
-                          color: Colors.transparent,
-                          shadowColor: Colors.green,
-                          elevation: 20,
-                          child: Container(
-                            margin: const EdgeInsets.all(8.0),
-                            child: SizedBox(
-                              height: 60.0,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      CustomPageRoute(
-                                          child: const Profile(),
-                                          direction: AxisDirection.left));
+                        StreamBuilder<QuerySnapshot>(
+                            stream: alluser,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Something went wrong');
+                              }
+
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Text("Loading");
+                              }
+
+                              var data = snapshot.requireData;
+
+                              return ListView.builder(
+                                itemCount: data.size,
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return StreamBuilder(
+                                    stream: friend,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<QuerySnapshot>
+                                            snapshot2) {
+                                      if (snapshot2.hasError) {
+                                        return Text("something is wrong");
+                                      }
+                                      if (snapshot2.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      if (data.docs[index]['userid'] == user) {
+                                        return SizedBox.shrink();
+                                      }
+
+                                      var added = snapshot2.data!.docChanges[0]
+                                          .doc['request_uid'];
+                                      // snapshot2.data!.docChanges[0].doc['pending_uid'];
+                                      bool check = added
+                                          .contains(data.docs[index]['userid']);
+
+                                      print(added);
+                                      print(data.docs[index]['userid']);
+                                      print(check);
+                                      if (!check) {
+                                        return SizedBox.shrink();
+                                      } else {
+                                        return FriendRequestBox(
+                                            data.docs[index]['dpUrl'],
+                                            data.docs[index]['username'],
+                                            context);
+                                      }
+                                    },
+                                  );
                                 },
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.white),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                    ))),
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 10),
-                                      child: const CircleAvatar(
-                                        backgroundImage:
-                                            AssetImage("assets/baam.jpg"),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Container(
-                                                child: const Text(
-                                                  'Idham Anur',
-                                                  style: TextStyle(
-                                                    color: Colors.black87,
-                                                    fontSize: 18.0,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Row(
-                                                children: [
-                                                  IconButton(
-                                                      iconSize: 35.0,
-                                                      onPressed: () {},
-                                                      icon: Icon(
-                                                        Icons
-                                                            .check_circle_outline,
-                                                        color:
-                                                            Colors.green[600],
-                                                      )),
-                                                  IconButton(
-                                                      iconSize: 35.0,
-                                                      onPressed:
-                                                          deleteFriendReq,
-                                                      icon: Icon(
-                                                        Icons.cancel_outlined,
-                                                        color: Colors.red[600],
-                                                      )),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
+                              );
+                            })
                       ],
                     ),
                     SizedBox(
@@ -300,28 +282,65 @@ class FriendsState extends State<Friends> {
                             ),
                           ),
                         ),
-                        FutureBuilder(
-                            future: listBoxVariable,
+                        StreamBuilder<QuerySnapshot>(
+                            stream: alluser,
                             builder: (BuildContext context,
-                                AsyncSnapshot<List> snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                return ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Container(
-                                      child: FriendBox('${friendPic[index]}',
-                                          '${snapshot.data![index]}', context),
-                                    );
-                                  },
-                                );
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Something went wrong');
                               }
 
-                              return Text("Loading");
-                            }),
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Text("Loading");
+                              }
+
+                              var data = snapshot.requireData;
+
+                              return ListView.builder(
+                                itemCount: data.size,
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return StreamBuilder(
+                                    stream: friend,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<QuerySnapshot>
+                                            snapshot2) {
+                                      if (snapshot2.hasError) {
+                                        return Text("something is wrong");
+                                      }
+                                      if (snapshot2.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                      if (data.docs[index]['userid'] == user) {
+                                        return SizedBox.shrink();
+                                      }
+
+                                      var added = snapshot2.data!.docChanges[0]
+                                          .doc['friend_uid'];
+                                      // snapshot2.data!.docChanges[0].doc['pending_uid'];
+                                      bool check = added
+                                          .contains(data.docs[index]['userid']);
+
+                                      print(added);
+                                      print(data.docs[index]['userid']);
+                                      print(check);
+                                      if (!check) {
+                                        return SizedBox.shrink();
+                                      } else {
+                                        return FriendBox(
+                                            data.docs[index]['dpUrl'],
+                                            data.docs[index]['username'],
+                                            context);
+                                      }
+                                    },
+                                  );
+                                },
+                              );
+                            })
                       ],
                     ),
                   ],
@@ -346,22 +365,22 @@ class FriendsState extends State<Friends> {
   }
 }
 
-Future<List> listBoxFunction() {
-  List<String> friendName = [];
-  FirebaseFirestore.instance
-      .collection('testfriend')
-      .get()
-      .then((QuerySnapshot querySnapshot) {
-    querySnapshot.docs.forEach((doc) {
-      print(doc['friendName']);
-      friendName.add(doc['friendName']);
-    });
-  });
+// Future<List> listBoxFunction() {
+//   List<String> friendName = [];
+//   FirebaseFirestore.instance
+//       .collection('testfriend')
+//       .get()
+//       .then((QuerySnapshot querySnapshot) {
+//     querySnapshot.docs.forEach((doc) {
+//       print(doc['friendName']);
+//       friendName.add(doc['friendName']);
+//     });
+//   });
 
-  return Future.value(friendName);
-}
+//   return Future.value(friendName);
+// }
 
-Future<List> listBoxVariable = listBoxFunction();
+// Future<List> listBoxVariable = listBoxFunction();
 
 Widget FriendBox(String friendPic, String friendName, BuildContext context) {
   List<Color> _colors = <Color>[
@@ -409,6 +428,17 @@ Widget FriendBox(String friendPic, String friendName, BuildContext context) {
     }
   }
 
+  String? user = FirebaseAuth.instance.currentUser?.uid;
+
+  final Stream<QuerySnapshot> friend = FirebaseFirestore.instance
+      .collection('users')
+      .where('userid', isEqualTo: user)
+      // .orderBy('id')
+      .snapshots();
+
+  final Stream<QuerySnapshot> alluser =
+      FirebaseFirestore.instance.collection('users').snapshots();
+
 //Confirm Remove Dialog
   Future<void> _showMyDialog() async {
     return showDialog<void>(
@@ -428,8 +458,13 @@ Widget FriendBox(String friendPic, String friendName, BuildContext context) {
             TextButton(
               child: Text('Confirm'),
               onPressed: () {
-                Navigator.of(context).pop();
-                updateStatus();
+                // snapshot.data!.docs[index].reference.update({
+                //   'friend_uid': FieldValue.arrayRemove([user]),
+                // })
+                // snapshot2.data!.docs[0].reference.update({
+                //   'friend_uid': FieldValue.arrayRemove(
+                //       [snapshot.data!.docs[index]['userid']]),
+                // })
               },
             ),
             TextButton(
@@ -484,7 +519,7 @@ Widget FriendBox(String friendPic, String friendName, BuildContext context) {
                     Container(
                       margin: const EdgeInsets.only(right: 10),
                       child: CircleAvatar(
-                        backgroundImage: AssetImage(friendPic),
+                        backgroundImage: NetworkImage(friendPic),
                       ),
                     ),
                     Expanded(
@@ -533,6 +568,131 @@ Widget FriendBox(String friendPic, String friendName, BuildContext context) {
           ),
           SizedBox(height: 8),
         ],
+      ),
+    ),
+  );
+}
+
+Widget FriendRequestBox(
+    String friendPic, String friendName, BuildContext context) {
+  List<Color> _colors = <Color>[
+    Colors.red.shade600,
+    Colors.green.shade600,
+  ];
+
+  Future<void> _showDeleteFriendReqDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Friend Request'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Text('Would you like to delete this friend request?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // updateStatus();
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deleteFriendReq() {
+    _showDeleteFriendReqDialog();
+  }
+
+  return PhysicalModel(
+    color: Colors.transparent,
+    shadowColor: Colors.green,
+    elevation: 20,
+    child: Container(
+      margin: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        height: 60.0,
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                CustomPageRoute(
+                    child: const Profile(), direction: AxisDirection.left));
+          },
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              ))),
+          child: Row(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(right: 10),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(friendPic),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          child: Text(
+                            friendName,
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          children: [
+                            IconButton(
+                                iconSize: 35.0,
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.check_circle_outline,
+                                  color: Colors.green[600],
+                                )),
+                            IconButton(
+                                iconSize: 35.0,
+                                onPressed: deleteFriendReq,
+                                icon: Icon(
+                                  Icons.cancel_outlined,
+                                  color: Colors.red[600],
+                                )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     ),
   );
