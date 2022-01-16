@@ -192,7 +192,7 @@ class _WorkshopState extends State<Workshop> {
                                     builder: (context) {
                                       return AlertDialog(
                                         content: const Text(
-                                            'You are aleardy Book this Programme'),
+                                            'You have already Booked this Programme'),
                                         actions: [
                                           TextButton(
                                             onPressed: () =>
@@ -241,24 +241,7 @@ class _WorkshopState extends State<Workshop> {
               ),
             );
           }),
-      // floatingActionButton: ElevatedButton.icon(
-      //   style: ElevatedButton.styleFrom(
-      //     primary: Colors.lightGreen.shade100,
-      //   ),
-      //   onPressed: () {
-      //     Navigator.push(
-      //         context, MaterialPageRoute(builder: (_) => const MyWorkShop()));
-      //   },
-      //   icon: const Icon(
-      //     Icons.schedule_outlined,
-      //     color: Colors.black,
-      //   ),
-      //   label: const Text(
-      //     'My Workshop',
-      //     style: TextStyle(
-      //         color: Colors.black, fontSize: 10, fontStyle: FontStyle.italic),
-      //   ),
-      // ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
