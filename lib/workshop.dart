@@ -20,14 +20,6 @@ getUserName() async {
   userName = data.data()!['username'];
 }
 
-getMyWorShop() async {
-  final worshopData = await FirebaseFirestore.instance
-      .collection('myWorkshop')
-      .doc(user.currentUser!.uid)
-      .get();
-  myWorkShop = worshopData.data();
-}
-
 class Workshop extends StatefulWidget {
   const Workshop({Key? key}) : super(key: key);
 
@@ -39,7 +31,6 @@ class _WorkshopState extends State<Workshop> {
   @override
   Widget build(BuildContext context) {
     getUserName();
-    getMyWorShop();
     return Scaffold(
       backgroundColor: Colors.lightGreen.shade100,
       body: StreamBuilder(
@@ -75,7 +66,8 @@ class _WorkshopState extends State<Workshop> {
                       child: IconButton(
                         onPressed: () {
                           showSearch(
-                              context: context, delegate: SearchProgramme());
+                              context: context,
+                              delegate: SearchProgramme(data: data));
                         },
                         icon: const Icon(Icons.search),
                       ),
@@ -191,11 +183,9 @@ class _WorkshopState extends State<Workshop> {
                             DataCell(
                               MaterialButton(
                                 onPressed: () {
-                                  setState(() {});
-                                  myWorkShop!['myWorkshop'].any(
-                                          (element) =>
-                                      element['programe'] ==
-                                          data[i]['programe']) ==
+                                  data[i]['users'].any((element) =>
+                                  element ==
+                                      user.currentUser!.uid) ==
                                       true
                                       ? showDialog(
                                     context: context,
@@ -229,6 +219,7 @@ class _WorkshopState extends State<Workshop> {
                                             ['sessionFrom'],
                                             sessiontTo: data[i]
                                             ['sessionTo'],
+                                            docId: data[i].id,
                                           )));
                                 },
                                 color: Colors.lightGreen.shade100,
@@ -250,49 +241,76 @@ class _WorkshopState extends State<Workshop> {
               ),
             );
           }),
-      floatingActionButton: ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-          primary: Colors.lightGreen.shade100,
-        ),
+      // floatingActionButton: ElevatedButton.icon(
+      //   style: ElevatedButton.styleFrom(
+      //     primary: Colors.lightGreen.shade100,
+      //   ),
+      //   onPressed: () {
+      //     Navigator.push(
+      //         context, MaterialPageRoute(builder: (_) => const MyWorkShop()));
+      //   },
+      //   icon: const Icon(
+      //     Icons.schedule_outlined,
+      //     color: Colors.black,
+      //   ),
+      //   label: const Text(
+      //     'My Workshop',
+      //     style: TextStyle(
+      //         color: Colors.black, fontSize: 10, fontStyle: FontStyle.italic),
+      //   ),
+      // ),
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {});
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => const MyWorkShop()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => MyWorkShop()));
         },
-        icon: const Icon(
-          Icons.schedule_outlined,
-          color: Colors.black,
-        ),
-        label: const Text(
-          'My Workshop',
-          style: TextStyle(
-              color: Colors.black, fontSize: 10, fontStyle: FontStyle.italic),
-        ),
+        child: const Icon(Icons.schedule_outlined),
+        backgroundColor: Colors.green[700],
+        tooltip: "My Workshop",
       ),
     );
   }
 }
 
 class SearchProgramme extends SearchDelegate {
+  List? data;
+  SearchProgramme({this.data});
   @override
   List<Widget>? buildActions(BuildContext context) => [
-    IconButton(onPressed: () {
-      query='';
-    }, icon: const Icon(Icons.clear)),
+    IconButton(
+        onPressed: () {
+          query = '';
+        },
+        icon: const Icon(Icons.clear)),
   ];
 
   @override
   Widget? buildLeading(BuildContext context) => IconButton(
       onPressed: () {
-        Navigator.pop(context);
+        close(context, null);
       },
       icon: const Icon(Icons.arrow_back));
 
   @override
-  Widget buildResults(BuildContext context) => Container();
+  Widget buildResults(BuildContext context) => Center(child: Text(query));
 
   @override
-  Widget buildSuggestions(BuildContext context) => Container();
+  Widget buildSuggestions(BuildContext context) {
+    dynamic searchList = query.isEmpty
+        ? data
+        : data!.where((value) => value['programe'].startsWith(query)).toList();
+    return ListView.builder(
+      itemCount: searchList!.length,
+      itemBuilder: (context, i) {
+        return ListTile(
+            title: Text(searchList[i]['programe']),
+            onTap: () {
+              query = searchList[i]['programe'];
+              showResults(context);
+            });
+      },
+    );
+  }
 }
 
 // ignore: must_be_immutable
@@ -303,6 +321,7 @@ class BookingForm extends StatefulWidget {
   dynamic sessionFrom;
   dynamic sessiontTo;
   dynamic index;
+  dynamic docId;
   BookingForm({
     Key? key,
     this.programmeName,
@@ -311,6 +330,7 @@ class BookingForm extends StatefulWidget {
     this.sessionFrom,
     this.sessiontTo,
     this.index,
+    this.docId,
   }) : super(key: key);
 
   @override
@@ -415,14 +435,16 @@ class _BookingFormState extends State<BookingForm> {
                         'sessionTo': widget.sessiontTo,
                         'sessionFrom': widget.sessionFrom,
                         'userName': user.currentUser!.email,
+                        'workshopId': widget.docId,
                       };
-
                       await FirebaseFirestore.instance
-                          .collection('myWorkshop')
-                          .doc(user.currentUser!.uid)
+                          .collection('workshop')
+                          .doc(widget.docId)
                           .set({
-                        'myWorkshop': FieldValue.arrayUnion([workshopData])
+                        'users': FieldValue.arrayUnion([user.currentUser!.uid]),
                       }, SetOptions(merge: true));
+
+
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
