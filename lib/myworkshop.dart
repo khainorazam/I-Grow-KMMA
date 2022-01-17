@@ -24,10 +24,9 @@ class _MyWorkShopState extends State<MyWorkShop> {
         body: Scaffold(
           backgroundColor: Colors.lightGreen.shade100,
           body: StreamBuilder<dynamic>(
-              stream: FirebaseFirestore.instance
-                  .collection('myWorkshop')
-                  .doc(user.currentUser!.uid)
-                  .snapshots(),
+              stream: FirebaseFirestore.instance.collection('workshop').where(
+                  'users',
+                  arrayContainsAny: [user.currentUser!.uid]).snapshots(),
               builder: (context, dynamic snapshot) {
                 if (snapshot.hasError || !snapshot.hasData) {
                   return Column(
@@ -85,9 +84,9 @@ class _MyWorkShopState extends State<MyWorkShop> {
                   return const Text("Loading");
                 }
 
-                dynamic data = snapshot.data!.data();
-
-                return data == null || data['myWorkshop'].isEmpty
+                //dynamic data = snapshot.data!.data();
+                dynamic data = snapshot.data.docs.toList();
+                return data == null || data.isEmpty
                     ? Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -108,7 +107,7 @@ class _MyWorkShopState extends State<MyWorkShop> {
                         alignment: Alignment.topRight,
                         child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.lightGreen.shade100,
+                              primary: Colors.lightGreen.shade200,
                             ),
                             onPressed: () {
                               Navigator.pop(context);
@@ -126,6 +125,7 @@ class _MyWorkShopState extends State<MyWorkShop> {
                             )),
                       ),
                     ),
+
                     Container(
                       color: Colors.white,
                       height: 350,
@@ -158,7 +158,8 @@ class _MyWorkShopState extends State<MyWorkShop> {
                           alignment: Alignment.topRight,
                           child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.lightGreen.shade100,
+                                primary: Colors.lightGreen.shade200,
+
                               ),
                               onPressed: () {
                                 Navigator.pop(context);
@@ -225,9 +226,7 @@ class _MyWorkShopState extends State<MyWorkShop> {
                                 ),
                               ],
                               rows: [
-                                for (int i = 0;
-                                i < data['myWorkshop'].length;
-                                i++)
+                                for (int i = 0; i < data.length; i++)
                                   DataRow(cells: [
                                     DataCell(Text(
                                       '${i + 1}'.toString(),
@@ -236,16 +235,15 @@ class _MyWorkShopState extends State<MyWorkShop> {
                                           fontStyle: FontStyle.italic),
                                     )),
                                     DataCell(Text(
-                                      data['myWorkshop'][i]['programe'],
+                                      data[i]['programe'],
                                       style: const TextStyle(
                                           fontSize: 10,
                                           fontStyle: FontStyle.italic),
                                     )),
                                     DataCell(Text(
                                       DateFormat.yMMMd()
-                                          .format(data['myWorkshop'][i]
-                                      ['date']
-                                          .toDate())
+                                          .format(
+                                          data[i]['date'].toDate())
                                           .toString(),
                                       style: const TextStyle(
                                           fontSize: 10,
@@ -258,8 +256,8 @@ class _MyWorkShopState extends State<MyWorkShop> {
                                         children: [
                                           Text(
                                             DateFormat.jm()
-                                                .format(data['myWorkshop']
-                                            [i]['sessionFrom']
+                                                .format(data[i]
+                                            ['sessionFrom']
                                                 .toDate())
                                                 .toString(),
                                             style: const TextStyle(
@@ -276,8 +274,8 @@ class _MyWorkShopState extends State<MyWorkShop> {
                                           ),
                                           Text(
                                             DateFormat.jm()
-                                                .format(data['myWorkshop']
-                                            [i]['sessionTo']
+                                                .format(data[i]
+                                            ['sessionTo']
                                                 .toDate())
                                                 .toString(),
                                             style: const TextStyle(
@@ -291,16 +289,18 @@ class _MyWorkShopState extends State<MyWorkShop> {
                                     DataCell(
                                       MaterialButton(
                                         onPressed: () async {
-                                          setState(() {});
+                                          // setState(() {});
                                           await FirebaseFirestore.instance
-                                              .collection('myWorkshop')
-                                              .doc(user.currentUser!.uid)
+                                              .collection('workshop')
+                                              .doc(data[i].id)
                                               .update({
-                                            'myWorkshop':
+                                            'users':
                                             FieldValue.arrayRemove([
-                                              data['myWorkshop'][i]
+                                              user.currentUser!.uid
                                             ]),
                                           });
+
+
                                           Navigator.pop(context);
                                         },
                                         color: Colors.red.shade100,
