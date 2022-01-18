@@ -50,7 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 clearMessage();
               }),
         ],
-        title: Text('⚡️Chat'),
+        title: Text('⚡️ Chatroom'),
         backgroundColor: Colors.green,
       ),
       body: SafeArea(
