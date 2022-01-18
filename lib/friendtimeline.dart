@@ -1,23 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_group9/editpost.dart';
-import 'package:flutter_group9/maininterface.dart';
 import 'package:intl/intl.dart';
+import 'maininterface.dart';
 
 CollectionReference users = FirebaseFirestore.instance.collection('users');
-String? documentId = FirebaseAuth.instance.currentUser?.uid;
-String temp = "";
+String? documentid;
+String temp1 = "";
 bool refresh = false;
-Map<String, dynamic>? data;
+Map<String, dynamic>? data1;
 
-class MyTimeline extends StatefulWidget {
-  const MyTimeline({Key? key}) : super(key: key);
+class FriendTimeline extends StatefulWidget {
+  final String userid;
+  const FriendTimeline({Key? key, required this.userid}) : super(key: key);
+
   @override
-  _MyTimelineState createState() => _MyTimelineState();
+  _FriendTimelineState createState() =>
+      _FriendTimelineState(userid: this.userid);
 }
 
-class _MyTimelineState extends State<MyTimeline> {
+class _FriendTimelineState extends State<FriendTimeline> {
+  String userid;
+  _FriendTimelineState({required this.userid});
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,7 @@ class _MyTimelineState extends State<MyTimeline> {
   bool _isLoadingFeed = false;
   @override
   Widget build(BuildContext context) {
+    documentid = userid;
     return Scaffold(
       backgroundColor: Colors.lightGreen.shade100,
       appBar: AppBar(
@@ -70,7 +74,7 @@ class _MyTimelineState extends State<MyTimeline> {
                       ),
                       StreamBuilder(
                           stream: users
-                              .where('userid', isEqualTo: documentId)
+                              .where('userid', isEqualTo: documentid)
                               .snapshots(),
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -89,16 +93,16 @@ class _MyTimelineState extends State<MyTimeline> {
                               shrinkWrap: true,
                               children: snapshot.data!.docs
                                   .map((DocumentSnapshot document) {
-                                data = document.data() as Map<String, dynamic>;
+                                data1 = document.data() as Map<String, dynamic>;
                                 return Column(
                                   children: [
                                     CircleAvatar(
                                       radius: 75,
                                       backgroundImage:
-                                          NetworkImage(data!['dpUrl']),
+                                          NetworkImage(data1!['dpUrl']),
                                     ),
                                     Text(
-                                      data!['username'],
+                                      data1!['username'],
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 30.0,
@@ -152,11 +156,12 @@ Widget PostFeed() {
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
-            data = document.data() as Map<String, dynamic>;
-            date = DateFormat.yMMMd().format(data!['time'].toDate()).toString();
+            data1 = document.data() as Map<String, dynamic>;
+            date =
+                DateFormat.yMMMd().format(data1!['time'].toDate()).toString();
             postID = document.id;
             return Column(children: [
-              if (data!['userID'] == documentId)
+              if (data1!['userID'] == documentid)
                 PhysicalModel(
                   color: Colors.transparent,
                   shadowColor: Colors.green,
@@ -176,7 +181,7 @@ Widget PostFeed() {
                         StreamBuilder(
                             stream: FirebaseFirestore.instance
                                 .collection('users')
-                                .where('userid', isEqualTo: documentId)
+                                .where('userid', isEqualTo: documentid)
                                 .snapshots(),
                             builder: (BuildContext context,
                                 AsyncSnapshot<QuerySnapshot> snapshot2) {
@@ -195,14 +200,14 @@ Widget PostFeed() {
                                 shrinkWrap: true,
                                 children: snapshot2.data!.docs
                                     .map((DocumentSnapshot document) {
-                                  data =
+                                  data1 =
                                       document.data() as Map<String, dynamic>;
                                   return AvatarandUsername(
-                                      data!['dpUrl'],
-                                      data!['username'],
+                                      data1!['dpUrl'],
+                                      data1!['username'],
                                       date,
                                       postID,
-                                      data!['userid'],
+                                      data1!['userid'],
                                       context);
                                 }).toList(),
                               );
@@ -212,7 +217,7 @@ Widget PostFeed() {
                         ),
                         Container(
                             child: Text(
-                          data!['caption'],
+                          data1!['caption'],
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -221,14 +226,14 @@ Widget PostFeed() {
                           height: 10,
                         ),
                         Container(
-                            child: data!['imageUrl'] != temp
+                            child: data1!['imageUrl'] != temp1
                                 ? SizedBox(
                                     width: double.infinity,
                                     height: 200,
                                     child: FittedBox(
                                         fit: BoxFit.fill,
                                         child:
-                                            Image.network(data!['imageUrl'])))
+                                            Image.network(data1!['imageUrl'])))
                                 : null),
                         SizedBox(
                           height: 10,
@@ -269,110 +274,8 @@ Widget AvatarandUsername(String? avatarUrl, String userName, String date,
           ],
         ),
       ),
-      Expanded(
-        flex: 1,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.more_vert,
-                color: Colors.black,
-              ),
-              color: Colors.purple.shade600,
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                          title: Text(
-                            "Choose option",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: [
-                                Divider(
-                                  height: 1,
-                                  color: Colors.blue,
-                                ),
-                                ListTile(
-                                  onTap: () {
-                                    Navigator.of(ctx).pop();
-                                    deletePost(ID, context);
-                                  },
-                                  title: Text("Delete Post"),
-                                ),
-                                Divider(
-                                  height: 1,
-                                  color: Colors.blue,
-                                ),
-                                ListTile(
-                                  onTap: () {
-                                    Navigator.of(ctx).pop();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => EditPost(
-                                          docID: ID,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  title: Text("Edit Post"),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ));
-              },
-            ),
-          ],
-        ),
-      )
     ],
   );
-}
-
-Future<void> deletePost(String ID, BuildContext context) async {
-  CollectionReference sharing =
-      FirebaseFirestore.instance.collection('sharing');
-  showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-            title: Text(
-              "Confirm Delete",
-              style: TextStyle(color: Colors.red),
-            ),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  Divider(
-                    height: 1,
-                    color: Colors.red,
-                  ),
-                  ListTile(
-                    onTap: () {
-                      Navigator.of(ctx).pop();
-                      sharing
-                          .doc(ID)
-                          .delete()
-                          .then((value) => print("Sharing Deleted"))
-                          .catchError((error) =>
-                              print("Failed to delete user: $error"));
-                    },
-                    title: Text(
-                      "Yes",
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Divider(
-                    height: 1,
-                    color: Colors.red,
-                  ),
-                ],
-              ),
-            ),
-          ));
 }
 
 Widget LikeandDislike() {

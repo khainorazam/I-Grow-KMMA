@@ -23,7 +23,6 @@ String dpUrl = "";
 String userID = "";
 bool image = false;
 String imageUrl = "";
-DateTime now = DateTime.now();
 
 //define collection ref
 CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -64,7 +63,7 @@ class NewPostState extends State<NewPost> {
             'userID': userID,
             'caption': myController.text,
             'imageUrl': imageUrl,
-            'time': now
+            'time': FieldValue.serverTimestamp(),
           })
           .then((value) => print("Sharing Added"))
           .catchError((error) => print("Failed to add sharing: $error"));

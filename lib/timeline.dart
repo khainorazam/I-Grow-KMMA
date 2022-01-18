@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/chats/chatbox.dart';
+import 'package:flutter_group9/friendtimeline.dart';
+import 'package:flutter_group9/myworkshop.dart';
 import 'package:flutter_group9/newpost.dart';
 import 'package:flutter_group9/mytimeline.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 import 'maininterface.dart';
 import 'widget/custom_post.dart';
@@ -211,6 +214,7 @@ class _TimelineState extends State<Timeline> {
 
 Widget PostFeed(List userid) {
   DateTime d;
+  String date;
   String postID;
   return StreamBuilder(
       stream: FirebaseFirestore.instance
@@ -232,7 +236,7 @@ Widget PostFeed(List userid) {
           shrinkWrap: true,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             data = document.data() as Map<String, dynamic>;
-            d = data!['time'].toDate();
+            date = DateFormat.yMMMd().format(data!['time'].toDate()).toString();
             postID = document.id;
             return Column(children: [
               for (int i = 0; i < userid.length; i++)
@@ -282,8 +286,9 @@ Widget PostFeed(List userid) {
                                     return AvatarandUsername(
                                         data!['dpUrl'],
                                         data!['username'],
-                                        d.toString(),
+                                        date,
                                         postID,
+                                        data!['userid'],
                                         context);
                                   }).toList(),
                                 );
@@ -326,12 +331,37 @@ Widget PostFeed(List userid) {
 }
 
 Widget AvatarandUsername(String? avatarUrl, String userName, String date,
-    String ID, BuildContext context) {
+    String ID, String userID, BuildContext context) {
   return Row(
     children: <Widget>[
       FittedBox(
         fit: BoxFit.contain,
-        child: CircleAvatar(backgroundImage: NetworkImage(avatarUrl!)),
+        child: Container(
+          margin: EdgeInsets.all(0),
+          child: ButtonTheme(
+            padding: EdgeInsets.symmetric(
+                vertical: 0, horizontal: 0), //adds padding inside the button
+            materialTapTargetSize: MaterialTapTargetSize
+                .shrinkWrap, //limits the touch area to the button area
+            minWidth: 0, //wraps child's width
+            height: 0,
+            child: FlatButton(
+              child: CircleAvatar(backgroundImage: NetworkImage(avatarUrl!)),
+              onPressed: () {
+                print(userID);
+                if (userID == documentId) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyTimeline()));
+                } else {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => FriendTimeline(userid: userID)));
+                }
+              },
+            ),
+          ),
+        ),
       ),
       SizedBox(
         width: 8.0,
