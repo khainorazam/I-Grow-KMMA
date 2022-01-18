@@ -119,7 +119,36 @@ class _FriendTimelineState extends State<FriendTimeline> {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [PostFeed()],
+                        children: [
+                          StreamBuilder(
+                              stream: users
+                                  .where('userid', isEqualTo: documentid)
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Something went wrong');
+                                }
+
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Text("Loading");
+                                }
+
+                                return ListView(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  children: snapshot.data!.docs
+                                      .map((DocumentSnapshot document) {
+                                    data1 =
+                                        document.data() as Map<String, dynamic>;
+                                    return PostFeed(
+                                        data1!['dpUrl'], data1!['username']);
+                                  }).toList(),
+                                );
+                              }),
+                        ],
                       ),
                     ],
                   ),
@@ -133,10 +162,9 @@ class _FriendTimelineState extends State<FriendTimeline> {
   }
 }
 
-Widget PostFeed() {
+Widget PostFeed(String? avatarUrl, String userName) {
   DateTime d;
   String date;
-  String postID;
   return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('sharing')
@@ -157,9 +185,8 @@ Widget PostFeed() {
           shrinkWrap: true,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             data1 = document.data() as Map<String, dynamic>;
-            date =
-                DateFormat.yMMMd().format(data1!['time'].toDate()).toString();
-            postID = document.id;
+            d = DateTime.parse((data1!['time'].toDate()).toString());
+            date = convertToAgo(d);
             return Column(children: [
               if (data1!['userID'] == documentid)
                 PhysicalModel(
@@ -178,40 +205,8 @@ Widget PostFeed() {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection('users')
-                                .where('userid', isEqualTo: documentid)
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<QuerySnapshot> snapshot2) {
-                              if (snapshot2.hasError) {
-                                return Text('Something went wrong');
-                              }
-
-                              if (snapshot2.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Text("Loading");
-                              }
-
-                              return ListView(
-                                physics: NeverScrollableScrollPhysics(),
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                children: snapshot2.data!.docs
-                                    .map((DocumentSnapshot document) {
-                                  data1 =
-                                      document.data() as Map<String, dynamic>;
-                                  return AvatarandUsername(
-                                      data1!['dpUrl'],
-                                      data1!['username'],
-                                      date,
-                                      postID,
-                                      data1!['userid'],
-                                      context);
-                                }).toList(),
-                              );
-                            }),
+                        AvatarandUsername(avatarUrl, userName, date,
+                            document.id, documentid!, context),
                         SizedBox(
                           height: 10,
                         ),
@@ -235,18 +230,32 @@ Widget PostFeed() {
                                         child:
                                             Image.network(data1!['imageUrl'])))
                                 : null),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        LikeandDislike()
                       ],
                     ),
                   ),
                 )
+              else
+                SizedBox()
             ]);
           }).toList(),
         );
       });
+}
+
+String convertToAgo(DateTime input) {
+  Duration diff = DateTime.now().difference(input);
+
+  if (diff.inDays >= 1) {
+    return '${diff.inDays} day(s) ago';
+  } else if (diff.inHours >= 1) {
+    return '${diff.inHours} hour(s) ago';
+  } else if (diff.inMinutes >= 1) {
+    return '${diff.inMinutes} minute(s) ago';
+  } else if (diff.inSeconds >= 1) {
+    return '${diff.inSeconds} second(s) ago';
+  } else {
+    return 'just now';
+  }
 }
 
 Widget AvatarandUsername(String? avatarUrl, String userName, String date,
@@ -278,58 +287,58 @@ Widget AvatarandUsername(String? avatarUrl, String userName, String date,
   );
 }
 
-Widget LikeandDislike() {
-  return Container(
-    width: double.infinity,
-    height: 40,
-    decoration: BoxDecoration(
-        border: Border(
-            top: BorderSide(
-              color: Colors.grey.shade500,
-            ),
-            bottom: BorderSide(
-              color: Colors.grey.shade500,
-            ))),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Row(
-          children: [
-            IconButton(
-              iconSize: 20,
-              onPressed: () {},
-              icon: Icon(Icons.thumb_up_outlined, color: Colors.grey[500]
-                  //_likeStatus ? Colors.green[700] : Colors.grey[500],
-                  ),
-              tooltip: "Like this post",
-            ),
-            Text(
-              "Like",
-              style: TextStyle(fontSize: 14, color: Colors.grey[500]
-                  //_likeStatus ? Colors.green[700]: Colors.grey[500]
-                  ),
-            )
-          ],
-        ),
-        Row(
-          children: [
-            IconButton(
-              iconSize: 20,
-              onPressed: () {},
-              icon: Icon(Icons.thumb_down_outlined, color: Colors.grey[500]
-                  //_likeStatus ? Colors.green[700] : Colors.grey[500],
-                  ),
-              tooltip: "Like this post",
-            ),
-            Text(
-              "Dislike",
-              style: TextStyle(fontSize: 14, color: Colors.grey[500]
-                  //_likeStatus ? Colors.green[700]: Colors.grey[500]
-                  ),
-            )
-          ],
-        ),
-      ],
-    ),
-  );
-}
+// Widget LikeandDislike() {
+//   return Container(
+//     width: double.infinity,
+//     height: 40,
+//     decoration: BoxDecoration(
+//         border: Border(
+//             top: BorderSide(
+//               color: Colors.grey.shade500,
+//             ),
+//             bottom: BorderSide(
+//               color: Colors.grey.shade500,
+//             ))),
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//       children: <Widget>[
+//         Row(
+//           children: [
+//             IconButton(
+//               iconSize: 20,
+//               onPressed: () {},
+//               icon: Icon(Icons.thumb_up_outlined, color: Colors.grey[500]
+//                   //_likeStatus ? Colors.green[700] : Colors.grey[500],
+//                   ),
+//               tooltip: "Like this post",
+//             ),
+//             Text(
+//               "Like",
+//               style: TextStyle(fontSize: 14, color: Colors.grey[500]
+//                   //_likeStatus ? Colors.green[700]: Colors.grey[500]
+//                   ),
+//             )
+//           ],
+//         ),
+//         Row(
+//           children: [
+//             IconButton(
+//               iconSize: 20,
+//               onPressed: () {},
+//               icon: Icon(Icons.thumb_down_outlined, color: Colors.grey[500]
+//                   //_likeStatus ? Colors.green[700] : Colors.grey[500],
+//                   ),
+//               tooltip: "Like this post",
+//             ),
+//             Text(
+//               "Dislike",
+//               style: TextStyle(fontSize: 14, color: Colors.grey[500]
+//                   //_likeStatus ? Colors.green[700]: Colors.grey[500]
+//                   ),
+//             )
+//           ],
+//         ),
+//       ],
+//     ),
+//   );
+// }
