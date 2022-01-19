@@ -57,187 +57,196 @@ class _EditProfileState extends State<EditProfile> {
     getCurrentUser();
     userID = documentId!;
 
-    var firebaseUser = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(userID)
-        .get()
-        .then((value) {
-      email = value.data()!["email"];
-      name = value.data()!["username"];
-      location = value.data()!["location"];
-      phone = value.data()!["phone"];
-      status = value.data()!["status"];
-      dpUrl = value.data()!["dpUrl"];
-      about = value.data()!["about"];
-    });
+    Stream prof() async* {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userID)
+          .get()
+          .then((value) {
+        email = value.data()!["email"];
+        name = value.data()!["username"];
+        location = value.data()!["location"];
+        phone = value.data()!["phone"];
+        status = value.data()!["status"];
+        dpUrl = value.data()!["dpUrl"];
+        about = value.data()!["about"];
+      });
+    }
 
     return Scaffold(
       backgroundColor: Colors.lightGreen.shade100,
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: ListView(
-            children: <Widget>[
-              //   Padding(
-              //     padding: const EdgeInsets.only(left: 310),
-              //     child: MaterialButton(
-              //       onPressed: () async {
-              //         setState(() {
-              //           _isSigningOut = true;
-              //         });
-              //         await FirebaseAuth.instance.signOut();
-              //         setState(() {
-              //           _isSigningOut = false;
-              //         });
-              //         Navigator.of(context).pushReplacement(
-              //           MaterialPageRoute(
-              //             builder: (context) => Login(),
-              //           ),
-              //         );
-              //         // Navigator.push(context,
-              //         //     MaterialPageRoute(builder: (context) => Login()));
-              //       },
-              //       child: Icon(Icons.logout_outlined,
-              //           size: 35, color: Colors.black87),
-              //     ),
-              //   ),
-              Padding(
-                padding: const EdgeInsets.only(left: 310),
-                child: MaterialButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => SettingsPage()));
-                  },
-                  child: Icon(
-                    Icons.settings,
-                    color: Colors.green,
-                  ),
-                ),
-              ),
-              Text(
-                "My Profile ",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.black.withOpacity(0.1),
-                                offset: Offset(0, 10))
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                dpUrl,
-                              ))),
+      body: StreamBuilder(
+          stream: prof(),
+          builder: (context, snapshot) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+              child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: ListView(
+                  children: <Widget>[
+                    //   Padding(
+                    //     padding: const EdgeInsets.only(left: 310),
+                    //     child: MaterialButton(
+                    //       onPressed: () async {
+                    //         setState(() {
+                    //           _isSigningOut = true;
+                    //         });
+                    //         await FirebaseAuth.instance.signOut();
+                    //         setState(() {
+                    //           _isSigningOut = false;
+                    //         });
+                    //         Navigator.of(context).pushReplacement(
+                    //           MaterialPageRoute(
+                    //             builder: (context) => Login(),
+                    //           ),
+                    //         );
+                    //         // Navigator.push(context,
+                    //         //     MaterialPageRoute(builder: (context) => Login()));
+                    //       },
+                    //       child: Icon(Icons.logout_outlined,
+                    //           size: 35, color: Colors.black87),
+                    //     ),
+                    //   ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 310),
+                      child: MaterialButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  SettingsPage()));
+                        },
+                        child: Icon(
+                          Icons.settings,
+                          color: Colors.green,
+                        ),
+                      ),
                     ),
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 1.5,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            color: Colors.green,
+                    Text(
+                      "My Profile ",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Center(
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 130,
+                            height: 130,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 4,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor),
+                                boxShadow: [
+                                  BoxShadow(
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      color: Colors.black.withOpacity(0.1),
+                                      offset: Offset(0, 10))
+                                ],
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                      dpUrl,
+                                    ))),
                           ),
-                          child: IconButton(
-                            icon: const Icon(Icons.edit),
-                            color: Colors.white,
-                            onPressed: () {},
-                            //size: 10,
-                            //align:
+                          Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 1.5,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                  ),
+                                  color: Colors.green,
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  color: Colors.white,
+                                  onPressed: () {},
+                                  //size: 10,
+                                  //align:
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    buildUserInfoDisplay(name, 'Name', EditNameFormPage()),
+                    buildUserInfoDisplay2(email, 'Email'),
+                    buildUserInfoDisplay(phone, 'Phone', EditPhoneFormPage()),
+                    buildUserInfoDisplay(
+                        location, 'Location', EditLocationFormPage()),
+                    buildUserInfoDisplay(
+                        about, 'About Me', EditDescriptionFormPage()),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        MaterialButton(
+                          padding: EdgeInsets.symmetric(horizontal: 50),
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainInterface.select(0),
+                                ));
+                          },
+                          //color: Colors.white,
+                          child: Text("CANCEL",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  letterSpacing: 2.2,
+                                  color: Colors.black)),
+                        ),
+                        MaterialButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MainInterface.select(4),
+                                ));
+                          },
+                          color: Colors.green,
+                          padding: EdgeInsets.symmetric(horizontal: 50),
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Text(
+                            "SAVE",
+                            style: TextStyle(
+                                fontSize: 14,
+                                letterSpacing: 2.2,
+                                color: Colors.white),
                           ),
-                        )),
+                        )
+                      ],
+                    )
                   ],
                 ),
               ),
-              SizedBox(
-                height: 35,
-              ),
-              buildUserInfoDisplay(name, 'Name', EditNameFormPage()),
-              buildUserInfoDisplay2(email, 'Email'),
-              buildUserInfoDisplay(phone, 'Phone', EditPhoneFormPage()),
-              buildUserInfoDisplay(
-                  location, 'Location', EditLocationFormPage()),
-              buildUserInfoDisplay(
-                  about, 'About Me', EditDescriptionFormPage()),
-
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  MaterialButton(
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainInterface.select(0),
-                          ));
-                    },
-                    //color: Colors.white,
-                    child: Text("CANCEL",
-                        style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 2.2,
-                            color: Colors.black)),
-                  ),
-                  MaterialButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainInterface.select(4),
-                          ));
-                    },
-                    color: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Text(
-                      "SAVE",
-                      style: TextStyle(
-                          fontSize: 14,
-                          letterSpacing: 2.2,
-                          color: Colors.white),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
+            );
+          }),
     );
     userID = "Null";
   }
