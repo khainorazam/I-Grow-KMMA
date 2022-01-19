@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/profile/page/edit_description.dart';
 import 'package:flutter_group9/profile/page/edit_email.dart';
+import 'package:flutter_group9/profile/page/edit_image.dart';
 import 'package:flutter_group9/profile/page/edit_location.dart';
 import 'package:flutter_group9/profile/page/edit_name.dart';
 import 'package:flutter_group9/profile/page/edit_phone.dart';
@@ -175,7 +176,14 @@ class _EditProfileState extends State<EditProfile> {
                                 child: IconButton(
                                   icon: const Icon(Icons.edit),
                                   color: Colors.white,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const EditImagePage(),
+                                        ));
+                                  },
                                   //size: 10,
                                   //align:
                                 ),
@@ -191,7 +199,7 @@ class _EditProfileState extends State<EditProfile> {
                     buildUserInfoDisplay(phone, 'Phone', EditPhoneFormPage()),
                     buildUserInfoDisplay(
                         location, 'Location', EditLocationFormPage()),
-                    buildUserInfoDisplay(
+                    buildUserInfoDisplay3(
                         about, 'About Me', EditDescriptionFormPage()),
 
                     SizedBox(
@@ -271,6 +279,53 @@ class _EditProfileState extends State<EditProfile> {
             Container(
                 width: 350,
                 height: 40,
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                  color: Colors.grey,
+                  width: 1,
+                ))),
+                child: Row(children: [
+                  Expanded(
+                      child: TextButton(
+                          onPressed: () {
+                            navigateSecondPage(editPage);
+                          },
+                          child: Text(
+                            getValue,
+                            style: TextStyle(
+                                fontSize: 16, height: 1.4, color: Colors.green),
+                          ))),
+                  Icon(
+                    Icons.keyboard_arrow_right,
+                    color: Colors.grey,
+                    size: 40.0,
+                  )
+                ]))
+          ],
+        ));
+  }
+
+  Widget buildUserInfoDisplay3(String getValue, String title, Widget editPage) {
+    return Padding(
+        padding: EdgeInsets.only(bottom: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(
+              height: 1,
+            ),
+            Container(
+                width: 350,
+                height: 100,
                 decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
