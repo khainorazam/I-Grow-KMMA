@@ -1,12 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
-    iconTheme: IconThemeData(
-        color: Colors
-            .black), // set backbutton color here which will reflect in all screens.
-    leading: BackButton(),
-    backgroundColor: Colors.lightGreen,
+    leading: const BackButton(color: Colors.black),
+    backgroundColor: Colors.transparent,
     elevation: 0,
   );
 }

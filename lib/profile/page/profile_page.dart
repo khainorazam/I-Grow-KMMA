@@ -16,6 +16,8 @@ import 'package:flutter_group9/timeline.dart';
 import '../../maininterface.dart';
 
 class SettingsUI extends StatelessWidget {
+  const SettingsUI({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -44,6 +46,7 @@ class _EditProfileState extends State<EditProfile> {
   String location = "";
   String about = "";
   String status = "";
+  String dpUrl = "";
   bool _isSigningOut = false;
   bool showPassword = false;
 
@@ -65,6 +68,7 @@ class _EditProfileState extends State<EditProfile> {
       location = value.data()!["location"];
       phone = value.data()!["phone"];
       status = value.data()!["status"];
+      dpUrl = value.data()!["dpUrl"];
       about = value.data()!["about"];
     });
 
@@ -143,7 +147,7 @@ class _EditProfileState extends State<EditProfile> {
                           image: DecorationImage(
                               fit: BoxFit.cover,
                               image: NetworkImage(
-                                "https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80",
+                                dpUrl,
                               ))),
                     ),
                     Positioned(

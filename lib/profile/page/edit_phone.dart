@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/profile/widget/appbar_widget.dart';
 import 'package:string_validator/string_validator.dart';
-import 'package:flutter_group9/profile/user/user_data.dart';
+
 import 'package:flutter_group9/profile/page/profile_page.dart';
 
 import '../../maininterface.dart';
@@ -119,7 +119,7 @@ class EditPhoneFormPageState extends State<EditPhoneFormPage> {
                                 FirebaseFirestore.instance
                                     .collection("users")
                                     .doc(userID)
-                                    .update({'phone': '`' + _phone})
+                                    .update({'phone': _phone})
                                     .then((_) => print(_phone))
                                     .catchError(
                                         (error) => print('Failed: $error'));

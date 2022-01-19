@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_group9/profile/user/user_data.dart';
+
 import 'package:flutter_group9/profile/widget/appbar_widget.dart';
 
 // This class handles the Page to edit the Email Section of the User Profile.
