@@ -115,6 +115,15 @@ class _FriendTimelineState extends State<FriendTimeline> {
                             );
                           }),
                       SizedBox(
+                        height: 5,
+                      ),
+                      FlatButton(
+                          onPressed: () {},
+                          child: Text(
+                            "View Profile",
+                            style: TextStyle(color: Colors.blueAccent),
+                          )),
+                      SizedBox(
                         height: 22,
                       ),
                       Column(

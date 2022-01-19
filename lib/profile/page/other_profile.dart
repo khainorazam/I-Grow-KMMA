@@ -28,51 +28,55 @@ class _ProfilePageState2 extends State<ProfilePage2> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
     //to get current user ID
     String? documentId = FirebaseAuth.instance.currentUser?.uid;
     userID = documentId!;
 
-    var user = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(userID)
-        .get()
-        .then((value) {
-      email = value.data()!["email"];
-      name = value.data()!["username"];
-      location = value.data()!["location"];
-      phone = value.data()!["phone"];
-      status = value.data()!["status"];
-      dpUrl = value.data()!["dpUrl"];
-      about = value.data()!["about"];
-    });
+    Stream prof() async* {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userID)
+          .get()
+          .then((value) {
+        email = value.data()!["email"];
+        name = value.data()!["username"];
+        location = value.data()!["location"];
+        phone = value.data()!["phone"];
+        status = value.data()!["status"];
+        dpUrl = value.data()!["dpUrl"];
+        about = value.data()!["about"];
+      });
+    }
 
     return Scaffold(
       backgroundColor: Colors.lightGreen.shade100,
       appBar: buildAppBar(context),
-      body: ListView(
-        physics: BouncingScrollPhysics(),
-        children: [
-          ProfileWidget(
-            imagePath: dpUrl,
-            onClicked: () async {},
-          ),
-          const SizedBox(height: 24),
-          buildName(),
-          const SizedBox(height: 24),
-          buildNumber(),
-          // const SizedBox(height: 24),
-          // buildLocation(),
-          const SizedBox(height: 24),
-          buildStatus(),
+      body: StreamBuilder(
+          stream: prof(),
+          builder: (context, snapshot) {
+            return ListView(
+              physics: BouncingScrollPhysics(),
+              children: [
+                ProfileWidget(
+                  imagePath: dpUrl,
+                  onClicked: () async {},
+                ),
+                const SizedBox(height: 24),
+                buildName(),
+                const SizedBox(height: 24),
+                buildNumber(),
+                // const SizedBox(height: 24),
+                // buildLocation(),
+                const SizedBox(height: 24),
+                buildStatus(),
 
-          // const SizedBox(height: 24),
-          // Center(child: buildUpgradeButton())
-          const SizedBox(height: 48),
-          buildAbout(),
-        ],
-      ),
+                // const SizedBox(height: 24),
+                // Center(child: buildUpgradeButton())
+                const SizedBox(height: 48),
+                buildAbout(),
+              ],
+            );
+          }),
     );
   }
 
