@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_group9/profile/widget/appbar_widget.dart';
+import 'package:flutter_group9/profile/widget/button_widget.dart';
 import 'package:flutter_group9/profile/widget/profile_widget.dart';
 
 class ProfilePage2 extends StatefulWidget {
@@ -62,15 +63,16 @@ class _ProfilePageState2 extends State<ProfilePage2> {
                 ),
                 const SizedBox(height: 24),
                 buildName(),
+
                 const SizedBox(height: 24),
-                buildNumber(),
+                buildNumber(), //buildlocationbaru
+                const SizedBox(height: 24),
+                Center(child: buildUpgradeButton()),
                 // const SizedBox(height: 24),
                 // buildLocation(),
                 const SizedBox(height: 24),
                 buildStatus(),
 
-                // const SizedBox(height: 24),
-                // Center(child: buildUpgradeButton())
                 const SizedBox(height: 48),
                 buildAbout(),
               ],
@@ -188,5 +190,9 @@ class _ProfilePageState2 extends State<ProfilePage2> {
             ),
           ],
         ),
+      );
+  Widget buildUpgradeButton() => ButtonWidget(
+        text: 'Unfriend this user',
+        onClicked: () {},
       );
 }
