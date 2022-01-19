@@ -8,7 +8,7 @@ Map<String, dynamic>? userMap;
 Map<String, dynamic>? groupMap;
 String? userId;
 String plantKey = "Onion";
-String locKey = "Kelantan";
+String locKey = "Kuala Lumpur";
 
 class GroupSuggestion extends StatefulWidget {
   @override
@@ -164,7 +164,7 @@ Widget SuggestedGroupBox() {
           .collection('groups')
           .where('groupKey', isEqualTo: plantKey)
           .where('locKey', isEqualTo: locKey)
-          .where('userId',isEqualTo: "")
+          // .where('userId',whereNotIn: [userId])
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {

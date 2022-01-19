@@ -225,7 +225,9 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
 
 Widget BoxTemplate() {
   return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('groups').where('userId', isEqualTo: documentId).snapshots(),
+      stream: FirebaseFirestore.instance.collection('groups').where(
+                  'userId',
+                  arrayContainsAny: [documentId]).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong');
@@ -253,7 +255,7 @@ Widget BoxTemplate() {
                           Navigator.push(
                               context,
                               CustomPageRoute(
-                                  child: const ViewGroup(),
+                                  child: ViewGroup(docId: document.id),
                                   direction: AxisDirection.left));
                         },
                         style: ButtonStyle(
