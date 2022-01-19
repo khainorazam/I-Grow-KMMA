@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_group9/friend.dart';
 import 'package:flutter_group9/group.dart';
+import 'package:flutter_group9/profile/page/profile_page.dart';
 import 'package:flutter_group9/timeline.dart';
 import 'package:flutter_group9/workshop.dart';
 
@@ -67,7 +68,7 @@ class MainInterface extends StatelessWidget {
             Groups(),
             Friends(),
             Workshop(),
-            ProfilePage2(),
+            EditProfile(),
           ],
         ),
       ),

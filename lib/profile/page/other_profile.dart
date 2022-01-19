@@ -7,17 +7,19 @@ import 'package:flutter_group9/profile/widget/appbar_widget.dart';
 import 'package:flutter_group9/profile/widget/profile_widget.dart';
 
 class ProfilePage2 extends StatefulWidget {
-  const ProfilePage2({Key? key}) : super(key: key);
+  final String userid;
+  const ProfilePage2({Key? key, required this.userid}) : super(key: key);
 
   @override
-  _ProfilePageState2 createState() => _ProfilePageState2();
+  _ProfilePageState2 createState() => _ProfilePageState2(userid: this.userid);
 }
 
-CollectionReference users = FirebaseFirestore.instance.collection('users');
 String? documentId;
 
 class _ProfilePageState2 extends State<ProfilePage2> {
-  String userID = "";
+  String userid;
+  _ProfilePageState2({required this.userid});
+  String? userID;
   String name = "";
   String email = "";
   String phone = "";
@@ -28,10 +30,7 @@ class _ProfilePageState2 extends State<ProfilePage2> {
 
   @override
   Widget build(BuildContext context) {
-    //to get current user ID
-    String? documentId = FirebaseAuth.instance.currentUser?.uid;
-    userID = documentId!;
-
+    userID = userid;
     Stream prof() async* {
       await FirebaseFirestore.instance
           .collection("users")
@@ -41,7 +40,7 @@ class _ProfilePageState2 extends State<ProfilePage2> {
         email = value.data()!["email"];
         name = value.data()!["username"];
         location = value.data()!["location"];
-        phone = value.data()!["phone"];
+        phone = value.data()!["phone"].toString();
         status = value.data()!["status"];
         dpUrl = value.data()!["dpUrl"];
         about = value.data()!["about"];

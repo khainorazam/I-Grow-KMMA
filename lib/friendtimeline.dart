@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/profile/page/other_profile.dart';
 import 'package:intl/intl.dart';
 import 'maininterface.dart';
 
@@ -118,7 +119,13 @@ class _FriendTimelineState extends State<FriendTimeline> {
                         height: 5,
                       ),
                       FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        ProfilePage2(userid: documentid!)));
+                          },
                           child: Text(
                             "View Profile",
                             style: TextStyle(color: Colors.blueAccent),
