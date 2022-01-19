@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/chats/chatbox.dart';
 
 import 'package:flutter_group9/profile/widget/appbar_widget.dart';
 import 'package:flutter_group9/profile/widget/button_widget.dart';
@@ -66,8 +67,7 @@ class _ProfilePageState2 extends State<ProfilePage2> {
 
                 const SizedBox(height: 24),
                 buildNumber(), //buildlocationbaru
-                const SizedBox(height: 24),
-                Center(child: buildUpgradeButton()),
+
                 // const SizedBox(height: 24),
                 // buildLocation(),
                 const SizedBox(height: 24),
@@ -75,6 +75,15 @@ class _ProfilePageState2 extends State<ProfilePage2> {
 
                 const SizedBox(height: 48),
                 buildAbout(),
+
+                const SizedBox(height: 148),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: floatingActionButton(),
+                  ),
+                ),
               ],
             );
           }),
@@ -191,8 +200,21 @@ class _ProfilePageState2 extends State<ProfilePage2> {
           ],
         ),
       );
-  Widget buildUpgradeButton() => ButtonWidget(
-        text: 'Unfriend this user',
-        onClicked: () {},
+  // Widget buildUpgradeButton() => ButtonWidget(
+  //       text: 'Chatroom',
+  //       onClicked: () {
+  //         Navigator.of(context).push(MaterialPageRoute(
+  //             builder: (BuildContext context) => ChatScreen()));
+  //       },
+  //     );
+
+  Widget floatingActionButton() => FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => ChatScreen()));
+        },
+        child: const Icon(Icons.chat_bubble),
+        backgroundColor: Colors.green[700],
+        tooltip: "Chatroom",
       );
 }

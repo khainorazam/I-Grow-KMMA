@@ -66,6 +66,7 @@ dependencies:
   firebase_messaging: ^11.2.5
   animated_theme_switcher: ^2.0.6
   string_validator: ^0.3.0
+
   
 
 dev_dependencies:
