@@ -6,7 +6,7 @@ import 'package:flutter_group9/myworkshop.dart';
 import 'package:intl/intl.dart';
 
 // ignore: prefer_typing_uninitialized_variables
-
+Map? searchReslt;
 FirebaseAuth user = FirebaseAuth.instance;
 String? userName;
 Map? myWorkShop;
@@ -214,7 +214,7 @@ class _WorkshopState extends State<Workshop> {
                                             date: data[i]['date'],
                                             description: data[i]
                                             ['description'],
-                                            index: data[i],
+                                            //  index: data[i],
                                             sessionFrom: data[i]
                                             ['sessionFrom'],
                                             sessiontTo: data[i]
@@ -241,7 +241,6 @@ class _WorkshopState extends State<Workshop> {
               ),
             );
           }),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
@@ -258,6 +257,7 @@ class _WorkshopState extends State<Workshop> {
 class SearchProgramme extends SearchDelegate {
   List? data;
   SearchProgramme({this.data});
+
   @override
   List<Widget>? buildActions(BuildContext context) => [
     IconButton(
@@ -275,20 +275,140 @@ class SearchProgramme extends SearchDelegate {
       icon: const Icon(Icons.arrow_back));
 
   @override
-  Widget buildResults(BuildContext context) => Center(child: Text(query));
+  Widget buildResults(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text(
+            'Programe',
+            style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+          ),
+          Text(
+            searchReslt!['programe'],
+            style: const TextStyle(fontSize: 25, fontStyle: FontStyle.italic),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Description',
+            style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+          ),
+          Text(
+            searchReslt!['description'],
+            style: const TextStyle(fontSize: 25, fontStyle: FontStyle.italic),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Date',
+            style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+          ),
+          Text(
+            DateFormat.yMMMd().format(searchReslt!['date'].toDate()).toString(),
+            style: const TextStyle(fontSize: 25, fontStyle: FontStyle.italic),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Session',
+            style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                DateFormat.jm()
+                    .format(searchReslt!['sessionFrom'].toDate())
+                    .toString(),
+                style:
+                const TextStyle(fontSize: 25, fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                'to',
+                style: TextStyle(fontSize: 25, fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                DateFormat.jm()
+                    .format(searchReslt!['sessionTo'].toDate())
+                    .toString(),
+                style: const TextStyle(
+                  fontSize: 25,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          MaterialButton(
+            onPressed: () {
+              searchReslt!['users']
+                  .any((element) => element == user.currentUser!.uid) ==
+                  true
+                  ? showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content:
+                    const Text('You have already Booked this Programme'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Ok'),
+                      ),
+                    ],
+                  );
+                },
+              )
+                  : Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      fullscreenDialog: true,
+                      builder: (_) => BookingForm(
+                        programmeName: searchReslt!['programe'],
+                        date: searchReslt!['date'],
+                        description: searchReslt!['description'],
+                        //   index: searchReslt!,
+                        sessionFrom: searchReslt!['sessionFrom'],
+                        sessiontTo: searchReslt!['sessionTo'],
+                        docId: searchReslt!['docId'],
+                      )));
+            },
+            color: Colors.lightGreen.shade100,
+            child: const Text(
+              'Book',
+              style: TextStyle(fontSize: 10, fontStyle: FontStyle.italic),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     dynamic searchList = query.isEmpty
         ? data
-        : data!.where((value) => value['programe'].startsWith(query)).toList();
+        : data!
+        .where((value) =>
+        value['programe'].toUpperCase().startsWith(query.toUpperCase()))
+        .toList();
     return ListView.builder(
       itemCount: searchList!.length,
       itemBuilder: (context, i) {
         return ListTile(
             title: Text(searchList[i]['programe']),
             onTap: () {
-              query = searchList[i]['programe'];
+              searchReslt = {
+                'programe': searchList[i]['programe'],
+                'date': searchList[i]['date'],
+                'description': searchList[i]['description'],
+                'sessionTo': searchList[i]['sessionTo'],
+                'sessionFrom': searchList[i]['sessionFrom'],
+                'users': searchList[i]['users'],
+                'docId': searchList[i].id,
+              };
+
               showResults(context);
             });
       },
@@ -303,7 +423,7 @@ class BookingForm extends StatefulWidget {
   dynamic description;
   dynamic sessionFrom;
   dynamic sessiontTo;
-  dynamic index;
+  // dynamic index;
   dynamic docId;
   BookingForm({
     Key? key,
@@ -312,7 +432,7 @@ class BookingForm extends StatefulWidget {
     this.description,
     this.sessionFrom,
     this.sessiontTo,
-    this.index,
+    //   this.index,
     this.docId,
   }) : super(key: key);
 
@@ -426,7 +546,6 @@ class _BookingFormState extends State<BookingForm> {
                           .set({
                         'users': FieldValue.arrayUnion([user.currentUser!.uid]),
                       }, SetOptions(merge: true));
-
 
                       Navigator.pushReplacement(
                           context,
