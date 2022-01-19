@@ -32,8 +32,6 @@ class NewPostState extends State<NewPost> {
   File? imageFile;
   bool _isLoading = false;
   final myController = TextEditingController();
-  late VideoPlayerController _videoPlayerController;
-  late VideoPlayerController _cameraVideoPlayerController;
   String? documentId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
@@ -81,24 +79,6 @@ class NewPostState extends State<NewPost> {
       //Navigator.pop(context);
     }
 
-    // void _openCamVid(BuildContext context) async {
-    //   final pickedFile =
-    //       await ImagePicker().getVideo(source: ImageSource.camera);
-    //   final pickedImageFile = File(pickedFile!.path);
-    //   setState(() {
-    //     imageFile = pickedImageFile;
-    //image = true;
-    //   });
-
-    //   _cameraVideoPlayerController = VideoPlayerController.file(imageFile!)
-    //     ..initialize().then((_) {
-    //       setState(() {});
-    //       _cameraVideoPlayerController.play();
-    //     });
-
-    //   Navigator.pop(context);
-    // }
-
     void _openLibImage(BuildContext context) async {
       final pickedFile =
           await ImagePicker().getImage(source: ImageSource.gallery);
@@ -107,17 +87,6 @@ class NewPostState extends State<NewPost> {
         imageFile = pickedImageFile;
         image = true;
       });
-    }
-
-    void _openLibVid(BuildContext context) async {
-      final pickedFile =
-          await ImagePicker().getVideo(source: ImageSource.gallery);
-      final pickedImageFile = File(pickedFile!.path);
-      _videoPlayerController = VideoPlayerController.file(pickedImageFile)
-        ..initialize().then((_) {
-          setState(() {});
-          _videoPlayerController.play();
-        });
     }
 
     void _remove(BuildContext context) {
@@ -144,6 +113,7 @@ class NewPostState extends State<NewPost> {
             automaticallyImplyLeading: true,
             leading: IconButton(
               onPressed: () {
+                _remove(context);
                 Navigator.pop(context);
               },
               icon: Icon(Icons.clear),
@@ -318,43 +288,6 @@ class NewPostState extends State<NewPost> {
                                 color: Colors.purple.shade600,
                                 onPressed: () {
                                   _openCamImage(context);
-                                  // showDialog(
-                                  //     context: context,
-                                  //     builder: (BuildContext context) {
-                                  //       return AlertDialog(
-                                  //         title: Text(
-                                  //           "Choose option",
-                                  //           style:
-                                  //               TextStyle(color: Colors.blue),
-                                  //         ),
-                                  //         content: SingleChildScrollView(
-                                  //           child: ListBody(
-                                  //             children: [
-                                  //               Divider(
-                                  //                 height: 1,
-                                  //                 color: Colors.blue,
-                                  //               ),
-                                  //               ListTile(
-                                  //                 onTap: () {
-                                  //                   _openCamImage(context);
-                                  //                 },
-                                  //                 title: Text("Image"),
-                                  //               ),
-                                  //               Divider(
-                                  //                 height: 1,
-                                  //                 color: Colors.blue,
-                                  //               ),
-                                  //               ListTile(
-                                  //                 onTap: () {
-                                  //                   _openCamVid(context);
-                                  //                 },
-                                  //                 title: Text("Video"),
-                                  //               ),
-                                  //             ],
-                                  //           ),
-                                  //         ),
-                                  //       );
-                                  //     });
                                 },
                               ),
                               Text(
@@ -372,19 +305,6 @@ class NewPostState extends State<NewPost> {
                                 },
                               ),
                               Text("Photo"),
-                            ],
-                          ),
-
-                          Row(
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.videocam),
-                                color: Colors.red.shade600,
-                                onPressed: () {
-                                  _openLibVid(context);
-                                },
-                              ),
-                              Text("Video"),
                             ],
                           ),
                         ],
