@@ -101,7 +101,7 @@ class _EditPostState extends State<EditPost> {
               },
               icon: Icon(Icons.clear),
               color: Colors.green.shade700,
-              tooltip: "Update",
+              tooltip: "Cancel",
             ),
             actions: <Widget>[
               // IconButton(onPressed: (){}, icon: Icon(Icons.post_add_outlined), color: Colors.green.shade700, tooltip: "Post", )
@@ -138,7 +138,7 @@ class _EditPostState extends State<EditPost> {
                         });
                   }
                 },
-                child: Text("Post"),
+                child: Text("Update"),
               ),
             ]),
         body: SingleChildScrollView(

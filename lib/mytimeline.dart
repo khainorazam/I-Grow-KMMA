@@ -21,6 +21,7 @@ class _MyTimelineState extends State<MyTimeline> {
   @override
   void initState() {
     super.initState();
+    documentId = FirebaseAuth.instance.currentUser?.uid;
     _setupFeed();
   }
 

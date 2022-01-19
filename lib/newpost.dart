@@ -118,7 +118,7 @@ class NewPostState extends State<NewPost> {
               },
               icon: Icon(Icons.clear),
               color: Colors.green.shade700,
-              tooltip: "Post",
+              tooltip: "Cancel",
             ),
             actions: <Widget>[
               // IconButton(onPressed: (){}, icon: Icon(Icons.post_add_outlined), color: Colors.green.shade700, tooltip: "Post", )

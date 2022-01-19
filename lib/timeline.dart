@@ -186,7 +186,7 @@ class _TimelineState extends State<Timeline> {
                                     List<String> strArr =
                                         List.from(data!['friend_uid']);
                                     strArr.add(documentId!);
-                                    return ListAvatarUsername(strArr);
+                                    return PostFeed(strArr);
                                   }).toList(),
                                 );
                               })
@@ -213,7 +213,7 @@ class _TimelineState extends State<Timeline> {
   }
 }
 
-Widget PostFeed(List strAvatar, List strUsername, List userid) {
+Widget PostFeed(List userid) {
   DateTime d;
   String date;
   return StreamBuilder(
@@ -258,8 +258,10 @@ Widget PostFeed(List strAvatar, List strUsername, List userid) {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            AvatarandUsername(strAvatar[i], strUsername[i],
+                            ListAvatarUsername(
                                 date, document.id, userid[i], context),
+                            // AvatarandUsername(strAvatar[i], strUsername[i],
+                            //     date, document.id, userid[i], context),
                             SizedBox(
                               height: 10,
                             ),
@@ -312,12 +314,15 @@ String convertToAgo(DateTime input) {
   }
 }
 
-Widget ListAvatarUsername(List userid) {
-  List<String> strAvatar = [];
-  List<String> strUsername = [];
+Widget ListAvatarUsername(
+    String date, String ID, String? userID, BuildContext context) {
   return StreamBuilder(
-      stream: users.snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .snapshots(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong');
         }
@@ -325,29 +330,11 @@ Widget ListAvatarUsername(List userid) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Text("Loading");
         }
-        return Column(
-          children: [
-            for (int i = 0; i < userid.length; i++)
-              ListView(
-                physics: NeverScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                  data = document.data() as Map<String, dynamic>;
 
-                  if (userid[i] == data!['userid']) {
-                    // print("j ${data!['userid']}");
-                    // print("k ${userid[i]}");
-                    strAvatar.add(data!['dpUrl']);
-                    strUsername.add(data!['username']);
-                  }
+        var data = snapshot.data;
 
-                  return SizedBox();
-                }).toList(),
-              ),
-            PostFeed(strAvatar, strUsername, userid)
-          ],
-        );
+        return AvatarandUsername(
+            data!['dpUrl'], data['username'], date, ID, userID, context);
       });
 }
 
