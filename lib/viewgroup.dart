@@ -488,206 +488,209 @@ class _ViewGroupState extends State<ViewGroup> {
 
                                               return Column(
                                                 children: [
-                                                  PhysicalModel(
-                                                    color: Colors
-                                                        .transparent,
-                                                    shadowColor:
-                                                        Colors.green,
-                                                    elevation: 20,
-                                                    child: Container(
-                                                      width: 360,
-                                                      padding:
-                                                          const EdgeInsets
-                                                              .all(12.0),
-                                                      decoration:
-                                                          BoxDecoration(
-                                                        color: Colors
-                                                            .grey[200],
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    10.0),
-                                                      ),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: <
-                                                            Widget>[
-                                                          Column(
-                                                            children: <
-                                                                Widget>[
-                                                              StreamBuilder(
-                                                                  stream: FirebaseFirestore
-                                                                      .instance
-                                                                      .collection(
-                                                                          'users')
-                                                                      .doc(data[
-                                                                          'userId'])
-                                                                      .snapshots(),
-                                                                  builder: (BuildContext
-                                                                          context,
-                                                                      AsyncSnapshot<DocumentSnapshot>
-                                                                          snapshot1) {
-                                                                    if (snapshot1
-                                                                        .hasError) {
-                                                                      return Text('Something went wrong');
-                                                                    }
-
-                                                                    if (snapshot1.connectionState ==
-                                                                        ConnectionState.waiting) {
-                                                                      return Text("Loading");
-                                                                    }
-
-                                                                    var data1 =
-                                                                        snapshot1.data;
-                                                                    return Row(
-                                                                      children: [
-                                                                        FittedBox(
-                                                                          fit: BoxFit.contain,
-                                                                          child: CircleAvatar(
-                                                                            backgroundImage: NetworkImage(data1!['dpUrl']),
-                                                                          ),
-                                                                        ),
-                                                                        SizedBox(
-                                                                          width: 8,
-                                                                        ),
-                                                                        Column(
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          children: <Widget>[
-                                                                            Text(data1['username'], style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                                                            Text(
-                                                                              date,
-                                                                              style: TextStyle(color: Colors.grey[600]),
-                                                                            )
-                                                                          ],
-                                                                        )
-                                                                      ],
-                                                                    );
-                                                                  }),
-                                                            ],
-                                                          ),
-                                                          SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          Text(
-                                                            data[
-                                                                'caption'],
-                                                            style:
-                                                                TextStyle(
-                                                              fontSize:
-                                                                  16,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          Container(
-                                                              child: data['attachImg'] !=
-                                                                      ""
-                                                                  ? SizedBox(
-                                                                      width: double
-                                                                          .infinity,
-                                                                      height:
-                                                                          200,
-                                                                      child:
-                                                                          FittedBox(fit: BoxFit.fill, child: Image.network(data['attachImg'])))
-                                                                  : null),
-                                                          SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          Container(
-                                                            //like comment share
-
-                                                            width: double
-                                                                .infinity,
-                                                            height: 40,
-                                                            decoration: BoxDecoration(
-                                                                border: Border(
-                                                                    top: BorderSide(
-                                                                      color:
-                                                                          Colors.grey.shade500,
-                                                                    ),
-                                                                    bottom: BorderSide(
-                                                                      color:
-                                                                          Colors.grey.shade500,
-                                                                    ))),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(left:18.0,right:18.0),
+                                                    child: PhysicalModel(
+                                                      color: Colors
+                                                          .transparent,
+                                                      shadowColor:
+                                                          Colors.green,
+                                                      elevation: 20,
+                                                      child: Container(
+                                                        // width: 360,
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(12.0),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .grey[200],
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: <
+                                                              Widget>[
+                                                            Column(
                                                               children: <
                                                                   Widget>[
-                                                                Row(
-                                                                  children: [
-                                                                    IconButton(
-                                                                      iconSize:
-                                                                          20,
-                                                                      onPressed:
-                                                                          updateLikeStatus,
-                                                                      icon:
-                                                                          Icon(
-                                                                        Icons.thumb_up_outlined,
-                                                                        color: _likeStatus ? Colors.green[700] : Colors.grey[500],
-                                                                      ),
-                                                                      tooltip:
-                                                                          "Like this post",
-                                                                    ),
-                                                                    Text(
-                                                                      "Like",
-                                                                      style:
-                                                                          TextStyle(fontSize: 14, color: _likeStatus ? Colors.green[700] : Colors.grey[500]),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    IconButton(
-                                                                      iconSize:
-                                                                          20,
-                                                                      onPressed:
-                                                                          () {},
-                                                                      icon:
-                                                                          Icon(
-                                                                        Icons.comment_outlined,
-                                                                        color: Colors.grey[500],
-                                                                      ),
-                                                                      tooltip:
-                                                                          "Comment this post",
-                                                                    ),
-                                                                    Text(
-                                                                      "Comment",
-                                                                      style:
-                                                                          TextStyle(fontSize: 14, color: Colors.grey[500]),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    IconButton(
-                                                                      iconSize:
-                                                                          20,
-                                                                      onPressed:
-                                                                          () {},
-                                                                      icon:
-                                                                          Icon(
-                                                                        Icons.share_outlined,
-                                                                        color: Colors.grey[500],
-                                                                      ),
-                                                                      tooltip:
-                                                                          "Share this post",
-                                                                    ),
-                                                                    Text(
-                                                                      "Share",
-                                                                      style:
-                                                                          TextStyle(fontSize: 14, color: Colors.grey[500]),
-                                                                    )
-                                                                  ],
-                                                                ),
+                                                                StreamBuilder(
+                                                                    stream: FirebaseFirestore
+                                                                        .instance
+                                                                        .collection(
+                                                                            'users')
+                                                                        .doc(data[
+                                                                            'userId'])
+                                                                        .snapshots(),
+                                                                    builder: (BuildContext
+                                                                            context,
+                                                                        AsyncSnapshot<DocumentSnapshot>
+                                                                            snapshot1) {
+                                                                      if (snapshot1
+                                                                          .hasError) {
+                                                                        return Text('Something went wrong');
+                                                                      }
+
+                                                                      if (snapshot1.connectionState ==
+                                                                          ConnectionState.waiting) {
+                                                                        return Text("Loading");
+                                                                      }
+
+                                                                      var data1 =
+                                                                          snapshot1.data;
+                                                                      return Row(
+                                                                        children: [
+                                                                          FittedBox(
+                                                                            fit: BoxFit.contain,
+                                                                            child: CircleAvatar(
+                                                                              backgroundImage: NetworkImage(data1!['dpUrl']),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width: 8,
+                                                                          ),
+                                                                          Column(
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            children: <Widget>[
+                                                                              Text(data1['username'], style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                                                              Text(
+                                                                                date,
+                                                                                style: TextStyle(color: Colors.grey[600]),
+                                                                              )
+                                                                            ],
+                                                                          )
+                                                                        ],
+                                                                      );
+                                                                    }),
                                                               ],
                                                             ),
-                                                          )
-                                                        ],
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Text(
+                                                              data[
+                                                                  'caption'],
+                                                              style:
+                                                                  TextStyle(
+                                                                fontSize:
+                                                                    16,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Container(
+                                                                child: data['attachImg'] !=
+                                                                        ""
+                                                                    ? SizedBox(
+                                                                        width: double
+                                                                            .infinity,
+                                                                        height:
+                                                                            200,
+                                                                        child:
+                                                                            FittedBox(fit: BoxFit.fill, child: Image.network(data['attachImg'])))
+                                                                    : null),
+                                                            // SizedBox(
+                                                            //   height: 10,
+                                                            // ),
+                                                            // Container(
+                                                            //   //like comment share
+
+                                                            //   width: double
+                                                            //       .infinity,
+                                                            //   height: 40,
+                                                            //   decoration: BoxDecoration(
+                                                            //       border: Border(
+                                                            //           top: BorderSide(
+                                                            //             color:
+                                                            //                 Colors.grey.shade500,
+                                                            //           ),
+                                                            //           bottom: BorderSide(
+                                                            //             color:
+                                                            //                 Colors.grey.shade500,
+                                                            //           ))),
+                                                            //   child: Row(
+                                                            //     mainAxisAlignment:
+                                                            //         MainAxisAlignment
+                                                            //             .spaceEvenly,
+                                                            //     children: <
+                                                            //         Widget>[
+                                                            //       Row(
+                                                            //         children: [
+                                                            //           IconButton(
+                                                            //             iconSize:
+                                                            //                 20,
+                                                            //             onPressed:
+                                                            //                 updateLikeStatus,
+                                                            //             icon:
+                                                            //                 Icon(
+                                                            //               Icons.thumb_up_outlined,
+                                                            //               color: _likeStatus ? Colors.green[700] : Colors.grey[500],
+                                                            //             ),
+                                                            //             tooltip:
+                                                            //                 "Like this post",
+                                                            //           ),
+                                                            //           Text(
+                                                            //             "Like",
+                                                            //             style:
+                                                            //                 TextStyle(fontSize: 14, color: _likeStatus ? Colors.green[700] : Colors.grey[500]),
+                                                            //           )
+                                                            //         ],
+                                                            //       ),
+                                                            //       Row(
+                                                            //         children: [
+                                                            //           IconButton(
+                                                            //             iconSize:
+                                                            //                 20,
+                                                            //             onPressed:
+                                                            //                 () {},
+                                                            //             icon:
+                                                            //                 Icon(
+                                                            //               Icons.comment_outlined,
+                                                            //               color: Colors.grey[500],
+                                                            //             ),
+                                                            //             tooltip:
+                                                            //                 "Comment this post",
+                                                            //           ),
+                                                            //           Text(
+                                                            //             "Comment",
+                                                            //             style:
+                                                            //                 TextStyle(fontSize: 14, color: Colors.grey[500]),
+                                                            //           )
+                                                            //         ],
+                                                            //       ),
+                                                            //       Row(
+                                                            //         children: [
+                                                            //           IconButton(
+                                                            //             iconSize:
+                                                            //                 20,
+                                                            //             onPressed:
+                                                            //                 () {},
+                                                            //             icon:
+                                                            //                 Icon(
+                                                            //               Icons.share_outlined,
+                                                            //               color: Colors.grey[500],
+                                                            //             ),
+                                                            //             tooltip:
+                                                            //                 "Share this post",
+                                                            //           ),
+                                                            //           Text(
+                                                            //             "Share",
+                                                            //             style:
+                                                            //                 TextStyle(fontSize: 14, color: Colors.grey[500]),
+                                                            //           )
+                                                            //         ],
+                                                            //       ),
+                                                            //     ],
+                                                            //   ),
+                                                            // )
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),

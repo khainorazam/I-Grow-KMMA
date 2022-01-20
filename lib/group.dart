@@ -72,21 +72,21 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
     ));
   }
 
-  Widget buttonSearch() {
-    return Container(
-        child: FloatingActionButton(
-      heroTag: "btn2",
-      backgroundColor: Colors.yellow[700],
-      onPressed: () {
-        showSearch(
-          context: context,
-          delegate: CustomSearchDelegate(),
-        );
-      },
-      tooltip: "Search groups",
-      child: Icon(Icons.search_outlined),
-    ));
-  }
+  // Widget buttonSearch() {
+  //   return Container(
+  //       child: FloatingActionButton(
+  //     heroTag: "btn2",
+  //     backgroundColor: Colors.yellow[700],
+  //     onPressed: () {
+  //       showSearch(
+  //         context: context,
+  //         delegate: CustomSearchDelegate(),
+  //       );
+  //     },
+  //     tooltip: "Search groups",
+  //     child: Icon(Icons.search_outlined),
+  //   ));
+  // }
 
   Widget buttonToggle() {
     return Container(
@@ -154,14 +154,14 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
         children: <Widget>[
           Transform(
             transform: Matrix4.translationValues(
-                0.0, _translateButton.value * 2.0, 0.0),
+                0.0, _translateButton.value , 0.0),
             child: buttonExplore(),
           ),
-          Transform(
-            transform:
-                Matrix4.translationValues(0.0, _translateButton.value, 0.0),
-            child: buttonSearch(),
-          ),
+          // Transform(
+          //   transform:
+          //       Matrix4.translationValues(0.0, _translateButton.value, 0.0),
+          //   child: buttonSearch(),
+          // ),
           buttonToggle()
         ],
       ),
