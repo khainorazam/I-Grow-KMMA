@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_group9/group.dart';
+import 'package:flutter_group9/maininterface.dart';
+import 'package:flutter_group9/newpost.dart';
 import 'package:flutter_group9/profile/widget/appbar_widget.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -12,66 +15,62 @@ import 'package:path/path.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditImagePage extends StatefulWidget {
-  const EditImagePage({Key? key}) : super(key: key);
+  final String docID;
+  const EditImagePage({Key? key, required this.docID}) : super(key: key);
 
   @override
-  _EditImagePageState createState() => _EditImagePageState();
+  _EditImagePageState createState() => _EditImagePageState(docID: this.docID);
 }
 
-String? documentId;
-String _dpUrl = "";
-String userID = "";
-String imageUrl = "";
 bool image = false;
+String imageUrl = "";
+String dpUrl = "";
+//DateTime now = DateTime.now();
+CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 class _EditImagePageState extends State<EditImagePage> {
-//  var user = UserData.myUser;
-
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  String docID;
+  _EditImagePageState({required this.docID});
   File? imageFile;
+  //String dpUrl;
+//  final myController = TextEditingController();
 
   ///NOTE: Only supported on Android & iOS
   ///Needs image_picker plugin {https://pub.dev/packages/image_picker}
   final picker = ImagePicker();
-  bool _isLoading = false;
   //final myController = TextEditingController();
   String? documentId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
   Widget build(BuildContext context) {
-    getCurrentUser();
-    userID = documentId!;
+    Stream prof() async* {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(documentId)
+          .get()
+          .then((value) {
+        dpUrl = value.data()!["dpUrl"];
+        // about = value.data()!["about"];
+      });
+    }
 
-    var firebaseUser = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(userID)
-        .get()
-        .then((value) {
-      _dpUrl = value.data()!["dpUrl"];
-    });
-
-    Future<void> addSharing() async {
+    Future<void> updatePost() async {
       try {
         if (imageFile != null) {
-          setState(() {
-            _isLoading = true;
-          });
           final ref = FirebaseStorage.instance.ref().child(imageFile!.path);
           await ref.putFile(imageFile!);
           imageUrl = await ref.getDownloadURL();
+          setState(() {});
         }
       } catch (error) {
         Text("Error");
         print('error occured ${error}');
       }
-      // Call the user's CollectionReference to add a new user
       return users
-          .add({
-            'imageUrl': imageUrl,
-          })
-          .then((value) => print("Sharing Added"))
-          .catchError((error) => print("Failed to add sharing: $error"));
+          .doc(docID)
+          .update({'dpUrl': imageUrl})
+          .then((value) => print("User Updated"))
+          .catchError((error) => print("Failed to update user: $error"));
     }
 
     void _openCamImage(BuildContext context) async {
@@ -95,15 +94,23 @@ class _EditImagePageState extends State<EditImagePage> {
       });
     }
 
+    void _remove(BuildContext context) {
+      setState(() {
+        imageFile = null;
+        image = false;
+        imageUrl = "";
+      });
+    }
+
     return Scaffold(
       appBar: buildAppBar(context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
               width: 330,
-              child: const Text(
+              child: Text(
                 "Upload a photo of yourself:",
                 style: TextStyle(
                   fontSize: 23,
@@ -128,7 +135,16 @@ class _EditImagePageState extends State<EditImagePage> {
                       // setState(
                       //     () => users = _dpUrl as CollectionReference<Object?>);
                     },
-                    child: Image.network(_dpUrl),
+                    // child: const Text('Choose a picture',
+                    //     style: TextStyle(fontSize: 15)),
+
+                    child: const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Choose a picture',
+                        style: TextStyle(fontSize: 15, color: Colors.blue),
+                      ),
+                    ),
                   ))),
           Padding(
               padding: EdgeInsets.only(top: 40),
@@ -139,12 +155,13 @@ class _EditImagePageState extends State<EditImagePage> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
+                        updatePost();
+                        _remove(context);
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => EditImagePage(),
-                          ),
-                        );
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainInterface.select(4),
+                            ));
                       },
                       child: const Text(
                         'Update',
@@ -156,10 +173,4 @@ class _EditImagePageState extends State<EditImagePage> {
       ),
     );
   }
-}
-
-void getCurrentUser() async {
-  final User? user = FirebaseAuth.instance.currentUser;
-  final uid = user!.uid;
-  documentId = uid;
 }
