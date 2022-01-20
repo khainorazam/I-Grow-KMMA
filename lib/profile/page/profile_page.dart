@@ -53,8 +53,9 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {});
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    //to get current user ID
+
     getCurrentUser();
     userID = documentId!;
 
@@ -87,29 +88,6 @@ class _EditProfileState extends State<EditProfile> {
                 },
                 child: ListView(
                   children: <Widget>[
-                    //   Padding(
-                    //     padding: const EdgeInsets.only(left: 310),
-                    //     child: MaterialButton(
-                    //       onPressed: () async {
-                    //         setState(() {
-                    //           _isSigningOut = true;
-                    //         });
-                    //         await FirebaseAuth.instance.signOut();
-                    //         setState(() {
-                    //           _isSigningOut = false;
-                    //         });
-                    //         Navigator.of(context).pushReplacement(
-                    //           MaterialPageRoute(
-                    //             builder: (context) => Login(),
-                    //           ),
-                    //         );
-                    //         // Navigator.push(context,
-                    //         //     MaterialPageRoute(builder: (context) => Login()));
-                    //       },
-                    //       child: Icon(Icons.logout_outlined,
-                    //           size: 35, color: Colors.black87),
-                    //     ),
-                    //   ),
                     Padding(
                       padding: const EdgeInsets.only(left: 310),
                       child: MaterialButton(
@@ -118,19 +96,19 @@ class _EditProfileState extends State<EditProfile> {
                               builder: (BuildContext context) =>
                                   SettingsPage()));
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.settings,
                           color: Colors.green,
                         ),
                       ),
                     ),
-                    Text(
+                    const Text(
                       "My Profile ",
                       style:
                           TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     Center(
@@ -149,7 +127,7 @@ class _EditProfileState extends State<EditProfile> {
                                       spreadRadius: 2,
                                       blurRadius: 10,
                                       color: Colors.black.withOpacity(0.1),
-                                      offset: Offset(0, 10))
+                                      offset: const Offset(0, 10))
                                 ],
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
@@ -180,8 +158,9 @@ class _EditProfileState extends State<EditProfile> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) =>
-                                              const EditImagePage(),
+                                          builder: (context) => EditImagePage(
+                                            docID: userID,
+                                          ),
                                         ));
                                   },
                                   //size: 10,
@@ -201,15 +180,14 @@ class _EditProfileState extends State<EditProfile> {
                         location, 'Location', EditLocationFormPage()),
                     buildUserInfoDisplay3(
                         about, 'About Me', EditDescriptionFormPage()),
-
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         MaterialButton(
-                          padding: EdgeInsets.symmetric(horizontal: 50),
+                          padding: const EdgeInsets.symmetric(horizontal: 140),
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
@@ -227,27 +205,27 @@ class _EditProfileState extends State<EditProfile> {
                                   letterSpacing: 2.2,
                                   color: Colors.black)),
                         ),
-                        MaterialButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MainInterface.select(4),
-                                ));
-                          },
-                          color: Colors.green,
-                          padding: EdgeInsets.symmetric(horizontal: 50),
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Text(
-                            "SAVE",
-                            style: TextStyle(
-                                fontSize: 14,
-                                letterSpacing: 2.2,
-                                color: Colors.white),
-                          ),
-                        )
+                        // MaterialButton(
+                        //   onPressed: () {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => MainInterface.select(4),
+                        //         ));
+                        //   },
+                        //   color: Colors.green,
+                        //   padding: EdgeInsets.symmetric(horizontal: 50),
+                        //   elevation: 2,
+                        //   shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(20)),
+                        //   child: Text(
+                        //     "SAVE",
+                        //     style: TextStyle(
+                        //         fontSize: 14,
+                        //         letterSpacing: 2.2,
+                        //         color: Colors.white),
+                        //   ),
+                        // )
                       ],
                     )
                   ],
