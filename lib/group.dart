@@ -153,8 +153,8 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Transform(
-            transform: Matrix4.translationValues(
-                0.0, _translateButton.value , 0.0),
+            transform:
+                Matrix4.translationValues(0.0, _translateButton.value, 0.0),
             child: buttonExplore(),
           ),
           // Transform(
@@ -225,9 +225,9 @@ class GroupsState extends State<Groups> with SingleTickerProviderStateMixin {
 
 Widget BoxTemplate() {
   return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('groups').where(
-                  'userId',
-                  arrayContainsAny: [documentId]).snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('groups')
+          .where('userId', arrayContainsAny: [documentId]).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong');
@@ -243,6 +243,9 @@ Widget BoxTemplate() {
           shrinkWrap: true,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             data = document.data() as Map<String, dynamic>;
+
+            List<String> strArr = [];
+            strArr = List.from(data!['userId']);
 
             return Container(
               margin: const EdgeInsets.all(8.0),
@@ -295,7 +298,7 @@ Widget BoxTemplate() {
                                       alignment: Alignment.centerLeft,
                                       child: Container(
                                           child: Text(
-                                        '${data!['notiCount'].toString()} new notifications',
+                                        '${strArr.length} member(s)',
                                       )),
                                     ),
                                   ],
@@ -313,6 +316,7 @@ Widget BoxTemplate() {
         );
       });
 }
+
 void getCurrentUser() async {
   final User? user = FirebaseAuth.instance.currentUser;
   final uid = user!.uid;
