@@ -3,19 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_group9/widget/custom_title.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-Map<String, dynamic>? groupMap;
-String groupRef = "Group Kobis Maluri";
+// String groupRef = "Group Kobis Maluri";
 
 class AboutGroup extends StatefulWidget {
+  final String docId2;
+  const AboutGroup({Key? key, required this.docId2}) : super(key: key);
   @override
-  State<StatefulWidget> createState() {
-    return AboutGroupState();
-  }
+  AboutGroupState createState() => AboutGroupState(docId2: this.docId2);
 }
 
 class AboutGroupState extends State<AboutGroup> {
-  var description =
-      "This group is created solely on teaching everything about onion.";
+  String docId2;
+  AboutGroupState({required this.docId2});
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +47,10 @@ class AboutGroupState extends State<AboutGroup> {
                     StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('groups')
-                          .where('groupName', isEqualTo: groupRef)
+                          .doc(docId2)
                           .snapshots(),
                       builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
                         if (snapshot.hasError) {
                           return Text('Something went wrong');
                         }
@@ -61,185 +60,166 @@ class AboutGroupState extends State<AboutGroup> {
                           return Text("Loading");
                         }
 
-                        return ListView(
-                            physics: NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            children: snapshot.data!.docs
-                                .map((DocumentSnapshot document) {
-                              groupMap =
-                                  document.data() as Map<String, dynamic>;
+                        var groupMap = snapshot.data;
 
-                              return Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(18.0),
-                                    child: Material(
-                                        elevation: 20.0,
-                                        shadowColor: Colors.green,
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Container(
+                        return Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Material(
+                                  elevation: 20.0,
+                                  shadowColor: Colors.green,
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.all(18.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          color: Colors.grey[200]),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text("Description",
+                                              style: TextStyle(
+                                                color: Colors.grey[800],
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                          SizedBox(
                                             width: double.infinity,
-                                            padding: EdgeInsets.all(18.0),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                                color: Colors.grey[200]),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text("Description",
-                                                    style: TextStyle(
-                                                      color: Colors.grey[800],
-                                                      fontSize: 22,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    )),
-                                                const SizedBox(
-                                                  height: 8,
-                                                ),
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  height: 3,
-                                                  child: Container(
-                                                    color: Colors.lightGreen,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 18,
-                                                ),
-                                                Text(
-                                                  groupMap!['desc'],
-                                                  style: TextStyle(
-                                                      color: Colors.grey[700]),
-                                                ),
-                                              ],
-                                            ))),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(18.0),
-                                    child: Material(
-                                        elevation: 20.0,
-                                        shadowColor: Colors.green,
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Container(
+                                            height: 3,
+                                            child: Container(
+                                              color: Colors.lightGreen,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 18,
+                                          ),
+                                          Text(
+                                            groupMap!['desc'],
+                                            style: TextStyle(
+                                                color: Colors.grey[700]),
+                                          ),
+                                        ],
+                                      ))),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Material(
+                                  elevation: 20.0,
+                                  shadowColor: Colors.green,
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.all(18.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          color: Colors.grey[200]),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text("Related Tags",
+                                              style: TextStyle(
+                                                color: Colors.grey[800],
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                          SizedBox(
                                             width: double.infinity,
-                                            padding: EdgeInsets.all(18.0),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                                color: Colors.grey[200]),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text("Related Tags",
-                                                    style: TextStyle(
-                                                      color: Colors.grey[800],
-                                                      fontSize: 22,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    )),
-                                                const SizedBox(
-                                                  height: 8,
-                                                ),
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  height: 3,
-                                                  child: Container(
-                                                    color: Colors.lightGreen,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 18,
-                                                ),
-                                                Row(
-                                                  children: <Widget>[
-                                                    Container(
-                                                      // width: 90,
-                                                      child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        50),
-                                                            color: Colors
-                                                                .purple[700],
-                                                          ),
-                                                          padding:
-                                                              EdgeInsets.all(8),
-                                                          child: Center(
-                                                              child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              const Icon(
-                                                                  MdiIcons.tag,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  size: 20),
-                                                              const SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              Text(groupMap!['groupKey'],
-                                                                  style: const TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .white)),
-                                                            ],
-                                                          ))),
+                                            height: 3,
+                                            child: Container(
+                                              color: Colors.lightGreen,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 18,
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Container(
+                                                // width: 90,
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                      color: Colors.purple[700],
                                                     ),
-                                                    const SizedBox(width: 5),
-                                                    Container(
-                                                      child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        50),
-                                                            color: Colors
-                                                                .orange[700],
-                                                          ),
-                                                          padding:
-                                                              const EdgeInsets.all(8),
-                                                          child: Center(
-                                                              child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Icon(MdiIcons.tag,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  size: 20),
-                                                              SizedBox(
-                                                                width: 5,
-                                                              ),
-                                                              Text(
-                                                                  groupMap!['locKey'],
-                                                                  style: const TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .white)),
-                                                            ],
-                                                          ))),
+                                                    padding: EdgeInsets.all(8),
+                                                    child: Center(
+                                                        child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        const Icon(MdiIcons.tag,
+                                                            color: Colors.white,
+                                                            size: 20),
+                                                        const SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Text(
+                                                            groupMap[
+                                                                'groupKey'],
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white)),
+                                                      ],
+                                                    ))),
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Container(
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                      color: Colors.orange[700],
                                                     ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ))),
-                                  )
-                                ],
-                              );
-                            }).toList());
+                                                    padding:
+                                                        const EdgeInsets.all(8),
+                                                    child: Center(
+                                                        child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Icon(MdiIcons.tag,
+                                                            color: Colors.white,
+                                                            size: 20),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Text(groupMap['locKey'],
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white)),
+                                                      ],
+                                                    ))),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ))),
+                            )
+                          ],
+                        );
                       },
                     ),
                   ],
