@@ -32,6 +32,7 @@ class _EditImagePageState extends State<EditImagePage> {
   String docID;
   _EditImagePageState({required this.docID});
   File? imageFile;
+  bool _isloading = false;
   //String dpUrl;
 //  final myController = TextEditingController();
 
@@ -54,13 +55,12 @@ class _EditImagePageState extends State<EditImagePage> {
       });
     }
 
-    Future<void> updatePost() async {
+    Future<void> updateImage() async {
       try {
         if (imageFile != null) {
           final ref = FirebaseStorage.instance.ref().child(imageFile!.path);
           await ref.putFile(imageFile!);
           imageUrl = await ref.getDownloadURL();
-          setState(() {});
         }
       } catch (error) {
         Text("Error");
@@ -155,7 +155,7 @@ class _EditImagePageState extends State<EditImagePage> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        updatePost();
+                        updateImage();
                         _remove(context);
                         Navigator.push(
                             context,
