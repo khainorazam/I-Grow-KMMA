@@ -731,7 +731,7 @@ class _ViewGroupState extends State<ViewGroup> {
                     Navigator.push(
                         context,
                         CustomPageRoute(
-                            child: CreateGroupPost(),
+                            child: CreateGroupPost(docId4: docId ),
                             direction: AxisDirection.up));
                   },
             child: Icon(
