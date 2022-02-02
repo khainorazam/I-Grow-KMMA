@@ -549,7 +549,7 @@ Widget FriendBox(int num, String friendPic, String friendName, String userID,
     Colors.red.shade600,
     Colors.green.shade600,
   ];
-  //variable declaration
+  //variable declaration 
   var _currentColorIndex = 0;
   var _currentOverlayIndex = 1;
   var friendStatus = true;
@@ -1262,6 +1262,7 @@ Widget FriendSuggestionBox(int num, String friendPic, String friendName,
                                                     .all<Color>(_colors[
                                                         _currentOverlayIndex]),
                                               ),
+                                              //kat sini 
                                               onPressed: () {
                                                 snapshot
                                                     .data!.docs[num].reference

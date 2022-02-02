@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_group9/creategrouppost.dart';
 import 'package:flutter_group9/viewGroupMember.dart';
 import 'package:flutter_group9/widget/custom_page_route.dart';
 import 'aboutgroup.dart';
+
+String? userId = FirebaseAuth.instance.currentUser?.uid;
 
 // String groupRef = "Group Kobis Maluri";
 // Map<String, dynamic>? groupMap;
@@ -29,7 +32,6 @@ class _ViewGroupState extends State<ViewGroup> {
   ];
   //variable declaration
   // var _likeStatus = false;
-  var _membersCount = 1;
   var _currentColorIndex = 0;
   var _currentOverlayIndex = 1;
 
@@ -75,31 +77,49 @@ class _ViewGroupState extends State<ViewGroup> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Please confirm'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Text('Would you like to leave this group?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Confirm'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                updateStatus();
-              },
-            ),
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        return StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('groups')
+                .doc(docId)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              // if (snapshot.hasError) {
+              //   return Text('Something went wrong');
+              // }
+
+              // if (snapshot.connectionState == ConnectionState.waiting) {
+              //   return Text("Loading");
+              // }
+              return AlertDialog(
+                title: Text('Please confirm'),
+                content: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      Text('Would you like to leave this group?'),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
+                      //sini update
+                      Navigator.of(context).pop();
+                      snapshot.data!.reference.update({
+                        'userId': FieldValue.arrayRemove([userId])
+                      });
+                      updateStatus();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
       },
     );
   }
@@ -209,6 +229,16 @@ class _ViewGroupState extends State<ViewGroup> {
                               var groupMap = snapshot.data;
                               List<String> memArr = [];
                               memArr = List.from(groupMap!['userId']);
+
+                              // for(int i = 0;i<memArr.length;i++){
+
+                              //   if(memArr[i]==userId){
+
+                              //     _joinStatus=true;
+                              //   }
+
+
+                              // }
 
                               return Column(
                                 children: <Widget>[
@@ -330,7 +360,18 @@ class _ViewGroupState extends State<ViewGroup> {
                                                         width: 150,
                                                         child: ElevatedButton(
                                                           onPressed:
-                                                              verifyAction,
+                                                              // verifyAction,
+                                                              () {
+                                                                //update sini
+                                                            snapshot
+                                                                .data!.reference
+                                                                .update({
+                                                              'userId': FieldValue
+                                                                  .arrayUnion(
+                                                                      [userId])
+                                                            });
+                                                            verifyAction();
+                                                          },
                                                           child: Text(
                                                             _buttonText,
                                                             style: TextStyle(
@@ -369,8 +410,9 @@ class _ViewGroupState extends State<ViewGroup> {
                                                             Navigator.push(
                                                                 context,
                                                                 CustomPageRoute(
-                                                                    child:
-                                                                        ViewGroupMember(docId3: docId),
+                                                                    child: ViewGroupMember(
+                                                                        docId3:
+                                                                            docId),
                                                                     direction:
                                                                         AxisDirection
                                                                             .left));
@@ -731,7 +773,7 @@ class _ViewGroupState extends State<ViewGroup> {
                     Navigator.push(
                         context,
                         CustomPageRoute(
-                            child: CreateGroupPost(docId4: docId ),
+                            child: CreateGroupPost(docId4: docId),
                             direction: AxisDirection.up));
                   },
             child: Icon(
