@@ -1421,10 +1421,10 @@ Widget FriendPendingBox(int num, String friendPic, String friendName,
                               'pending_uid': FieldValue.arrayRemove(
                                   [snapshot.data!.docs[num]['userid']]),
                             });
-                            snapshot2.data!.docs[0].reference.update({
-                              'sugg_uid': FieldValue.arrayUnion(
-                                  [snapshot.data!.docs[num]['userid']]),
-                            });
+                            // snapshot2.data!.docs[0].reference.update({
+                            //   'sugg_uid': FieldValue.arrayUnion(
+                            //       [snapshot.data!.docs[num]['userid']]),
+                            // });
                             // deleteFriend(num);
                             Navigator.of(context).pop();
                             // snapshot.data!.docs[index].reference.update({
