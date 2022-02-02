@@ -103,6 +103,7 @@ class _ViewGroupState extends State<ViewGroup> {
                   TextButton(
                     child: Text('Confirm'),
                     onPressed: () {
+                      //sini update
                       Navigator.of(context).pop();
                       snapshot.data!.reference.update({
                         'userId': FieldValue.arrayRemove([userId])
@@ -361,6 +362,7 @@ class _ViewGroupState extends State<ViewGroup> {
                                                           onPressed:
                                                               // verifyAction,
                                                               () {
+                                                                //update sini
                                                             snapshot
                                                                 .data!.reference
                                                                 .update({
