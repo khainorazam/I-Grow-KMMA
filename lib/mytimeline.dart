@@ -221,12 +221,9 @@ Widget PostFeed(String? avatarUrl, String userName) {
                         Container(
                             child: data!['imageUrl'] != temp
                                 ? SizedBox(
-                                    width: double.infinity,
-                                    height: 200,
-                                    child: FittedBox(
-                                        fit: BoxFit.fill,
-                                        child:
-                                            Image.network(data!['imageUrl'])))
+                                    child: Image.network(data!['imageUrl'],
+                                        fit: BoxFit.fill))
+                                // ))
                                 : null),
                       ],
                     ),

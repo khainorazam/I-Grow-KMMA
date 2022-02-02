@@ -278,12 +278,9 @@ Widget PostFeed(List userid) {
                             Container(
                                 child: data!['imageUrl'] != temp1
                                     ? SizedBox(
-                                        width: double.infinity,
-                                        height: 200,
-                                        child: FittedBox(
-                                            fit: BoxFit.fill,
-                                            child: Image.network(
-                                                data!['imageUrl'])))
+                                        child: Image.network(data!['imageUrl'],
+                                            fit: BoxFit.fill))
+                                    // ))
                                     : null),
                           ],
                         ),
