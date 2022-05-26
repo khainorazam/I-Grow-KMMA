@@ -98,7 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
               height: 50,
             ),
             Center(
-              child: OutlineButton(
+              child: FlatButton(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
